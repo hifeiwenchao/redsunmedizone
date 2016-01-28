@@ -1,0 +1,175 @@
+<html lang="zh-CN">
+<head>
+    <title>Red Sun CRM</title>
+    {%include 'crm/head.html' %}
+    <link href="/static/crm/index.css" rel="stylesheet">
+    <script src="/static/crm/index.js" ></script>
+    <style type="text/css">
+    	.datagrid-header-row td{height:30px;}
+    	.datagrid-cell{height: 25px;line-height: 25px;}
+    </style>
+</head>
+
+<div id='loading' style="position:absolute;z-index:10000;top:0px;left:0px;width:100%;height:100%;text-align:center;background:#fff;opacity:0.4;">
+ 	<img style="margin-top:20%" src="/static/crm/loading.gif" height="62" width="64">
+ </div>
+<body>
+    {%include 'crm/navbar.html' %}
+    <div class="container-fluid">
+      <div class="row">
+        <div class="main">
+        	<div style="height:5%;width: 100%;text-align:left;padding-top:3px;float:left;">
+        		<span style="margin-left:15px;font-size:16px;font-weight: bold;margin-right:5px;color:#003d79">客户分类:</span>
+				<span id="filter" style="width:100px;"></span>
+        		<span style="font-size:16px;font-weight: bold;">来源:</span>
+   				<span class="easyui-combobox"  style="width:110px;" data="source_of_customer"></span>
+       			<span style="font-size:16px;font-weight: bold;">沟通情况:</span>
+        		<span class="easyui-combobox" style="width:110px;" data-options="editable:false," data="communication_situation"></span>
+       			<span style="font-size:16px;font-weight: bold;">宗教:</span>
+        		<span class="easyui-combobox" style="width:80px" data-options="editable:false," data="religion"></span>
+        		<span style="font-size:16px;font-weight: bold;">付款方式:</span>
+				<span class="easyui-combobox" style="width:110px" data-options="editable:false," data="payment_term"></span>
+       			<span style="font-size:16px;font-weight: bold;">LV:</span>
+       			<span class="easyui-combobox" style="width:80px;" data="customer_grade"></span>
+       			<button type="button" class="btn btn-primary btn-xs" style="margin-left:10px;" onclick="addUser()">添加</button>
+       			<button type="button" class="btn btn-success btn-xs" style="margin-left:10px;" onclick="saveUser()">保存</button>
+       			<button type="button" class="btn btn-default btn-xs" style="margin-left:10px;" onclick="clearAll()">清空</button>
+       			<span style="margin-right:15px;"></span>
+       		</div>
+	        <div style="width:72%;height:95%;float:left;">
+	        	<div style="height:100%">
+	        		<div id="customer_list"></div>
+	        	</div>
+	        </div>
+	        <div style="width:28%;height:95%;float:left;">
+	        	<div class="easyui-panel" data-options="fit:true," title='<span style="font-size:16px;font-weight: bold;color:#003d79">客户详细信息<span>'>
+		        	<div class="format_info">
+		        		<div class="key">国家:</div>
+        				<span class="easyui-textbox" style="width:75%;height:100%" render="value" data="nation"></span>
+		        	</div>
+		        	<div class="format_info">
+		        		<div class="key">公司名:</div>
+        				<span class="easyui-textbox" render="value" data="company_name" style="width:75%;height:100%"></span>
+		        	</div>
+		        	<div class="format_info">
+		        		<div class="key">人名</div>
+        				<span class="easyui-textbox"  render="value" data="name" style="width:75%;height:100%"></span>
+		        	</div>
+		        	<div style="height:80px;width:100%;margin-top:10px;">
+		        		<div class="key">邮箱:</div>
+		        		<div render="value" data="email" class="easyui-textbox" data-options="multiline:true," style="width:75%;height:100%"></div>
+		        	</div>
+		        	<div style="height:55px;width:100%;margin-top:3px;maring-bottom:3px;">
+		        		<div class="key">网站:</div>
+		        		<div render="value" data="website" class="easyui-textbox" data-options="multiline:true," style="width:75%;height:100%"></div>
+		        	</div>
+		        	<div class="format_info">
+		        		<div class="key">职位:</div>
+		        		<div render="value" data="job_title" class="easyui-textbox" data-options="multiline:true," style="width:75%;height:100%"></div>
+		        	</div>
+		        	<div style="height:120px;width:100%;margin-top:3px;maring-bottom:3px;">
+		        		<div class="key">地址:</div>
+		        		<div render="value" data="office_address" class="easyui-textbox" data-options="multiline:true," style="width:75%;height:100%"></div>
+		        	</div>
+		        	<div class="format_info">
+		        		<div class="key">手机:</div>
+		        		<div render="value" data="cell_phone" class="easyui-textbox" data-options="multiline:true," style="width:75%;height:100%"></div>
+		        	</div>
+		        	<div class="format_info">
+		        		<div class="key">电话:</div>
+		        		<div render="value" data="phone" class="easyui-textbox" data-options="multiline:true," style="width:75%;height:100%"></div>
+		        	</div>
+		        	<div class="format_info">
+		        		<div class="key">传真:</div>
+		        		<div render="value" data="fax" class="easyui-textbox" data-options="multiline:true," style="width:75%;height:100%"></div>
+		        	</div>
+		        	<div style="height:120px;width:100%;margin-top:3px;maring-bottom:3px;">
+		        		<div class="key">购买意向:</div>
+		        		<div render="value" data="purchase_intention" class="easyui-textbox" data-options="multiline:true," style="width:75%;height:100%"></div>
+		        	</div>
+		        	<div class="format_info">
+		        		<div class="key">wt's app:</div>
+		        		<div render="value" data="whats_app" class="easyui-textbox" data-options="multiline:true," style="width:75%;height:100%"></div>
+		        	</div>
+		        	<div class="format_info">
+		        		<div class="key">Skype:</div>
+		        		<div render="value" data="skype" class="easyui-textbox" data-options="multiline:true," style="width:75%;height:100%"></div>
+		        	</div>
+		        	<div class="format_info">
+		        		<div class="key">邮编:</div>
+		        		<div render="value" data="zip_code" class="easyui-textbox" data-options="multiline:true," style="width:75%;height:100%"></div>
+		        	</div>
+		        	<div class="format_info">
+		        		<div class="key">工作时间:</div>
+		        		<div render="value" data="working_time" class="easyui-textbox" data-options="multiline:true," style="width:75%;height:100%"></div>
+		        	</div>
+		        	<div class="format_info">
+		        		<div class="key">QQ:</div>
+		        		<div render="value" data="qq" class="easyui-textbox" data-options="multiline:true," style="width:75%;height:100%"></div>
+		        	</div>
+		        	<div class="format_info">
+		        		<div class="key">公司性质:</div>
+		        		<div render="value" data="nature_of_company" class="easyui-textbox" data-options="multiline:true," style="width:75%;height:100%"></div>
+		        	</div>
+		        	<div class="format_info">
+		        		<div class="key">时差:</div>
+		        		<div render="value" data="time_difference" class="easyui-textbox" data-options="multiline:true," style="width:75%;height:100%"></div>
+		        	</div>
+		        	<div class="format_info">
+		        		<div class="key">购买偏好:</div>
+		        		<div render="value" data="purchasing_preference" class="easyui-textbox" data-options="multiline:true," style="width:75%;height:100%"></div>
+		        	</div>
+		        	<div class="format_info">
+		        		<div class="key">特殊要求:</div>
+		        		<div render="value" data="special_requirement" class="easyui-textbox" data-options="multiline:true," style="width:75%;height:100%"></div>
+		        	</div>
+		        	<div class="format_info">
+		        		<div class="key">OEM:</div>
+		        		<div render="value" data="oem" class="easyui-textbox" data-options="multiline:true," style="width:75%;height:100%"></div>
+		        	</div>
+		        	<div class="format_info">
+		        		<div class="key">生日:</div>
+		        		<div render="value" data="birthday" class="easyui-textbox" data-options="multiline:true," style="width:75%;height:100%"></div>
+		        	</div>
+		        	<div class="format_info">
+		        		<div class="key">兴趣爱好:</div>
+		        		<div render="value" data="hobby" class="easyui-textbox" data-options="multiline:true," style="width:75%;height:100%"></div>
+		        	</div>
+		        	<div class="format_info">
+		        		<div class="key">家庭成员:</div>
+		        		<div render="value" data="family_member" class="easyui-textbox" data-options="multiline:true," style="width:75%;height:100%"></div>
+		        	</div>
+		        	<div class="format_info">
+		        		<div class="key">抽烟饮酒:</div>
+		        		<div render="value" data="smoke_and_drink" class="easyui-textbox" data-options="multiline:true," style="width:75%;height:100%"></div>
+		        	</div>
+		        	<div style="height:130px;width:100%;margin-top:3px;maring-bottom:20px;">
+		        		<div class="key">照片:</div>
+		        		<div data="photo" style="width:75%;height:100%"></div>
+		        	</div>
+		        	<div class="format_info" style="margin-top:30px;">
+		        		<div class="key">排序权重:</div>
+		        		<div class="value"><div data="sort" data-options="showTip:true,value:30," class="easyui-slider"  style="width:75%;"></div></div>
+		        	</div>
+	        	</div>
+	        </div>
+        </div>
+      </div>
+    </div>
+</body>
+<div id="customer_list_toolbar" style="border:0px;float:right;width:100%;">
+	<table style="float: right;margin-right:10px;margin-bottom:5px;">
+		<tr>
+			<td>
+				<div style="margin-right:5px;font-size:14px;">搜索:</div>
+			</td>
+			<td>
+				<div class="easyui-searchbox" style="width:270px" data-options="prompt:'公司名,人名,宗教,国家,网站,邮箱'" data="search"></div>
+			</td>
+		</tr>
+	</table>
+</div>
+</html>
+
+
+

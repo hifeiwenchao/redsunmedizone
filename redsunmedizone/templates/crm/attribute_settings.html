@@ -1,0 +1,122 @@
+<html lang="zh-CN">
+<head>
+    <title>Red Sun CRM</title>
+    {%include 'crm/head.html' %}
+    <link href="/static/crm/index.css" rel="stylesheet">
+    <style type="text/css">
+    	.datagrid-header-row td{height:30px;}
+    	.datagrid-cell{height: 25px;line-height: 25px;}
+    </style>
+    <script type="text/javascript">
+    var attr_tree_data = [{"text": "来源",'iconCls':'icon-blank','data':'source_of_customer'},
+                          {"text": "沟通情况",'iconCls':'icon-blank','data':'communication_situation'},
+                          {"text": "宗教",'iconCls':'icon-blank','data':'religion'},
+                          {"text": "付款方式",'iconCls':'icon-blank','data':'payment_term'}]
+    
+    $(document).ready(function(){
+    	$('#loading').fadeOut()
+    });
+    
+    $(function($) {
+    	$('#attr_tree').tree({
+    		fit:true,
+    		data:attr_tree_data,
+    		onClick:function(node){
+    			loadAttrData(node.data)
+    		},
+    	});
+    	
+    	
+    	$('#data_tree').tree({
+    		fit:true,
+    	});
+    	
+    	
+    });
+    
+    function loadAttrData(type){
+    	$('#loading').show();
+    	$.ajax({url:'/get_'+type+'/',type:'POST',dataType:'json',success:function(data){
+            $.messager.show({title:'<span style="color:green">获取成功</span>',
+                msg:'获取信息成功!(窗口自动关闭)',showType:'slide',
+                style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
+            });
+            $('#data_tree').tree('loadData',data)
+    		$('#loading').fadeOut();
+    	},error:function(data){
+    		$.messager.show({title:'<span style="color:red">获取失败</span>',
+                msg:'获取信息失败!(呼叫开发者)',showType:'slide',
+                style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
+            });
+    		$('#loading').fadeOut();
+    		}
+    	});
+    }
+    
+    function addAttrData(){
+    	var node = $('#attr_tree').tree("getSelected")
+    	if(node == null){
+    		$.messager.show({title:'<span style="color:red">操作失败</span>',
+                msg:'请先选中第一列任意配置!(窗口自动关闭)',showType:'slide',
+                style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
+            });
+    		return
+    	}
+    	$.messager.prompt('添加操作', '添加属性到'+node.text+'大类下面吗!?!(根据第一列所选的,不能空格或为空)', function(r){
+    		if (r){
+    				if($.trim(r) == ''){return}
+			    	$('#loading').show();
+			    	$.ajax({url:'/add_'+node.data+'/',type:'POST',data:{'data':r},success:function(data){
+			    		$(node.target).click()
+			            $.messager.show({title:'<span style="color:green">添加成功</span>',
+			                msg:'获取信息成功!(窗口自动关闭)',showType:'slide',
+			                style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
+			            });
+			    		$('#loading').fadeOut();
+			    	},error:function(data){
+			    		$.messager.show({title:'<span style="color:red">添加失败</span>',
+			                msg:'添加信息失败!(呼叫开发者)',showType:'slide',
+			                style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
+			            });
+			    		$('#loading').fadeOut();
+			    		}
+			    	});
+    		}
+    	});
+    }
+    
+    
+    
+    </script>
+</head>
+<div id='loading' style="position:absolute;z-index:10000;top:0px;left:0px;width:100%;height:100%;text-align:center;background:#fff;opacity:0.4;">
+ 	<img style="margin-top:20%" src="/static/crm/loading.gif" height="62" width="64">
+ </div>
+<body>
+    {%include 'crm/navbar.html' %}
+    <div class="container-fluid">
+      <div class="row">
+        <div style="position:fixed;margin-top:5px;height:92%;width:100%;">
+        	<div style="margin:0 auto;height:100%;width:90%">
+        		<div class="easyui-panel" title="<span style='font-size:16px;'>客户选项类属性配置</span>" data-options="fit:true,">
+        			<div style="width:30%;height:100%;float: left;">
+        				<div class="easyui-panel" title="属性配置名称" style="height:100%">
+	        				<div id="attr_tree"></div>
+        				</div>
+        			</div>
+        			<div style="width:30%;height:100%;border-left:1px solid #ddd;float: left;">
+        				<div class="easyui-panel" title="对应属性所有配置" style="height:100%">
+        					<div id="data_tree"></div>
+        				</div>
+        			</div>
+        			<div style="width:40%;height:100%;border-left:1px solid #ddd;float: left;">
+	        			<button type="button" class="btn btn-primary btn-xs" style="margin-left:10px;" onclick="addAttrData()">添加</button>
+        			</div>
+        		</div>
+        	</div>
+        </div>
+      </div>
+    </div>
+</body>
+</html>
+
