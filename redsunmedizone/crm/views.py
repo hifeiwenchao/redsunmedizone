@@ -7,9 +7,9 @@ import json
 
 
 def index(request):
-    if request.GET.get('key') != 'yangyun':
-        return HttpResponseRedirect('https://www.redsunmedizone.com')
-    return render(request, 'crm/index.html')
+    #if request.GET.get('key') != 'yangyun':
+    #    return HttpResponseRedirect('https://www.redsunmedizone.com')
+    return render(request, 'index.html')
 
 
 
@@ -49,7 +49,7 @@ def customer_list(request):
             temp.__setitem__('id', item.id)
             temp.__setitem__('company_name', item.company_name)
             temp.__setitem__('name', item.name)
-            temp.__setitem__('nation', item.nation)
+            temp.__setitem__('nation', Nation.objects.filter(id = item.nation).first().nation)
             temp.__setitem__('email', item.email)
             temp.__setitem__('website',item.website)
             temp.__setitem__('sort',item.sort)
@@ -139,7 +139,7 @@ def customer_detail(request):
 
 
 def attribute_settings(request):
-    return render(request, 'crm/attribute_settings.html')
+    return render(request, 'attribute_settings.html')
 
 
 

@@ -7,7 +7,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = '8dcbti3-9q^&e-#vu0**#y0jtf5ne)tqf)9a7plm98917%(lm0'
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = '*'
 
@@ -86,23 +86,48 @@ TEMPLATES = [
 ]
 
 
-# Database
-# https://docs.djangoproject.com/en/1.8/ref/settings/#databases
+if DEBUG:
+    DB_HOST = '127.0.0.1'
+    DB_PASS = 'a1s2d3f4'
+else:
+    DB_HOST = '10.66.123.236'
+    DB_PASS = 'a1s2d3f4g5'
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'crm', 
         'USER': 'root',
-        'PASSWORD': 'a1s2d3f4',
-        'HOST': 'localhost', 
+        'PASSWORD': DB_PASS,
+        'HOST': DB_HOST, 
         'PORT': '3306', 
     },
 }
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/1.8/topics/i18n/
+#日志在中间件处理,收集到所有信息
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/soft/log/debug.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'django.db.backends': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
 
 LANGUAGE_CODE = 'en-us'
 

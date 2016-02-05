@@ -1,3 +1,18 @@
+.icon-settings{
+	background:url('icons/settings.png') no-repeat center center;
+}
+.icon-files{
+	background:url('icons/files.png') no-repeat center center;
+}
+.icon-finance{
+	background:url('icons/finance.png') no-repeat center center;
+}
+.icon-order{
+	background:url('icons/order.png') no-repeat center center;
+}
+.icon-mail{
+	background:url('icons/mail.png') no-repeat center center;
+}
 .icon-blank{
 	background:url('icons/blank.gif') no-repeat center center;
 }
