@@ -5,7 +5,7 @@
 <meta name="renderer" content="webkit">
 <meta http-equiv="Cache-Control" content="no-siteapp" />
 <link rel="alternate icon" type="image/png" href="/static/favicon.ico">
-<link id="uiTheme" rel="stylesheet" type="text/css" href="/static/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="/static/easyui/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="/static/easyui/demo/demo.css">
 <link rel="stylesheet" type="text/css" href="/static/easyui/themes/icon.css">
 <link rel="stylesheet" type="text/css" href="/static/easyui/themes/color.css">
@@ -13,33 +13,5 @@
 <script type="text/javascript" src="/static/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="/static/easyui/locale/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript" src="/static/easyui/jquery.cookie.js"></script>
-<script type="text/javascript" >
-$(function($) {
-	//初始化选择主题功能
-	$('#ith').combobox({
-	    panelHeight:100,
-	    onChange:function(newVal, oldVal){
-	       var oldHref = $('#uiTheme').attr('href');
-	       var newHref = oldHref.substring(0,oldHref.indexOf('themes')) + 'themes/' + newVal + '/easyui.css';
-	       $('#uiTheme').attr('href', newHref);
-	       //设置cookie值，并设置7天有效时间
-	       $.cookie('theme', newVal,{expires: 7});
-	    }
-	});
-	var theme = $.cookie('theme')
-	var default_theme = ["default","black","gray","bootstrap","metro","cupertino","dark-hive","metro-blue","metro-gray","metro-green","metro-orange","metro-red","pepper-grinder","sunny",]
-	if(default_theme.indexOf(theme) == -1){
-		$.cookie('theme', 'default',{ expires: 7 }); // 存储一个带7天期限的 cookie 
-		theme = 'default'
-	}else{
-		var theme = $.cookie('theme')
-		$('#ith').combobox('select',theme)
-		var oldHref = $('#uiTheme').attr('href');
-	    var newHref = oldHref.substring(0,oldHref.indexOf('themes')) + 'themes/' + theme + '/easyui.css';
-	    $('#uiTheme').attr('href', newHref);
-	}
-});
-
-</script>
 
 

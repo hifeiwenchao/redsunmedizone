@@ -53,7 +53,6 @@ class Customer(models.Model):
     time_difference = models.CharField(max_length=256,default='')
     working_time = models.CharField(max_length=256,default='')
     name = models.CharField(max_length=256,default='')
-    photo_url = models.CharField(max_length=256,default='')
     birthday = models.CharField(max_length=256,default='')
     job_title = models.CharField(max_length=256,default='')
     website = models.CharField(max_length=256,default='')
@@ -67,7 +66,6 @@ class Customer(models.Model):
     family_member = models.CharField(max_length=32,default='')
     communication_situation = models.IntegerField(default=1)
     purchase_intention = models.CharField(max_length=1024,default='')
-    purchasing_preference = models.CharField(max_length=256,default='')
     payment_term = models.IntegerField(default=1)
     sort = models.IntegerField(default=0)
     class Meta:

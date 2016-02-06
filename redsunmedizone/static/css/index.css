@@ -2,3 +2,13 @@
 .menu_item{
 	float: left;
 }
+
+.tabs-tool{
+	border-width:0px;
+	border-bottom-width: 1px;
+}
+
+.format_info{
+	width:100%;margin-top:10px;maring-bottom:10px;
+}
+

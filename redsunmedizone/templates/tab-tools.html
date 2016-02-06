@@ -1,0 +1,34 @@
+<div id="tab-tools">
+	<div class="easyui-panel" style="width:380px;" data-options="border:false">
+		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-man',plain:true" onclick="$('#customer_window').dialog('open')">添加客户</a>
+		<a href="#" class="easyui-menubutton" data-options="menu:'#mm1',iconCls:'icon-mail'">邮件功能</a>
+		<a href="#" class="easyui-menubutton" data-options="menu:'#mm2',iconCls:'icon-task'">定时任务</a>
+		<a href="#" class="easyui-menubutton" data-options="menu:'#mm3',iconCls:'icon-help'">注意事项</a>
+	</div>
+	
+	<div id="mm1" style="width:150px;">
+		<div data-options="iconCls:'icon-redo'">发送邮件</div>
+		<div data-options="iconCls:'icon-undo'">回复邮件</div>
+		<!-- 
+		<div>
+			<span>Toolbar</span>
+			<div>
+				<div>Address</div>
+				<div>Link</div>
+				<div>Navigation Toolbar</div>
+				<div>Bookmark Toolbar</div>
+				<div class="menu-sep"></div>
+				<div>New Toolbar...</div>
+			</div>
+		</div>
+		 -->
+	</div>
+	<div id="mm2" style="width:100px;">
+		<div data-options="iconCls:'icon-add'">添加邮件任务</div>
+	</div>
+	<div id="mm3" class="menu-content" style="background:#f0f0f0;padding:10px;text-align:left">
+		<div style="width:400px;height:300px">
+			注意事项:施工建设中
+		</div>
+	</div>
+</div>

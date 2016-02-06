@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.http.response import HttpResponse, HttpResponseRedirect
-from django.views.decorators.cache import cache_page
 from crm.models import *
 import json
 
@@ -26,11 +25,14 @@ def customer_list(request):
         end = page*rows
         
         if search != None:
-            sql="select t1.id,t1.company_name,t1.name,t1.nation,t1.email,t1.website,t2.religion from customer t1 left join religion t2 on t1.religion = t2.id \
-            where 1=1"
+            sql='select t1.id,t1.company_name,t1.name,t1.nation,t1.email,t1.website,t2.religion,t3.nation,t4.source \
+            from customer t1 left join religion t2 on t1.religion = t2.id \
+            left join nation t3 on t1.nation = t3.id \
+            left join source_of_customer t4 on t1.source_of_customer = t4.id \
+            where 1=1'
             search  = search.split(' ')
             for item in search:
-                sql+=' and concat(t1.company_name,t1.name,t1.nation,t1.email,t1.website,t2.religion) like "%%'+item+'%%"'
+                sql+=' and concat(t1.company_name,t1.name,t1.nation,t1.email,t1.website,t2.religion,t3.nation,t4.source) like "%%'+item+'%%"'
             print( sql)
             objs = Customer.objects.raw(sql +' order by t1.sort desc')
             objs = [item for item in objs]
@@ -111,12 +113,22 @@ def get_source_of_customer(requset):
         data.append(temp)
     return HttpResponse(json.dumps(data,ensure_ascii=False))   
 
+def get_nation(requset):
+    objs = Nation.objects.order_by('nation').all()
+    data = []
+    for item in objs:
+        temp = {}
+        temp.__setitem__('id', item.id)
+        temp.__setitem__('text', item.nation)
+        data.append(temp)
+    return HttpResponse(json.dumps(data,ensure_ascii=False))
+
 
 
 def add_customer(request):
     if request.method == "POST":
         info = request.POST.dict()
-        info['name'] = str(info['name']).capitalize()
+        info['name'] = str(info['name']).upper()
         Customer.objects.create(**info)
         return HttpResponse('done')
         
@@ -124,7 +136,7 @@ def save_customer(request):
     if request.method == "POST":
         cid = request.POST.get('id')
         new_data = request.POST.dict()
-        new_data['name'] = str(new_data['name']).capitalize()
+        new_data['name'] = str(new_data['name']).upper()
         del new_data['id']
         Customer.objects.filter(id = int(cid)).update(**new_data)
         return HttpResponse('done')

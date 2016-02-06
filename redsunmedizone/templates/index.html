@@ -3,13 +3,9 @@
 <head>
     <title>RedSunMediZoneCRM</title>
     {%include 'head.html' %}
-    <script type="text/javascript">
-	    window.onload=function(){	
-	    	
-	    }
-    </script>
     <link rel="stylesheet" type="text/css" href="/static/css/index.css">
     <script type="text/javascript" src="/static/js/index.js"></script>
+    <script type="text/javascript" src="/static/js/customer.js"></script>
 </head>
 <div id='loading' style="position:absolute;z-index:10000;top:0px;left:0px;width:100%;height:100%;text-align:center;background:#fff;opacity:0.4;">
  	<img style="margin-top:20%" src="/static/img/loading.gif" height="62" width="64">
@@ -20,55 +16,26 @@
 			<span style="float: left;margin:7px 0 0 7px;">
 				<img alt="169*50" src="/static/img/backstageLogo.png" width="110">
 			</span>
-			<div style="border-top:0px;border-left:0px;float:right;margin-top:7px">
-				<div style="margin-right:20px;border:0px;">主题:
-					<select id="ith" class="easyui-combobox" data-options="editable:false,">
-		                <option value="default">default</option>
-		                <option value="black">black</option>
-		                <option value="gray">gray</option>
-		                <option value="bootstrap">bootstrap</option>
-		                <option value="metro">metro</option>
-		                <option value="cupertino">cupertino</option>
-						<option value="dark-hive">dark-hive</option>
-						<option value="metro-blue">metro-blue</option>
-						<option value="metro-gray">metro-gray</option>
-						<option value="metro-green">metro-green</option>
-						<option value="metro-orange">metro-orange</option>
-						<option value="metro-red">metro-red</option>
-						<option value="sunny">sunny</option>
-		            </select>
-				</div>
-			</div>
 		</div>
 		<div data-options="region:'south',split:true" style="height:50px;"></div>
 		<div data-options="region:'west',split:true" title="功能菜单" style="width:130px;">
-			<div class="easyui-accordion" data-options="fit:true,border:false">
-		        <div title="客户管理" data-options="iconCls:'icon-man'" style="padding:5px 0 5px 0;border:0px">
-		        	<div id="customer_tree" class="menu_item"></div>
-		        </div>
-		        <div title="邮件系统" data-options="iconCls:'icon-mail'" style="padding:5px 0 5px 0;border:0px">
-		        	
-		        </div>
-		        <div title="订单管理" data-options="iconCls:'icon-order'" style="padding:5px 0 5px 0;border:0px">
-		        </div>
-		        <div title="财务管理" data-options="iconCls:'icon-finance'" style="padding:5px 0 5px 0;border:0px">
-		        </div>
-		        <div title="文件管理" data-options="iconCls:'icon-files'" style="padding:5px 0 5px 0;border:0px">
-		        </div>
-		        <div title="系统设置" data-options="iconCls:'icon-settings'" style="padding:5px 0 5px 0;border:0px">
-		        </div>
-	   		</div>
+			{%include 'tree_menu.html' %}
 		</div>
 		<div data-options="region:'center',">
-			<div class="easyui-tabs" data-options="fit:true,border:false,">
+			<div id="main_tab" class="easyui-tabs" data-options="fit:true,border:false,tools:'#tab-tools',plain:true">
 		        <div title="主页" style="padding:10px">
 		        </div>
-		        <div title="帮助" data-options="iconCls:'icon-help',closable:true" style="padding:10px">
+		        <div title="客户列表">
+		        	<div id="customer_list"></div>
 		        </div>
 		    </div>
 		</div>
-	
-	
 </body>
+{%include 'tab-tools.html' %}
+
+{%include 'customer_list_tools.html' %}
+
+{%include 'customer_window.html' %}
+
 
 </html>
