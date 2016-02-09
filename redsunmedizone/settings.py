@@ -31,12 +31,31 @@ CACHES = {
     }
 }
 
+#celery配置
+
+from celery.schedules import crontab
+
+CELERYBEAT_SCHEDULE = {
+    'test': {
+        'task':'mail.tasks.test',
+        'schedule': crontab(),
+        'args': (),
+    },
+}
+
+BROKER_URL = 'redis://127.0.0.1:6379/0'
+CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379/1"
+CELERYD_CONCURRENCY = 4
+CELERYD_MAX_TASKS_PER_CHILD = 5
+CELERYD_POOL_RESTARTS = True
+BROKER_CONNECTION_TIMEOUT = 10
+
 INSTALLED_APPS = (
     'django_jinja',
     'django.contrib.sessions',
     'django.contrib.staticfiles',
-    'crm.apps.CRMConfig',
-    'mail.apps.MailConfig',
+    'crm',
+    'mail',
 )
 
 MIDDLEWARE_CLASSES = (
