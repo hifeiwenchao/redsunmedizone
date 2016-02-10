@@ -1,4 +1,5 @@
 $(document).ready(function(){
+	$.parser.parse()
 	$('#loading').fadeOut('slow')
 })
 

@@ -10,10 +10,10 @@ import re
 imbox = Imbox('imap.redsunmedizone.com','matt@redsunmedizone.com', 'hlj52764892',ssl=True)
 
 # Gets all messages 
-#all_messages = imbox.messages()
+all_messages = imbox.messages()
 
 # Unread messages 
-unread_messages = imbox.messages(unread=True)
+#unread_messages = imbox.messages(unread=True)
 
 # Messages sent FROM
 #messages_from = imbox.messages(sent_from='martin@amon.cx')
@@ -28,9 +28,8 @@ unread_messages = imbox.messages(unread=True)
 #messages_from = imbox.messages(date__gt='30-July-2013')
 
 # Messages from a specific folder 
-
-
-for uid, message in unread_messages:
+for uid, message in all_messages:
+    print(uid)
     #print(message.sent_cc)
     #print(message.sent_from)
     #print(message.sent_to)
@@ -40,15 +39,16 @@ for uid, message in unread_messages:
     #print(message.date)
     #print(message.parsed_date)
     #print(message.body['plain'][0].decode())
+    print(message.attachments)
     '''
     print(message.body['html'][0].decode())
     body = message.body['html'][0].decode()
     img = re.findall(r"""<img.*?>""",body,re.I)
     for item in img:
         print(item)
-    '''
     
-    #print(message.attachments)
+    
+    
     #print(message)
     if len(message.attachments) != 0:
         for item in message.attachments:
@@ -58,7 +58,7 @@ for uid, message in unread_messages:
             file_object.write(item['content'].getvalue())
             file_object.close()
     #print(message.message_id)
-    
+    '''
     
 '''
 {
