@@ -108,35 +108,126 @@ $(function($){
 		}
 	});
 	
-	$('#filter').combobox({
+	$('#customer_filter').combobox({
+		valueField: 'id',
+        textField: 'text',
 		panelHeight:100,
 		editable:false,
-		data:[{
-		    "value":'all',
-		    "text":"全部客户",
-		},{
-		    "value":1,
-		    "text":"潜在客户"
-		},{
-		    "value":2,
-		    "text":"意向客户"
-		},{
-		    "value":3,
-		    "text":"合作客户",
-		}],
+		url:'/get_customer_grade_filter/',
+		method:'post',
 		onSelect:function(record){
 			$('#customer_list').datagrid({
 				queryParams:{
-					customer_grade:record['value'],
+					customer_grade:record['id'],
 				}
 			});
-			
 		},
+		onLoadSuccess:function(){
+			$('#customer_filter').combobox('select','all');
+		}
 	});
 	
-	$('#filter').combobox('select','all')
+	
+	//{0:'customer_grade',1:'communication_situation',2:'source_of_customer',3:'religion',4:'payment_term',5:'nation'}
 	
 	
+	$('div[data=communication_situation]').datagrid({
+		fit:true,
+		border:false,
+		remoteSort:false,
+		nowrap:false,
+		autoRowHeight:true,
+		fitColumns:true,
+        url:'/get_communication_situation/',
+        method:'get',
+        rownumbers:false,
+		columns:[[
+			{field:'id',title:'<div style="font-size:16px;font-weight: bold;">ID<div>',width:40,align:'center',halign:'center'},
+			{field:'text',title:'<span style="font-size:16px;font-weight: bold;">沟通情况<span>',width:fixWidth(0.13),align:'center',halign:'center',},
+		]],
+	});
+	
+	
+	$('div[data=customer_grade]').datagrid({
+		fit:true,
+		border:false,
+		remoteSort:false,
+		nowrap:false,
+		autoRowHeight:true,
+		fitColumns:true,
+        url:'/get_customer_grade/',
+        method:'get',
+        rownumbers:false,
+		columns:[[
+			{field:'id',title:'<div style="font-size:16px;font-weight: bold;">ID<div>',width:40,align:'center',halign:'center'},
+			{field:'text',title:'<span style="font-size:16px;font-weight: bold;">用户评级<span>',width:fixWidth(0.13),align:'center',halign:'center',},
+		]],
+	});
+	
+	
+	$('div[data=source_of_customer]').datagrid({
+		fit:true,
+		border:false,
+		remoteSort:false,
+		nowrap:false,
+		autoRowHeight:true,
+		fitColumns:true,
+        url:'/get_source_of_customer/',
+        method:'get',
+        rownumbers:false,
+		columns:[[
+			{field:'id',title:'<div style="font-size:16px;font-weight: bold;">ID<div>',width:40,align:'center',halign:'center'},
+			{field:'text',title:'<span style="font-size:16px;font-weight: bold;">来源<span>',width:fixWidth(0.13),align:'center',halign:'center',},
+		]],
+	});
+	
+	$('div[data=payment_term]').datagrid({
+		fit:true,
+		border:false,
+		remoteSort:false,
+		nowrap:false,
+		autoRowHeight:true,
+		fitColumns:true,
+        url:'/get_payment_term/',
+        method:'get',
+        rownumbers:false,
+		columns:[[
+			{field:'id',title:'<div style="font-size:16px;font-weight: bold;">ID<div>',width:40,align:'center',halign:'center'},
+			{field:'text',title:'<span style="font-size:16px;font-weight: bold;">付款方式<span>',width:fixWidth(0.13),align:'center',halign:'center',},
+		]],
+	});
+	
+	$('div[data=religion]').datagrid({
+		fit:true,
+		border:false,
+		remoteSort:false,
+		nowrap:false,
+		autoRowHeight:true,
+		fitColumns:true,
+        url:'/get_religion/',
+        method:'get',
+        rownumbers:false,
+		columns:[[
+			{field:'id',title:'<div style="font-size:16px;font-weight: bold;">ID<div>',width:40,align:'center',halign:'center'},
+			{field:'text',title:'<span style="font-size:16px;font-weight: bold;">付款方式<span>',width:fixWidth(0.13),align:'center',halign:'center',},
+		]],
+	});
+	
+	$('div[data=nation]').datagrid({
+		fit:true,
+		border:false,
+		remoteSort:false,
+		nowrap:false,
+		autoRowHeight:true,
+		fitColumns:true,
+        url:'/get_nation/',
+        method:'get',
+        rownumbers:false,
+		columns:[[
+			{field:'id',title:'<div style="font-size:16px;font-weight: bold;">ID<div>',width:40,align:'center',halign:'center'},
+			{field:'text',title:'<span style="font-size:16px;font-weight: bold;">国家<span>',width:fixWidth(0.13),align:'center',halign:'center',},
+		]],
+	});
 	
 });
 
@@ -218,7 +309,8 @@ function customerDetail(id){
 		$('span[data=religion]').combobox('select',data.religion)
 		$('span[data=payment_term]').combobox('select',data.payment_term)
 		$('span[data=nation]').combobox('select',data.nation)
-		
+		$('#customer_selected').text(data.name)
+		$('#customer_selected').attr('data',data.id)
 		$('#loading').fadeOut();
         
         $('#customer_window').dialog('open');
@@ -232,9 +324,7 @@ function customerDetail(id){
 	});
 	
 	
-	
 }
-
 
 
 function saveUser(){
@@ -242,17 +332,8 @@ function saveUser(){
 	$.messager.confirm('保存操作', '确定要保存用户吗?!(需要选中表格中任意一行!并且6个选项要全部选到才可以!)', function(r){
 		if (r){
 	
-				var rowData = $('#customer_list').datagrid('getSelected')
-				
-				if(rowData == null){
-					$.messager.show({title:'<span style="color:red">必须选择一条客户数据</span>',
-			            msg:'必须选择一条客户数据!(窗口自动关闭)',showType:'slide',
-			            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
-			        });
-					return
-				}
 				var data = {}
-				data.id = rowData.id
+				data.id = $('#customer_selected').attr('data')
 				var sort = $('span[data=sort]').slider('getValue')
 				var source_of_customer = $('span[data=source_of_customer]').combobox('getValue')
 				var customer_grade = $('span[data=customer_grade]').combobox('getValue')
@@ -311,11 +392,41 @@ function clearInfoCustomer(){
     });
 }
 
-
 function addSettings(){
 	var obj = $('#customer_settings_tabs').tabs('getSelected')
-	console.log($(obj).attr('related'))
+	data_type = $(obj).attr('related');
+	param = $(obj).attr('param');
+	title = $(obj).attr('call');
+	
+	$.messager.prompt('添加操作', '添加属性到  <span style="color:red;font-size:16px;">'+title+'</span>  属性中', function(r){
+		if (r){
+			if($.trim(r) == ''){return}
+	    	$('#loading').show();
+	    	$.ajax({url:'/add_customer_settings_info/',type:'POST',data:{'data':r,'type':data_type},success:function(data){
+	            $.messager.show({title:'<span style="color:green">添加成功</span>',
+	                msg:'获取信息成功!(窗口自动关闭)',showType:'slide',
+	                style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
+	            });
+	            reloadSettingsInfo(param)
+	    		$('#loading').fadeOut();
+	    	},error:function(data){
+	    		$.messager.show({title:'<span style="color:red">添加失败</span>',
+	                msg:'添加信息失败!(呼叫开发者)',showType:'slide',
+	                style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
+	            });
+	    		$('#loading').fadeOut();
+	    		}
+	    	});
+		}
+	});
+	
 }
 
-
+function reloadSettingsInfo(param){
+	if(param == 'customer_grade'){
+		$('#customer_filter').combobox('reload')
+	}
+	$('div[data='+param+']').datagrid('reload')
+	$('span[data='+param+']').combobox('reload')
+}
 

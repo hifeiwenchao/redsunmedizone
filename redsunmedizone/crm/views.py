@@ -83,6 +83,18 @@ def get_customer_grade(requset):
         data.append(temp)
     return HttpResponse(json.dumps(data,ensure_ascii=False))   
 
+def get_customer_grade_filter(requset):
+    objs = CustomerGrade.objects.order_by('id').all()
+    data = []
+    data.append({'id':'all','text':'全部客户'})
+    for item in objs:
+        temp = {}
+        temp.__setitem__('id', item.id)
+        temp.__setitem__('text', item.grade)
+        data.append(temp)
+    
+    return HttpResponse(json.dumps(data,ensure_ascii=False))  
+
 def get_payment_term(requset):
     objs = PaymentTerm.objects.order_by('id').all()
     data = []
@@ -124,6 +136,27 @@ def get_nation(requset):
     return HttpResponse(json.dumps(data,ensure_ascii=False))
 
 
+def add_customer_settings_info(requset):
+    
+    #{0:'customer_grade',1:'communication_situation',2:'source_of_customer',3:'religion',4:'payment_term',5:'nation'}
+    
+    data_type = requset.POST.get('type')
+    
+    
+    if data_type == '0':
+        CustomerGrade.objects.create(grade = requset.POST.get('data'))
+    if data_type == '1':
+        CommunicationSituation.objects.create(situation = requset.POST.get('data'))
+    if data_type == '2':
+        SourceOfCustomer.objects.create(source = requset.POST.get('data'))
+    if data_type == '3':
+        Religion.objects.create(religion = requset.POST.get('data'))
+    if data_type == '4':
+        PaymentTerm.objects.create(term = requset.POST.get('data'))
+    if data_type == '5':
+        Nation.objects.create(nation = requset.POST.get('data'))
+    
+    return HttpResponse('done')
 
 def add_customer(request):
     if request.method == "POST":
@@ -149,9 +182,6 @@ def customer_detail(request):
             data.__setitem__(item.name,eval('obj.'+item.name))
         return HttpResponse(json.dumps(data,ensure_ascii=False))   
 
-
-def attribute_settings(request):
-    return render(request, 'attribute_settings.html')
 
 
 

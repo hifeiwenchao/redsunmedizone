@@ -1,26 +1,26 @@
 <div id="customer_settings_window" class="easyui-dialog" title="客户信息配置" 
-data-options="width:1200,height:580,closed:true,collapsible:true,resizable:true,iconCls: 'icon-save',
+data-options="width:1200,height:630,closed:true,collapsible:true,resizable:true,iconCls: 'icon-save',
 buttons: [{text:'添加',iconCls:'icon-add',handler:function(){addSettings();}},
 {text:'关闭',iconCls:'icon-cancel',handler:function(){$('#customer_settings_window').dialog('close');}}],">
 
 	<div id="customer_settings_tabs" class="easyui-tabs" data-options="fit:true,border:false,plain:true,">
-	    <div title="来源" related="source_of_customer">
-	        
+	    <div title="分级" related="0" param="customer_grade" call="分级">
+	        <div data="customer_grade"></div>
 	    </div>
-	    <div title="沟通情况" related="communication_situation">
-	        
+	    <div title="来源" related="2" param="source_of_customer" call="来源">
+	        <div data="source_of_customer"></div>
 	    </div>
-	    <div title="宗教" related="religion">
-	        
+	    <div title="沟通情况" related="1" param="communication_situation" call="沟通情况">
+	        <div data="communication_situation"></div>
 	    </div>
-	    <div title="付款方式" related="payment_term">
-	        
+	    <div title="宗教" related="3" param="religion" call="宗教">
+	        <div data="religion"></div>
 	    </div>
-	    <div title="分级" related="customer_grade">
-	        
+	    <div title="付款方式" related="4" param="payment_term" call="付款方式">
+	        <div data="payment_term"></div>
 	    </div>
-	    <div title="国家" related="nation">
-	        
+	    <div title="国家" related="5" param="nation" call="国家">
+	        <div data="nation"></div>
 	    </div>
 	</div>
 	

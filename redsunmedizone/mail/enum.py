@@ -28,3 +28,17 @@ EMAIL_STATUS = {0:"未分类",1:"收件箱",2:"发件箱",3:"草稿箱",4:"垃�
 EMAIL_TYPE = {0:"普通",1:"询盘",2:"报价"}
 
 EMAIL_READ = {0:"未读",1:"已读"}
+
+CUSTOMER_INFO_SETTINGS = {0:'customer_grade',1:'communication_situation',2:'source_of_customer',3:'religion',4:'payment_term',5:'nation'}
+
+
+
+
+
+
+
+
+
+
+
+
