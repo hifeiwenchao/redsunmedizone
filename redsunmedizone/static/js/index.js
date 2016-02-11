@@ -5,12 +5,11 @@ $(document).ready(function(){
 
 
 var customer_tree = [{"id": 1,"text": "客户信息列表",}]
-var mail_tree = [{"id": 1,"text": "收件箱",},{"id": 2,"text": "发件箱",},{"id": 2,"text": "草稿箱",},{"id": 2,"text": "垃圾箱",}]
+var mail_tree = [{"id": 1,"text": "收件箱",},{"id": 2,"text": "发件箱",},{"id": 3,"text": "草稿箱",},{"id": 4,"text": "垃圾箱",},{"id": 5,"text": "询盘",},{"id": 6,"text": "报价",}]
 var order_tree = [{"id": 1,"text": "订单信息",}]
 var finance_tree = [{"id": 1,"text": "财务信息",}]
 var files_tree = [{"id": 1,"text": "文件目录",}]
-var settings_tree = [{"id": 1,"text": "基础信息配置",},{"id": 2,"text": "邮件配置",}]
-var task_tree = [{"id": 1,"text": "定时任务信息",}]
+var task_tree = [{"id": 1,"text": "任务信息",}]
 var tree_id_list = ['customer_tree','mail_tree','order_tree','finance_tree','files_tree','settings_tree','task_tree']
 
 
@@ -88,20 +87,6 @@ $(function($) {
         },
 	});
 	
-	
-	$('#settings_tree').datalist({
-		fit:true,
-		border:false,
-		data:settings_tree,
-		columns:[[
-          {field:'text',align:'center',},
-          {field:'id',align:'center',hidden:true,}
-	      ]],
-        onClickRow:function(inde,row){
-        	unSelect('settings_tree')
-        	console.log(row)
-        },
-	});
 	
 	$('#task_tree').datalist({
 		fit:true,

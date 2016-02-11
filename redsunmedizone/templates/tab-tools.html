@@ -1,14 +1,23 @@
 <div id="tab-tools">
-	<div class="easyui-panel" style="width:380px;" data-options="border:false">
-		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-man',plain:true" onclick="$('#customer_window').dialog('open')">添加客户</a>
+	<div class="easyui-panel" style="width:400px;" data-options="border:false">
+		<a href="#" class="easyui-menubutton" data-options="menu:'#mm0',iconCls:'icon-man'" >客户功能</a>
 		<a href="#" class="easyui-menubutton" data-options="menu:'#mm1',iconCls:'icon-mail'">邮件功能</a>
 		<a href="#" class="easyui-menubutton" data-options="menu:'#mm2',iconCls:'icon-task'">定时任务</a>
 		<a href="#" class="easyui-menubutton" data-options="menu:'#mm3',iconCls:'icon-help'">注意事项</a>
 	</div>
-	
+	<div id="mm0" style="width:150px;">
+		<div class="menu-sep"></div>
+		<div data-options="iconCls:'icon-add'" onclick="$('#customer_window').dialog('open')">添加新客户</div>
+		<div class="menu-sep"></div>
+		<div data-options="iconCls:'icon-settings'" onclick="$('#customer_settings_window').dialog('open')">选项信息配置</div>
+	</div>
 	<div id="mm1" style="width:150px;">
+	    <div class="menu-sep"></div>
 		<div data-options="iconCls:'icon-redo'">发送邮件</div>
+		<div class="menu-sep"></div>
 		<div data-options="iconCls:'icon-undo'">回复邮件</div>
+		<div class="menu-sep"></div>
+		<div data-options="iconCls:'icon-account'">配置账户</div>
 		<!-- 
 		<div>
 			<span>Toolbar</span>
@@ -28,7 +37,7 @@
 	</div>
 	<div id="mm3" class="menu-content" style="background:#f0f0f0;padding:10px;text-align:left">
 		<div style="width:400px;height:300px">
-			注意事项:施工建设中
+			注意事项:邮件收取使用 imap  发送使用smtp 配置时需要全部填入,不然无法使用
 		</div>
 	</div>
 </div>

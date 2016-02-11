@@ -20,16 +20,15 @@ demo2 = '''
 '''
 
 
-def send_gmail(username=None, password=None, from_addr=None, to_addr=None, subject=None, content=None, files=[], is_html=False):
+def send_gmail(username=None, password=None, from_addr=None, to_addr=None, subject=None, content=None, files=[]):
     # 邮箱已为腾讯邮箱，username 与 from_addr 应相同
     # GMAIL_IMAP_HOST = 'imap.exmail.qq.com'
     GMAIL_SMTP_HOST = 'smtp.redsunmedizone.com'
     # GMAIL_SMTP_PORT = 465
 
     msg = MIMEMultipart()
-    txt = MIMEText(content,'plain','utf8')
-    if is_html:
-        txt = MIMEText(content,_subtype='html',_charset='utf8')
+    #txt = MIMEText(content,'plain','utf8')
+    txt = MIMEText(content,_subtype='html',_charset='utf8')
     msg.attach(txt)
 
     for item in files:
@@ -50,7 +49,8 @@ def send_gmail(username=None, password=None, from_addr=None, to_addr=None, subje
     msg['to'] = to_addr
     msg['from'] = from_addr
     msg['subject'] = subject
-    server.sendmail(msg['from'], msg['to'], msg.as_string())
+    msg['cc'] = 'yangyun0602@126.com'
+    server.sendmail(msg['from'],[ msg['to'], msg['cc']],msg.as_string())
     server.quit()
 
 

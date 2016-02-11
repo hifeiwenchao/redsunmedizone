@@ -1,0 +1,27 @@
+<div id="customer_settings_window" class="easyui-dialog" title="客户信息配置" 
+data-options="width:1200,height:580,closed:true,collapsible:true,resizable:true,iconCls: 'icon-save',
+buttons: [{text:'添加',iconCls:'icon-add',handler:function(){addSettings();}},
+{text:'关闭',iconCls:'icon-cancel',handler:function(){$('#customer_settings_window').dialog('close');}}],">
+
+	<div id="customer_settings_tabs" class="easyui-tabs" data-options="fit:true,border:false,plain:true,">
+	    <div title="来源" related="source_of_customer">
+	        
+	    </div>
+	    <div title="沟通情况" related="communication_situation">
+	        
+	    </div>
+	    <div title="宗教" related="religion">
+	        
+	    </div>
+	    <div title="付款方式" related="payment_term">
+	        
+	    </div>
+	    <div title="分级" related="customer_grade">
+	        
+	    </div>
+	    <div title="国家" related="nation">
+	        
+	    </div>
+	</div>
+	
+</div>

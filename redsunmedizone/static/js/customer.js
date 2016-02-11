@@ -125,7 +125,6 @@ $(function($){
 		    "text":"合作客户",
 		}],
 		onSelect:function(record){
-			console.log(record)
 			$('#customer_list').datagrid({
 				queryParams:{
 					customer_grade:record['value'],
@@ -311,5 +310,12 @@ function clearInfoCustomer(){
 		$(this).textbox('setText','')
     });
 }
+
+
+function addSettings(){
+	var obj = $('#customer_settings_tabs').tabs('getSelected')
+	console.log($(obj).attr('related'))
+}
+
 
 
