@@ -4,8 +4,13 @@
     <title>RedSunMediZoneCRM</title>
     {%include 'head.html' %}
     <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+    <script type="text/javascript" src="/static/niceEdit/nicEdit.js"></script>
     <script type="text/javascript" src="/static/js/index.js"></script>
     <script type="text/javascript" src="/static/js/customer.js"></script>
+    <script type="text/javascript" src="/static/js/email.js"></script>
+    <script type="text/javascript" src="/static/js/finance.js"></script>
+    <script type="text/javascript" src="/static/js/order.js"></script>
+    <script type="text/javascript" src="/static/js/file.js"></script>
     <script type="text/javascript">
     	$(function($){
 	    	$('#test').bind('click',function(){
@@ -35,9 +40,41 @@
 		<div data-options="region:'center',">
 			<div id="main_tab" class="easyui-tabs" data-options="fit:true,border:false,tools:'#tab-tools',plain:true">
 		        <div title="主页" style="padding:10px">
+		        	<div style="width:50%;height:50%;float:left;">
+		        		<div class="easyui-panel" title="展示1" style="background:#fafafa;width:98%;height:98%;" data-options="iconCls:'icon-blank',">
+       	
+						</div>
+		        	</div>
+       				<div style="width:50%;height:50%;float:left;">
+			        	<div class="easyui-panel" title="展示2" style="background:#fafafa;width:98%;height:98%;" data-options="iconCls:'icon-blank',">
+			        	
+						</div>
+					</div>
+					<div style="width:50%;height:50%;float:left;">
+	       				<div class="easyui-panel" title="展示3" style="background:#fafafa;width:98%;height:98%;" data-options="iconCls:'icon-blank',">
+	       	
+						</div>
+					</div>
+					<div style="width:50%;height:50%;float:left;">
+			        	<div class="easyui-panel" title="展示4" style="background:#fafafa;width:98%;height:98%;" data-options="iconCls:'icon-blank',">
+			        	
+						</div>
+		        	</div>
 		        </div>
 		        <div title="客户列表">
 		        	<div id="customer_list"></div>
+		        </div>
+		        <div title="邮件列表">
+		        	<div id="email_list"></div>
+		        </div>
+		        <div title="订单列表">
+		        	<div id="order_list"></div>
+		        </div>
+		        <div title="财务列表">
+		        	<div id="finance_list"></div>
+		        </div>
+		        <div title="静态文件">
+		        	<div id="static_file"></div>
 		        </div>
 		    </div>
 		</div>
@@ -49,4 +86,7 @@
 {%include 'customer_window.html' %}
 
 {%include 'customer_info_settings.html' %}
+
+{%include 'email_account_settings.html' %}
+
 </html>

@@ -75,10 +75,116 @@ class Customer(models.Model):
 
 
 
+class EmailAccount(models.Model):
+    id = models.IntegerField(blank=True,primary_key=True)
+    address = models.CharField(max_length=64,default='')
+    password = models.CharField(max_length=64,default='')
+    imap = models.CharField(max_length=64,default='')
+    smtp = models.CharField(max_length=64,default='')
+    signature = models.CharField(max_length=1024,default='')
+    status = models.IntegerField(default=0)
+    create_time = models.IntegerField(default=0)
+    class Meta:
+        managed = False
+        db_table = 'email_account'
 
 
+class Finance(models.Model):
+    id = models.IntegerField(blank=True,primary_key=True)
+    status = models.IntegerField(default=0)
+    remark = models.CharField(max_length=1024,default='')
+    order_id = models.IntegerField(default=0)
+    create_time = models.IntegerField(default=0)
+    class Meta:
+        managed = False
+        db_table = 'finance'
+    
+    
+class EmailTask(models.Model):
+    id = models.IntegerField(blank=True,primary_key=True)
+    status = models.IntegerField(default=0)
+    name = models.CharField(max_length=128,default='')
+    interval = models.IntegerField(default=5)
+    remark = models.CharField(max_length=1024,default='')
+    create_time = models.IntegerField(default=0)
+    class Meta:
+        managed = False
+        db_table = 'email_task'
+        
+        
+        
+class EmailTaskDetail(models.Model):
+    id = models.IntegerField(blank=True,primary_key=True)
+    email_task_id = models.IntegerField(default=0)
+    customer_id = models.IntegerField(default=0)
+    status = models.IntegerField(default=0)
+    send_from = models.CharField(max_length=128,default='')
+    send_to = models.CharField(max_length=128,default='')
+    subject = models.CharField(max_length=256,default='')
+    content = models.TextField(default='')
+    remark = models.CharField(max_length=1024,default='')
+    result = models.IntegerField(default=0)
+    info = models.CharField(max_length=256,default='')
+    update_time = models.IntegerField(default=0)
+    process_time = models.IntegerField(default=0)
+    class Meta:
+        managed = False
+        db_table = 'email_task_detail'
 
+class EmailLog(models.Model):
+    id = models.IntegerField(blank=True,primary_key=True)
+    type = models.IntegerField(default=0)
+    status = models.IntegerField(default=0)
+    task = models.IntegerField(default=0)
+    email_task_id = models.IntegerField(default=0)
+    email_task_detail_id = models.IntegerField(default=0)
+    email_id = models.IntegerField(default=0)
+    info = models.CharField(max_length=256,default='')
+    create_time =models.IntegerField(default=0)
+    class Meta:
+        managed = False
+        db_table = 'email_log'
 
+class EmailTemplate(models.Model):
+    id = models.IntegerField(blank=True,primary_key=True)
+    type = models.IntegerField(default=0)
+    content = models.TextField(default='')
+    create_time = models.IntegerField(default=0)
+    class Meta:
+        managed = False
+        db_table = 'email_template'
+
+class Attachment(models.Model):
+    id = models.IntegerField(blank=True,primary_key=True)
+    email_id = models.IntegerField(default=0)
+    email_task_detail_id = models.IntegerField(default=0)
+    email_template_id = models.IntegerField(default=0)
+    finance = models.IntegerField(default=0)
+    file_name =  models.CharField(max_length=128,default='')
+    path =  models.CharField(max_length=128,default='')
+    create_time = models.IntegerField(default=0)
+    class Meta:
+        managed = False
+        db_table = 'attachment'
+
+class Email(models.Model):
+    id = models.IntegerField(blank=True,primary_key=True)
+    status = models.IntegerField(default=0)
+    type = models.IntegerField(default=0)
+    read = models.IntegerField(default=0)
+    uid = models.IntegerField(default=0)
+    sent_from = models.CharField(max_length=1024,default='')
+    send_to = models.CharField(max_length=1024,default='')
+    send_cc = models.CharField(max_length=1024,default='')
+    subject = models.CharField(max_length=1024,default='')
+    server_id = models.CharField(max_length=256,default='')
+    date = models.CharField(max_length=128,default='')
+    content = models.TextField(default='')
+    create_time = models.IntegerField(default=0)
+    class Meta:
+        managed = False
+        db_table = 'email'
+    
 
 
 

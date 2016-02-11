@@ -33,7 +33,6 @@ def customer_list(request):
             search  = search.split(' ')
             for item in search:
                 sql+=' and concat(t1.company_name,t1.name,t1.nation,t1.email,t1.website,t2.religion,t3.nation,t4.source) like "%%'+item+'%%"'
-            print( sql)
             objs = Customer.objects.raw(sql +' order by t1.sort desc')
             objs = [item for item in objs]
             total = len(objs)
@@ -43,7 +42,6 @@ def customer_list(request):
             objs = Customer.objects.filter(customer_grade = int(customer_grade)).order_by('-sort')[start:end]
         else:
             total = Customer.objects.count()
-            #objs = Customer.objects.order_by('-sort')[start:end]
             objs = Customer.objects.raw('select id,sort,name,company_name,nation,email,website from customer order by sort desc,id desc')[start:end]
         data = []
         for item in objs:
@@ -144,18 +142,35 @@ def add_customer_settings_info(requset):
     
     
     if data_type == '0':
-        CustomerGrade.objects.create(grade = requset.POST.get('data'))
+        if CustomerGrade.objects.filter(grade__contains = requset.POST.get('data')).first() != None:
+            return HttpResponse('repeat')
+        else:
+            CustomerGrade.objects.create(grade = requset.POST.get('data'))
     if data_type == '1':
-        CommunicationSituation.objects.create(situation = requset.POST.get('data'))
+        if CommunicationSituation.objects.filter(situation__contains = requset.POST.get('data')).first() !=None:
+            return HttpResponse('repeat')
+        else:
+            CommunicationSituation.objects.create(situation = requset.POST.get('data'))
     if data_type == '2':
-        SourceOfCustomer.objects.create(source = requset.POST.get('data'))
+        if SourceOfCustomer.objects.filter(source__contains = requset.POST.get('data')).first() !=None:
+            return HttpResponse('repeat')
+        else:
+            SourceOfCustomer.objects.create(source = requset.POST.get('data'))
     if data_type == '3':
-        Religion.objects.create(religion = requset.POST.get('data'))
+        if Religion.objects.filter(religion__contains = requset.POST.get('data')).first() !=None:
+            return HttpResponse('repeat')
+        else:
+            Religion.objects.create(religion = requset.POST.get('data'))
     if data_type == '4':
-        PaymentTerm.objects.create(term = requset.POST.get('data'))
+        if PaymentTerm.objects.filter(term__contains = requset.POST.get('data')).first() !=None:
+            return HttpResponse('repeat')
+        else:
+            PaymentTerm.objects.create(term = requset.POST.get('data'))
     if data_type == '5':
-        Nation.objects.create(nation = requset.POST.get('data'))
-    
+        if Nation.objects.filter(nation__contains = requset.POST.get('data')).first() !=None:
+            return HttpResponse('repeat')
+        else:
+            Nation.objects.create(nation = requset.POST.get('data'))
     return HttpResponse('done')
 
 def add_customer(request):

@@ -326,7 +326,6 @@ function customerDetail(id){
 	
 }
 
-
 function saveUser(){
 	
 	$.messager.confirm('保存操作', '确定要保存用户吗?!(需要选中表格中任意一行!并且6个选项要全部选到才可以!)', function(r){
@@ -403,11 +402,19 @@ function addSettings(){
 			if($.trim(r) == ''){return}
 	    	$('#loading').show();
 	    	$.ajax({url:'/add_customer_settings_info/',type:'POST',data:{'data':r,'type':data_type},success:function(data){
-	            $.messager.show({title:'<span style="color:green">添加成功</span>',
-	                msg:'获取信息成功!(窗口自动关闭)',showType:'slide',
-	                style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
-	            });
-	            reloadSettingsInfo(param)
+	    		if(data == 'repeat'){
+	    			$.messager.show({title:'<span style="color:red">添加失败</span>',
+		                msg:'添加信息有重复!(窗口自动关闭)',showType:'slide',
+		                style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
+		            });
+	    		}else{
+	    			$.messager.show({title:'<span style="color:green">添加成功</span>',
+		                msg:'获取信息成功!(窗口自动关闭)',showType:'slide',
+		                style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
+		            });
+		            reloadSettingsInfo(param)
+	    		}
+	            
 	    		$('#loading').fadeOut();
 	    	},error:function(data){
 	    		$.messager.show({title:'<span style="color:red">添加失败</span>',
