@@ -42,7 +42,7 @@ $(function($) {
 	      ]],
         onClickRow:function(inde,row){
         	unSelect('mail_tree')
-        	console.log(row)
+        	$('#main_tab').tabs('select','邮件列表')
         },
 	});
 	
@@ -56,7 +56,7 @@ $(function($) {
 	      ]],
         onClickRow:function(inde,row){
         	unSelect('order_tree')
-        	console.log(row)
+        	$('#main_tab').tabs('select','订单列表')
         },
 	});
 	
@@ -70,7 +70,7 @@ $(function($) {
 	      ]],
         onClickRow:function(inde,row){
         	unSelect('finance_tree')
-        	console.log(row)
+        	$('#main_tab').tabs('select','财务列表')
         },
 	});
 	
@@ -84,7 +84,7 @@ $(function($) {
 	      ]],
         onClickRow:function(inde,row){
         	unSelect('files_tree')
-        	console.log(row)
+        	$('#main_tab').tabs('select','静态文件')
         },
 	});
 	
@@ -99,7 +99,7 @@ $(function($) {
 	      ]],
         onClickRow:function(inde,row){
         	unSelect('task_tree')
-        	console.log(row)
+        	$('#main_tab').tabs('select','任务列表')
         },
 	});
 	

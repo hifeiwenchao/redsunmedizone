@@ -4,17 +4,18 @@
     <title>RedSunMediZoneCRM</title>
     {%include 'head.html' %}
     <link rel="stylesheet" type="text/css" href="/static/css/index.css">
-    <script type="text/javascript" src="/static/niceEdit/nicEdit.js"></script>
     <script type="text/javascript" src="/static/js/index.js"></script>
     <script type="text/javascript" src="/static/js/customer.js"></script>
     <script type="text/javascript" src="/static/js/email.js"></script>
     <script type="text/javascript" src="/static/js/finance.js"></script>
     <script type="text/javascript" src="/static/js/order.js"></script>
     <script type="text/javascript" src="/static/js/file.js"></script>
+    <script type="text/javascript" src="/static/js/task.js"></script>
     <script type="text/javascript">
     	$(function($){
 	    	$('#test').bind('click',function(){
-	    		
+	    		var signature = mail_signature.window.getText()
+	    		console.log(signature)
 	    	});
     	});
     </script>
@@ -67,6 +68,9 @@
 		        <div title="邮件列表">
 		        	<div id="email_list"></div>
 		        </div>
+		        <div title="任务列表">
+		        	<div id="task_list"></div>
+		        </div>
 		        <div title="订单列表">
 		        	<div id="order_list"></div>
 		        </div>
@@ -80,13 +84,12 @@
 		</div>
 </body>
 {%include 'tab-tools.html' %}
-
 {%include 'customer_list_tools.html' %}
-
 {%include 'customer_window.html' %}
-
 {%include 'customer_info_settings.html' %}
-
 {%include 'email_account_settings.html' %}
+{%include 'send_email.html' %}
+{%include 'email_task.html' %}
+
 
 </html>

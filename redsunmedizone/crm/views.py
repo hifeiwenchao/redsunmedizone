@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http.response import HttpResponse, HttpResponseRedirect
 from crm.models import *
 import json
+import time
 
 
 
@@ -197,11 +198,40 @@ def customer_detail(request):
             data.__setitem__(item.name,eval('obj.'+item.name))
         return HttpResponse(json.dumps(data,ensure_ascii=False))   
 
+def email_settings_editor(request):
+    return render(request,'email_settings_editor.html')
 
+def email_send_editor(request):
+    return render(request,'email_send_editor.html')
 
+def mail_account_list(request):
+    objs = EmailAccount.objects.filter().all()
+    data = []
+    for item in objs:
+        temp = {}
+        temp.__setitem__('id', item.id)
+        temp.__setitem__('address', item.address)
+        data.append(temp)
+    return HttpResponse(json.dumps(data,ensure_ascii=False))  
 
+def mail_account_detail(request):
+    obj = EmailAccount.objects.filter(id = int(request.POST.get('id'))).first()
+    data = {}
+    for item in obj._meta.fields:
+        data.__setitem__(item.name,eval('obj.'+item.name))
+    return HttpResponse(json.dumps(data,ensure_ascii=False))   
 
-
-
-
-
+def mail_account_add(request):
+    info = request.POST.dict()
+    if(EmailAccount.objects.filter(address__contains = info['address']).first() != None):
+        return HttpResponse('repeat')
+    info.__setitem__('create_time',int(time.time()))
+    EmailAccount.objects.create(**info)
+    return HttpResponse('done')
+        
+def mail_account_save(request):
+    new_data = request.POST.dict()
+    del new_data['id']
+    EmailAccount.objects.filter(id = int(request.POST.get('id'))).update(**new_data)
+    return HttpResponse('done')
+    

@@ -1,4 +1,6 @@
 $(function($){
+	//<a href="mailto:rsmedizone@yahoo.com">rsmedizone@yahoo.com</a>
+	
 	$('#customer_list').datagrid({
 		fit:true,
 		border:false,
@@ -35,13 +37,23 @@ $(function($){
                                            }
                                  },
                         },
-			{field:'email',title:'<span style="font-size:16px;font-weight: bold;">邮箱<span>',width:fixWidth(0.15),align:'center',halign:'center'},
+			{field:'email',title:'<span style="font-size:16px;font-weight: bold;">邮箱<span>',width:fixWidth(0.15),align:'center',halign:'center',
+                formatter:function(value,row,index){
+                	var email = $.trim(row.email)
+                	email = email.split('\n')
+                	var content = ''
+                	for(i in email){
+                		content += '<div><a style="text-decoration:none;" href="mailto:'+email[i]+'">'+email[i]+'</a></div>'
+                	}
+                	return content
+                }
+			},
 			{field:'website',title:'<span style="font-size:16px;font-weight: bold;">网站<span>',width:fixWidth(0.11),align:'center',halign:'center',
 				formatter:function(value,rowData,rowIndex){
 					if($.trim(rowData.website) == ''){
 						return rowData.website
 					}else{
-						return '<a href="http://'+rowData.website+'" target="_blank">'+rowData.website+'</a>'
+						return '<a style="text-decoration:none;" href="http://'+rowData.website+'" target="_blank">'+rowData.website+'</a>'
 					}
 				},
 			},
@@ -238,50 +250,50 @@ function addUser(){
 	$.messager.confirm('添加操作', '确定要添加用户吗?!(6个选项要全部选到才可以!)', function(r){
 		if (r){
 	
-	var data = {}
-	var source_of_customer = $('span[data=source_of_customer]').combobox('getValue')
-	var customer_grade = $('span[data=customer_grade]').combobox('getValue')
-	var communication_situation = $('span[data=communication_situation]').combobox('getValue')
-	var religion = $('span[data=religion]').combobox('getValue')
-	var payment_term = $('span[data=payment_term]').combobox('getValue')
-	var nation = $('span[data=nation]').combobox('getValue')
-	if(source_of_customer == ''){return}
-	if(customer_grade == ''){return}
-	if(communication_situation == ''){return}
-	if(religion == ''){return}
-	if(payment_term == ''){return}
-	if(nation == ''){return}
-	$('span[render=value]').each(function(){
-		var key = $(this).attr('data')
-		var value = $(this).textbox('getText')
-		data[key] = value
-	})
-	
-	
-	data.source_of_customer = source_of_customer
-	data.customer_grade = customer_grade
-	data.communication_situation = communication_situation
-	data.religion = religion
-	data.payment_term = payment_term
-	data.nation = nation
-	data.sort = 100
-	
-	$('#loading').show();
-	$.ajax({url:'/add_customer/',type:'POST',data:data,success:function(data){
-        $.messager.show({title:'<span style="color:green">保存成功</span>',
-            msg:'信息保存成功!(窗口自动关闭)',showType:'slide',
-            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
-        });
-        $('#customer_list').datagrid('reload')
-		$('#loading').fadeOut();
-	},error:function(data){
-		$.messager.show({title:'<span style="color:red">保存失败</span>',
-            msg:'信息保存失败!(呼叫开发者)',showType:'slide',
-            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
-        });
-		$('#loading').fadeOut();
-		}
-	});
+			var data = {}
+			var source_of_customer = $('span[data=source_of_customer]').combobox('getValue')
+			var customer_grade = $('span[data=customer_grade]').combobox('getValue')
+			var communication_situation = $('span[data=communication_situation]').combobox('getValue')
+			var religion = $('span[data=religion]').combobox('getValue')
+			var payment_term = $('span[data=payment_term]').combobox('getValue')
+			var nation = $('span[data=nation]').combobox('getValue')
+			if(source_of_customer == ''){return}
+			if(customer_grade == ''){return}
+			if(communication_situation == ''){return}
+			if(religion == ''){return}
+			if(payment_term == ''){return}
+			if(nation == ''){return}
+			$('span[render=value]').each(function(){
+				var key = $(this).attr('data')
+				var value = $(this).textbox('getText')
+				data[key] = value
+			})
+			
+			
+			data.source_of_customer = source_of_customer
+			data.customer_grade = customer_grade
+			data.communication_situation = communication_situation
+			data.religion = religion
+			data.payment_term = payment_term
+			data.nation = nation
+			data.sort = 100
+			
+			$('#loading').show();
+			$.ajax({url:'/add_customer/',type:'POST',data:data,success:function(data){
+		        $.messager.show({title:'<span style="color:green">保存成功</span>',
+		            msg:'信息保存成功!(窗口自动关闭)',showType:'slide',
+		            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
+		        });
+		        $('#customer_list').datagrid('reload')
+				$('#loading').fadeOut();
+			},error:function(data){
+				$.messager.show({title:'<span style="color:red">保存失败</span>',
+		            msg:'信息保存失败!(呼叫开发者)',showType:'slide',
+		            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
+		        });
+				$('#loading').fadeOut();
+				}
+			});
 	
 	
 		}

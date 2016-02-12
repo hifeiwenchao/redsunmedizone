@@ -34,4 +34,11 @@ urlpatterns = [
     url(r'add_customer/$', views.add_customer),
     url(r'save_customer/$', views.save_customer),
     url(r'customer_detail/$', views.customer_detail),
+    url(r'mail_account_list/$', views.mail_account_list),
+    url(r'mail_account_detail/$', views.mail_account_detail),
+    url(r'mail_account_add/$', views.mail_account_add),
+    url(r'mail_account_save/$', views.mail_account_save),
+    url(r'email_settings_editor/$', views.email_settings_editor),
 ]
+
+

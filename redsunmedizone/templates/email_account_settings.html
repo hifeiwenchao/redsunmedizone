@@ -1,9 +1,36 @@
 <div id="email_account_settings" class="easyui-dialog" title="配置邮件账户信息" 
 data-options="width:1200,height:630,closed:true,collapsible:true,resizable:true,iconCls: 'icon-save',
-buttons: [{text:'保存',iconCls:'icon-save',handler:function(){alert('1');}},
+buttons: [{text:'添加',iconCls:'icon-add',handler:function(){addMailAccount();}},{text:'保存',iconCls:'icon-save',handler:function(){saveMailAccount();}},
 {text:'关闭',iconCls:'icon-cancel',handler:function(){$('#email_account_settings').dialog('close');}}],">
 
-	<div style="">
-		<textarea style="width:1150px;height:300px;"  cols="50" id="area2">Some Initial Content was in this textarea</textarea>
-	</div>
+	<table style="width:100%;height:500px">
+		<tr>
+			<td width="23%">
+				<div class="easyui-panel" title="配置邮件账户一些基本信息"  style="padding:10px 10px;height:400px" data-options="fit:true,">
+					<div style="color:red;margin: 3px 0 3px 0">Tips:以下4项基本信息不能为空,否则无法添加,或保存</div>
+					<div style="margin: 3px 0 3px 0">Email:</div>
+					<input class="easyui-textbox" data-options="prompt:'此处输入邮箱地址',iconCls:'icon-mail'," style="width:100%;height:32px" data="mail_settings_email">
+					<div style="margin: 3px 0 3px 0">Password:</div>
+					<input class="easyui-textbox" data-options="prompt:'此处输入邮箱密码',iconCls:'icon-lock'," style="width:100%;height:32px" data="mail_settings_password">
+					<div style="margin: 3px 0 3px 0">IMAP:</div>
+					<input class="easyui-textbox" data-options="prompt:'邮箱IMAP的地址'" style="width:100%;height:32px" data="mail_settings_imap">
+					<div style="margin: 3px 0 3px 0">SMTP:</div>
+					<input class="easyui-textbox" data-options="prompt:'邮箱的SMTP地址'" style="width:100%;height:32px" data="mail_settings_smtp">
+					<div style="margin: 15px 0 3px 0;text-align: right;">
+						<span style="float: left">是否抓取邮件:</span><input class="easyui-switchbutton" id="mail_settings_status" data-options="onText:'Yes',offText:'No'">
+					</div>
+					<div style="text-align: center;margin-top:20px;">当前加载邮件地址为<span id="mail_settings_load_info" style="color:red;" data="">空</span>(此处仅对应保存功能,不影响添加,如果为空因为没有加载是无法保存的)</div>
+				</div>
+			</td>
+			<td width="50%">
+				<iframe name="mail_signature" src="/email_settings_editor/" width="560px" height="500px" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="author" allowtransparency="yes"></iframe>
+			</td>
+			<td width="26%">
+				<div class="easyui-panel" title="邮件账户列表"  style="padding:10px 10px" data-options="fit:true,">
+					<div id="mail_account_list" style="height: 100%;width:100%"></div>
+				</div>
+			</td>	
+		</tr>
+	</table>
+	
 </div>
