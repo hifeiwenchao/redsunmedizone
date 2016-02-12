@@ -14,6 +14,16 @@ $(function($){
 	});
 	
 	
+	
+	$('#send_email_from').combobox({
+		url:'/mail_account_list/',
+	    valueField:'id',
+	    textField:'address',
+	    editable:false,
+	    width:270,
+	});
+	
+	
 });
 
 
@@ -129,6 +139,11 @@ function saveMailAccount(){
 		$('#loading').fadeOut();
 		}
 	});
+}
+
+function openFromCustomerList(address){
+	$('#email_send_to').textbox('setText',address)
+	$('#send_email').dialog('open')
 }
 
 

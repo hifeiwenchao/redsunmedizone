@@ -15,17 +15,19 @@ $(function($){
         url:'/customer_list/',
         method:'post',
         rownumbers:false,
+        singleSelect:false,
         toolbar:'#customer_list_tools',
 		columns:[[
+			{field:'ck',checkbox:true,},
 			{field:'id',title:'<div style="font-size:16px;font-weight: bold;">ID<div>',width:40,align:'center',halign:'center',
 				formatter:function(value,rowData,rowIndex){
-					return '<a href="#" onclick="customerDetail('+rowData.id+')">'+rowData.id+'</a>'
+					return '<a href="#" style="text-decoration:none;color:blue;" onclick="customerDetail('+rowData.id+')">'+rowData.id+'</a>'
 				},
 			},
 			{field:'company_name',title:'<span style="font-size:16px;font-weight: bold;">公司名<span>',width:fixWidth(0.13),align:'left',halign:'center',},
 			{field:'name',title:'<span style="font-size:16px;font-weight: bold;">人名<span>',width:fixWidth(0.1),align:'center',halign:'center',
 				formatter:function(value,rowData,rowIndex){
-					return '<a href="#" onclick="customerDetail('+rowData.id+')">'+rowData.name+'</a>'
+					return '<a href="#" style="text-decoration:none;color:blue;" onclick="customerDetail('+rowData.id+')">'+rowData.name+'</a>'
 				},
 			},
 			{field:'nation',title:'<span style="font-size:16px;font-weight: bold;">国家<span>',width:fixWidth(0.05),align:'center',halign:'center',
@@ -43,7 +45,7 @@ $(function($){
                 	email = email.split('\n')
                 	var content = ''
                 	for(i in email){
-                		content += '<div><a style="text-decoration:none;" href="mailto:'+email[i]+'">'+email[i]+'</a></div>'
+                		content += '<div><a style="text-decoration:none;color:blue;" href="#" onclick="openFromCustomerList(\''+email[i]+'\')">'+email[i]+'</a></div>'
                 	}
                 	return content
                 }
@@ -53,7 +55,7 @@ $(function($){
 					if($.trim(rowData.website) == ''){
 						return rowData.website
 					}else{
-						return '<a style="text-decoration:none;" href="http://'+rowData.website+'" target="_blank">'+rowData.website+'</a>'
+						return '<a style="text-decoration:none;color:blue;" href="http://'+rowData.website+'" target="_blank">'+rowData.website+'</a>'
 					}
 				},
 			},

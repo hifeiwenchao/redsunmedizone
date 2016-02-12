@@ -39,6 +39,8 @@ urlpatterns = [
     url(r'mail_account_add/$', views.mail_account_add),
     url(r'mail_account_save/$', views.mail_account_save),
     url(r'email_settings_editor/$', views.email_settings_editor),
+    url(r'email_send_editor/$', views.email_send_editor),
+    
 ]
 
 
