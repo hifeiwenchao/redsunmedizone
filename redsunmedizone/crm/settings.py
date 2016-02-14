@@ -64,10 +64,10 @@ MIDDLEWARE_CLASSES = (
     #'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'middlewares.AppclicationMiddleware',
+    'crm.middlewares.AppclicationMiddleware',
 )
 
-ROOT_URLCONF = 'urls'
+ROOT_URLCONF = 'crm.urls'
 
 TEMPLATES = [
     {
