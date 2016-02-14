@@ -6,12 +6,18 @@ Created on 2016年2月1日
 '''
 from imbox import Imbox
 import re
+import imaplib
+imaplib._MAXLINE = 40000
 
-imbox = Imbox('imap.redsunmedizone.com','matt@redsunmedizone.com', 'hlj52764892',ssl=True)
 
+
+
+#imbox = Imbox('imap.redsunmedizone.com','matt@redsunmedizone.com', 'hlj52764892',ssl=True)
+imbox = Imbox('imap.alibaba.com','matt@heershi.com.cn', 'as501180920',ssl=False)
 # Gets all messages 
-all_messages = imbox.messages()
-
+all_messages = imbox.messages(folder='INBOX')
+print(imbox.folders())
+#209 &XfJT0ZAB-
 # Unread messages 
 #unread_messages = imbox.messages(unread=True)
 
@@ -27,9 +33,12 @@ all_messages = imbox.messages()
 # Messages received after specific date
 #messages_from = imbox.messages(date__gt='30-July-2013')
 
-# Messages from a specific folder 
+# Messages from a specific folder
+id_list = []
 for uid, message in all_messages:
-    print(uid)
+    id_list.append(uid)
+    #print(message)
+    print(uid,message.sent_from,message.message_id)
     #print(message.sent_cc)
     #print(message.sent_from)
     #print(message.sent_to)
@@ -39,14 +48,15 @@ for uid, message in all_messages:
     #print(message.date)
     #print(message.parsed_date)
     #print(message.body['plain'][0].decode())
-    print(message.attachments)
-    '''
+    #print(message.attachments)
+print('共获取了%s封邮件' % len(id_list))
+'''
     print(message.body['html'][0].decode())
     body = message.body['html'][0].decode()
     img = re.findall(r"""<img.*?>""",body,re.I)
     for item in img:
         print(item)
-    
+ 
     
     
     #print(message)
