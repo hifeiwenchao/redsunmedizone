@@ -9,6 +9,8 @@ SECRET_KEY = '8dcbti3-9q^&e-#vu0**#y0jtf5ne)tqf)9a7plm98917%(lm0'
 
 DEBUG = True
 
+ROOT_URLCONF = 'urls'
+
 ALLOWED_HOSTS = '*'
 
 # Session超时设置
@@ -32,7 +34,6 @@ CACHES = {
 }
 
 #celery配置
-
 from celery.schedules import crontab
 
 CELERYBEAT_SCHEDULE = {
@@ -67,7 +68,6 @@ MIDDLEWARE_CLASSES = (
     'crm.middlewares.AppclicationMiddleware',
 )
 
-ROOT_URLCONF = 'crm.urls'
 
 TEMPLATES = [
     {
@@ -161,20 +161,17 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.8/howto/static-files/
-
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 
 STATICFILES_DIRS = (
     os.path.join(os.path.dirname(__file__), 'static').replace('\\', '/'),
-    # ("datagrid", "/soft/shinezone/static/datagrid/"),
 )
+
 
 STATIC_URL = '/static/'
 if DEBUG:
