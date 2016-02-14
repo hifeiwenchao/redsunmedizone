@@ -9,14 +9,11 @@ import re
 import imaplib
 imaplib._MAXLINE = 40000
 
-
-
-
-#imbox = Imbox('imap.redsunmedizone.com','matt@redsunmedizone.com', 'hlj52764892',ssl=True)
-imbox = Imbox('imap.alibaba.com','matt@heershi.com.cn', 'as501180920',ssl=False)
+imbox = Imbox('imap.redsunmedizone.com','matt@redsunmedizone.com', 'hlj52764892',ssl=True)
+#imbox = Imbox('imap.alibaba.com','matt@heershi.com.cn', 'as501180920',ssl=False)
 # Gets all messages 
 all_messages = imbox.messages(folder='INBOX')
-print(imbox.folders())
+
 #209 &XfJT0ZAB-
 # Unread messages 
 #unread_messages = imbox.messages(unread=True)

@@ -11,6 +11,7 @@
     <script type="text/javascript" src="/static/js/order.js"></script>
     <script type="text/javascript" src="/static/js/file.js"></script>
     <script type="text/javascript" src="/static/js/task.js"></script>
+    <script type="text/javascript" src="/static/js/chart.js"></script>
     <script type="text/javascript">
     	$(function($){
 	    	$('#test').bind('click',function(){
@@ -41,26 +42,7 @@
 		<div data-options="region:'center',">
 			<div id="main_tab" class="easyui-tabs" data-options="fit:true,border:false,tools:'#tab-tools',plain:true">
 		        <div title="主页" style="padding:10px">
-		        	<div style="width:50%;height:50%;float:left;">
-		        		<div class="easyui-panel" title="展示1" style="background:#fafafa;width:98%;height:98%;" data-options="iconCls:'icon-blank',">
-       	
-						</div>
-		        	</div>
-       				<div style="width:50%;height:50%;float:left;">
-			        	<div class="easyui-panel" title="展示2" style="background:#fafafa;width:98%;height:98%;" data-options="iconCls:'icon-blank',">
-			        	
-						</div>
-					</div>
-					<div style="width:50%;height:50%;float:left;">
-	       				<div class="easyui-panel" title="展示3" style="background:#fafafa;width:98%;height:98%;" data-options="iconCls:'icon-blank',">
-	       	
-						</div>
-					</div>
-					<div style="width:50%;height:50%;float:left;">
-			        	<div class="easyui-panel" title="展示4" style="background:#fafafa;width:98%;height:98%;" data-options="iconCls:'icon-blank',">
-			        	
-						</div>
-		        	</div>
+		        	{%include 'main_tab.html' %}
 		        </div>
 		        <div title="客户列表">
 		        	<div id="customer_list"></div>

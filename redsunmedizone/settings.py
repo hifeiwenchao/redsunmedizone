@@ -37,12 +37,15 @@ CACHES = {
 from celery.schedules import crontab
 
 CELERYBEAT_SCHEDULE = {
-    'test': {
-        'task':'mail.tasks.test',
+    'fetch': {
+        'task':'mail.tasks.fetch_email',
         'schedule': crontab(),
         'args': (),
     },
 }
+
+
+CELERY_ACCEPT_CONTENT=['pickle']
 
 BROKER_URL = 'redis://127.0.0.1:6379/0'
 CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379/1"
@@ -50,6 +53,8 @@ CELERYD_CONCURRENCY = 4
 CELERYD_MAX_TASKS_PER_CHILD = 5
 CELERYD_POOL_RESTARTS = True
 BROKER_CONNECTION_TIMEOUT = 10
+CELERY_TASK_RESULT_EXPIRES = 3600
+
 
 INSTALLED_APPS = (
     'django_jinja',
@@ -65,7 +70,7 @@ MIDDLEWARE_CLASSES = (
     #'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'crm.middlewares.AppclicationMiddleware',
+    'middlewares.AppclicationMiddleware',
 )
 
 

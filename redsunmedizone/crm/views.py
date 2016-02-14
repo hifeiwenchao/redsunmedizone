@@ -3,10 +3,13 @@ from django.http.response import HttpResponse, HttpResponseRedirect
 from crm.models import *
 import json
 import time
+from mail.tasks import fetch_email
 
 
 
 def index(request):
+    
+    fetch_email.apply_async(countdown=10,retry=False)
     #if request.GET.get('key') != 'yangyun':
     #    return HttpResponseRedirect('https://www.redsunmedizone.com')
     return render(request, 'index.html')
@@ -15,6 +18,8 @@ def index(request):
 
 def customer_list(request):
     if request.method == "POST":
+        
+        
         customer_grade = request.POST.get('customer_grade')
         search = request.POST.get('search')
         
