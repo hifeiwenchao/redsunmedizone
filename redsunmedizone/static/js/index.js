@@ -14,7 +14,9 @@ var task_tree = [{"id": 1,"text": "任务信息",}]
 var tree_id_list = ['customer_tree','mail_tree','order_tree','finance_tree','files_tree','settings_tree','task_tree']
 
 
+
 $(function($) {
+	
 	
 	$('#customer_tree').datalist({
 		fit:true,

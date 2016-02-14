@@ -43,8 +43,8 @@
 .panel-tool {
   position: absolute;
   top: 50%;
-  margin-top: -8px;
-  height: 16px;
+  margin-top: -13px;
+  height: 26px;
   overflow: hidden;
 }
 .panel-icon {
