@@ -240,7 +240,10 @@ function flushTime(){
    var h=dt.getHours();
    var m =dt.getMinutes();
    var s=dt.getSeconds();
-   $('#momoNowTime').text(y+'年'+month+'月'+d+'日'+h+"时"+m+"分"+s+"秒")
+   if(s < 10){
+	   s = '0'+s
+   }
+   $('#memoNowTime').text(y+'年'+month+'月'+d+'日'+h+"时"+m+"分"+s+"秒")
    timeInterval = setTimeout(flushTime,1000);       
 }
 

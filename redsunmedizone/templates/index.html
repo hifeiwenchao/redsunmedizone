@@ -27,7 +27,7 @@
 		}
 		.calendar-selected {
 		    color: #000000;
-		    border: 2px solid #CC0033;
+		    border: 1px solid #CC0033;
 		    padding: 0;
 		}
 		
@@ -42,7 +42,10 @@
 			<span style="float: left;margin:7px 0 0 7px;">
 				<img alt="169*50" src="/static/img/backstageLogo.png" width="110">
 			</span>
-			<span style="float: right;margin:15px 30px 0 0">Hi!&nbsp;&nbsp;&nbsp;{{request.session.get('username')}} ,<a style="text-decoration:none;color:blue;" id="logout" href="/logout/"  >Logout</a></span>
+			
+			
+			
+			<span style="float: right;margin:15px 30px 0 0"><span class="panel-title"style="padding:5px 0 5px 0">当前时间:</span>	<span id="memoNowTime" style="width:170px;"></span>&nbsp;&nbsp;&nbsp;Hi!&nbsp;&nbsp;&nbsp;{{request.session.get('username')}} ,<a style="text-decoration:none;color:blue;" id="logout" href="/logout/"  >Logout</a></span>
 		</div>
 		<div data-options="region:'south',split:true" style="height:50px;"></div>
 		<div data-options="region:'west',split:true,border:false,"  title="功能菜单" style="width:130px;">
