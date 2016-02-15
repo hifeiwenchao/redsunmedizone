@@ -187,7 +187,14 @@ class Email(models.Model):
     
 
 
-
+class Memo(models.Model):
+    id = models.IntegerField(blank=True,primary_key=True)
+    date = models.CharField(max_length=64,default='')
+    memo = models.CharField(max_length=1024,default='')
+    class Meta:
+        managed = False
+        db_table = 'memo'
+    
 
 
 

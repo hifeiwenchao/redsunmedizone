@@ -26,6 +26,24 @@ def logout(request):
     request.session.clear()
     return HttpResponseRedirect('/')
 
+def memo_handler(request):
+    if request.method == "GET":
+        obj = Memo.objects.filter(date = request.GET.get('date')).first()
+        
+        if obj == None:
+            return HttpResponse('')
+        else:
+            return HttpResponse(obj.memo)
+        
+    if request.method == "POST":
+        Memo.objects.create(**request.POST.dict())
+        return HttpResponse('done')
+    
+def memo_mark(request):
+    objs = Memo.objects.exclude(memo ='').all()
+    date_list = [item.date for item in objs]
+    return HttpResponse(json.dumps(date_list,ensure_ascii=False))
+    
 def customer_list(request):
     if request.method == "POST":
         

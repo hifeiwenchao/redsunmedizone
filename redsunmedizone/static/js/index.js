@@ -105,16 +105,102 @@ $(function($) {
         },
 	});
 	
+	
+	
+	$('div[data=memoCalendar]').calendar({
+		border:false,
+		onSelect:function(data){
+			getMemo(data);
+		}
+	});
+	
+	
 	//添加备忘录
 	$('a[data=addMemo]').click(function(){
 		var options = $('div[data=memoCalendar]').calendar('options')
-		console.log(options.current.Format("yyyy-MM-dd"))
+		var date = options.current.Format("yyyy-MM-dd")
+		var memo = $('span[data=memoInfo]').textbox('getText')
+		if($.trim(memo) == ''){return}
+		$.ajax({url:'/memo_handler/',type:'POST',data:{'date':date,'memo':memo},success:function(data){
+	        $.messager.show({title:'<span style="color:green">保存成功</span>',
+	            msg:'保存备忘信息成功!(窗口自动关闭)',showType:'slide',timeout:1200,
+	            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
+	        });
+	        getMemoMark()
+			$('#loading').fadeOut();
+		},error:function(data){
+			$.messager.show({title:'<span style="color:red">保存失败</span>',
+	            msg:'保存备忘信息失败!(呼叫开发者)',showType:'slide',timeout:1200,
+	            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
+	        });
+			$('#loading').fadeOut();
+			}
+		});
 	});
+	
+	//一开始就获取当前备忘录信息
+	loadMemo()
+	getMemoMark()
 });
 
-function getMemo(data){
-	console.log(date.Format("yyyy-MM-dd"))
+function getMemo(date){
+	date = date.Format("yyyy-MM-dd")
+	$('#loading').show();
+	$.ajax({url:'/memo_handler/',type:'GET',data:{'date':date},success:function(data){
+        $.messager.show({title:'<span style="color:green">保存成功</span>',
+            msg:'获取备忘信息成功!(窗口自动关闭)',showType:'slide',timeout:1200,
+            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
+        });
+        $('span[data=memoInfo]').textbox('setText',data)
+		$('#loading').fadeOut();
+	},error:function(data){
+		$.messager.show({title:'<span style="color:red">保存失败</span>',
+            msg:'获取备忘信息失败!(呼叫开发者)',showType:'slide',timeout:1200,
+            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
+        });
+		$('#loading').fadeOut();
+		}
+	});
 }
+
+function loadMemo(){
+	date = new Date();
+	date = date.Format("yyyy-MM-dd")
+	$.ajax({url:'/memo_handler/',type:'GET',data:{'date':date},success:function(data){
+        $('span[data=memoInfo]').textbox('setText',data)
+	},error:function(data){
+		$.messager.show({title:'<span style="color:red">保存失败</span>',
+            msg:'获取备忘信息失败!(呼叫开发者)',showType:'slide',timeout:1200,
+            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
+        });
+		}
+	});
+}
+
+function getMemoMark(){
+	$.ajax({url:'/memo_mark/',type:'GET',success:function(data){
+        var memo_mark_list = eval(data)
+        $('div[data=memoCalendar]').calendar({
+    		styler: function(date){
+    			if ($.inArray(date.Format("yyyy-MM-dd"), memo_mark_list) != -1){
+    				return 'background-color:#95B8E7';
+    				// the function can return predefined css class and inline style
+    				// return {class:'r1', style:{'color:#fff'}};	
+    			} else {
+    				return '';
+    			}
+    		},
+    	});
+        
+	},error:function(data){
+		$.messager.show({title:'<span style="color:red">保存失败</span>',
+            msg:'获取备忘信息失败!(呼叫开发者)',showType:'slide',timeout:1200,
+            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
+        });
+		}
+	});
+}
+
 
 
 
