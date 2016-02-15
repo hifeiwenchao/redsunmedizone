@@ -7,7 +7,7 @@ buttons: [{text:'添加',iconCls:'icon-add',handler:function(){addTesk();}},
 	<table style="width:100%;height:500px">
 		<tr>
 			<td width="30%">
-				<div class="easyui-panel" title="任务基本信息配置"  style="padding:10px 10px;height:400px" data-options="fit:true,">
+				<div class="easyui-panel" title="任务基本信息配置" headerCls="chartPanelHeight" style="padding:10px 10px;height:400px" data-options="fit:true,border:false,">
 					<div style="color:red;margin: 3px 0 3px 0">Tips:任务间隔只能是数字,任务名不能为空</div>
 					<div style="margin: 3px 0 3px 0;font-weight: bold;">任务名:</div>
 					<input class="easyui-textbox" style="width:100%;height:32px" data="email_task_name">
@@ -23,7 +23,7 @@ buttons: [{text:'添加',iconCls:'icon-add',handler:function(){addTesk();}},
 				<input class="easyui-textbox"  style="width:100%;height:500px" data="email_task_remark" data-options="multiline:true,">
 			</td>
 			<td width="20%">
-				<div class="easyui-panel" title="任务收取邮件列表"  style="padding:10px 10px" data-options="fit:true,">
+				<div class="easyui-panel" title="任务收取邮件列表" headerCls="chartPanelHeight" style="padding:10px 10px" data-options="fit:true,border:false,">
 					<div id="email_task_target" style="height: 100%;width:100%"></div>
 				</div>
 			</td>	

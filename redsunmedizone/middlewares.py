@@ -8,7 +8,10 @@ class AppclicationMiddleware(object):
         if request.path == '/':
             return 
         
-        if request.session.__contains__('username') == None:
+        if request.path == '/login/':
+            return 
+        
+        if request.session.__contains__('username') == False:
             return HttpResponseRedirect('/')
         
     def process_response(self, request, response):

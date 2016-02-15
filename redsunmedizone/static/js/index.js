@@ -4,9 +4,10 @@ $(document).ready(function(){
 	$('#loading').fadeOut('slow')
 })
 
-
+var timeInterval = null;
 var customer_tree = [{"id": 1,"text": "客户信息列表",}]
 var mail_tree = [{"id": 1,"text": "收件箱",},{"id": 2,"text": "发件箱",},{"id": 3,"text": "草稿箱",},{"id": 4,"text": "垃圾箱",},{"id": 5,"text": "询盘",},{"id": 6,"text": "报价",}]
+var product_tree = [{"id": 1,"text": "产品列表",}]
 var order_tree = [{"id": 1,"text": "订单信息",}]
 var finance_tree = [{"id": 1,"text": "财务信息",}]
 var files_tree = [{"id": 1,"text": "文件目录",}]
@@ -16,8 +17,7 @@ var tree_id_list = ['customer_tree','mail_tree','order_tree','finance_tree','fil
 
 
 $(function($) {
-	
-	
+	timeInterval = setTimeout(flushTime,1000);
 	$('#customer_tree').datalist({
 		fit:true,
 		border:false,
@@ -45,6 +45,20 @@ $(function($) {
         onClickRow:function(inde,row){
         	unSelect('mail_tree')
         	$('#main_tab').tabs('select','邮件列表')
+        },
+	});
+	
+	$('#product_tree').datalist({
+		fit:true,
+		border:false,
+		data:product_tree,
+		columns:[[
+          {field:'text',align:'center',},
+          {field:'id',align:'center',hidden:true,}
+	      ]],
+        onClickRow:function(inde,row){
+        	unSelect('order_tree')
+        	$('#main_tab').tabs('select','产品列表')
         },
 	});
 	
@@ -183,9 +197,7 @@ function getMemoMark(){
         $('div[data=memoCalendar]').calendar({
     		styler: function(date){
     			if ($.inArray(date.Format("yyyy-MM-dd"), memo_mark_list) != -1){
-    				return 'background-color:#95B8E7';
-    				// the function can return predefined css class and inline style
-    				// return {class:'r1', style:{'color:#fff'}};	
+    				return 'background-color:#95B8E7;';
     			} else {
     				return '';
     			}
@@ -216,6 +228,23 @@ function unSelect(select){
 function fixWidth(percent){
     return document.body.clientWidth * percent ; //这里你可以自己做调整  
 }
+
+
+
+function flushTime(){
+   clearTimeout(timeInterval);//清除定时器
+   dt = new Date();
+   var y = dt.getFullYear()
+   var month = dt.getMonth() + 1
+   var d = dt.getDate()
+   var h=dt.getHours();
+   var m =dt.getMinutes();
+   var s=dt.getSeconds();
+   $('#momoNowTime').text(y+'年'+month+'月'+d+'日'+h+"时"+m+"分"+s+"秒")
+   timeInterval = setTimeout(flushTime,1000);       
+}
+
+
 
 
 Date.prototype.Format = function (fmt) { //author: meizz 

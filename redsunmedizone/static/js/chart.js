@@ -34,5 +34,8 @@ $(function () {
             data: [-0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0]
         }]
     });
+    
+    
+    $('#email_situation').highcharts().showLoading();
 });
 			

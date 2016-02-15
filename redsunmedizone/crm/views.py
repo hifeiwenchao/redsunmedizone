@@ -8,7 +8,7 @@ from mail.tasks import fetch_email
 
 
 def index(request):
-    if request.session.get('username')== None:
+    if request.session.__contains__('username') == False:
         return render(request, 'login.html') 
     else:
         return render(request, 'index.html')

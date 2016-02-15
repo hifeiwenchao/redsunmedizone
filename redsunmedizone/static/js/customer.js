@@ -17,6 +17,12 @@ $(function($){
         rownumbers:false,
         singleSelect:false,
         toolbar:'#customer_list_tools',
+        selectOnCheck:false,
+        rowStyler: function(index,row){
+			return 'background-color:white;'; // return inline style
+			// the function can return predefined css class and inline style
+			//return {class:'nothover'};	
+    	},
 		columns:[[
 			{field:'ck',checkbox:true,},
 			{field:'id',title:'<div style="font-size:16px;font-weight: bold;">ID<div>',width:40,align:'center',halign:'center',
@@ -44,8 +50,12 @@ $(function($){
                 	var email = $.trim(row.email)
                 	email = email.split('\n')
                 	var content = ''
+                	var format_address = ''
+                	for(j in email){
+                		format_address += email[j] +';'
+                	}
                 	for(i in email){
-                		content += '<div><a style="text-decoration:none;color:blue;" href="#" onclick="openFromCustomerList(\''+email[i]+'\')">'+email[i]+'</a></div>'
+                		content += '<div><a style="text-decoration:none;color:blue;" href="#" onclick="openFromCustomerList(\''+format_address+'\')">'+email[i]+'</a></div>'
                 	}
                 	return content
                 }
