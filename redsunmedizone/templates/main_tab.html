@@ -1,10 +1,10 @@
 <div style="width:100%;height:50%;float:left;">
-	<div class="easyui-panel" title="当前邮件收发情况" headerCls="chartPanelHeight" style="background:#fafafa;width:99%;height:99%;" data-options="iconCls:'icon-blank',tools:'#chart_tool',">
+	<div class="easyui-panel" title="当前邮件收发情况" headerCls="chartPanelHeight" style="width:99%;height:99%;overflow: hidden;" data-options="iconCls:'icon-blank',tools:'#chart_tool',border:false,">
 		<div id="email_situation"  style="width:100%;;height:100%;"></div>
 	</div>
 </div>
 <div style="width:50%;height:50%;float:left;">
-	<div class="easyui-panel" title="备忘录" style="background:#fafafa;width:98%;height:98%;" data-options="iconCls:'icon-blank',">
+	<div class="easyui-panel" title="备忘录" headerCls="chartPanelHeight" style="width:98%;height:98%;" data-options="iconCls:'icon-blank',border:false,">
 		<table style="width: 100%;height: 100%">
 			<tr>
 				<td style="width:30%;vertical-align: top;">
@@ -18,16 +18,16 @@
 	</div>
 </div>
 <div style="width:50%;height:50%;float:left;">
-	<div class="easyui-panel" title="任务进展" style="background:#fafafa;width:98%;height:98%;" data-options="iconCls:'icon-blank',">	
+	<div class="easyui-panel" headerCls="chartPanelHeight" title="任务进展" style="width:98%;height:98%;" data-options="iconCls:'icon-blank',border:false,">	
 	
 	</div>
 </div>
 
 <div id="chart_tool" style="margin-bottom: 30px;">
 	<span style="margin: 0 10px 0 10px;" class="panel-title">开始时间:</span>
-	<input type="text" class="easyui-datebox" data-options="editable:false,">
+	<input type="text" class="easyui-datebox" data-options="editable:false," value="">
 	<span style="margin: 0 10px 0 10px;" class="panel-title">结束时间:</span>
-	<input type="text" class="easyui-datebox" data-options="editable:false,">
+	<input type="text" class="easyui-datebox" data-options="editable:false," value="">
 	<span style="margin: 0 10px 0 10px;"></span>
 	<span class="easyui-linkbutton c8" >查询</span>
 </div>

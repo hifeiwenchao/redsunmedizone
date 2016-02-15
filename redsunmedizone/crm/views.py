@@ -8,13 +8,23 @@ from mail.tasks import fetch_email
 
 
 def index(request):
-    
-    fetch_email.apply_async(countdown=10,retry=False)
-    #if request.GET.get('key') != 'yangyun':
-    #    return HttpResponseRedirect('https://www.redsunmedizone.com')
-    return render(request, 'index.html')
+    if request.session.get('username')== None:
+        return render(request, 'login.html') 
+    else:
+        return render(request, 'index.html')
 
+def login(request):
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+    print(username,password)
+    if(username =='adminhou' and password == 'a1s2d3f4'):
+        request.session.__setitem__('username','adminhou')
+        return HttpResponse('done')
+    return HttpResponse('error')
 
+def logout(request):
+    request.session.clear()
+    return HttpResponseRedirect('/')
 
 def customer_list(request):
     if request.method == "POST":

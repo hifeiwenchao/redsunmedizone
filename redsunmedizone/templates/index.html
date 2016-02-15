@@ -13,20 +13,17 @@
     <script type="text/javascript" src="/static/js/task.js"></script>
     <script type="text/javascript" src="/static/js/chart.js"></script>
     <script type="text/javascript">
+   	 	var date = date || new Date()
+    
 	    $(window).resize(function(){
 	    	var chart = $('#email_situation').highcharts();
 	    	chart.reflow();
 	    });
-    	$(function($){
-	    	$('#test').bind('click',function(){
-	    		var signature = mail_signature.window.getText()
-	    		console.log(signature)
-	    	});
-    	});
     </script>
     <style type="text/css">
     	.chartPanelHeight{
 			height:20px;
+			background:white;
 		}
     </style>
 </head>
@@ -35,20 +32,17 @@
 </div>
 
 <body class="easyui-layout">
-		<div data-options="region:'north'" style="height:50px">
+		<div data-options="region:'north',border:false," style="height:50px">
 			<span style="float: left;margin:7px 0 0 7px;">
 				<img alt="169*50" src="/static/img/backstageLogo.png" width="110">
 			</span>
-			<span style="float: right;margin:15px 30px 0 0">Hi!&nbsp;&nbsp;&nbsp;user_name ,<a id="logout" href="/logout/"  >Logout</a></span>
-			<span style="float: right;margin:7px 30px 0 0" >
-				<span id='test' class="easyui-linkbutton">测试</span>
-			</span>
+			<span style="float: right;margin:15px 30px 0 0">Hi!&nbsp;&nbsp;&nbsp;{{request.session.get('username')}} ,<a id="logout" href="/logout/"  >Logout</a></span>
 		</div>
 		<div data-options="region:'south',split:true" style="height:50px;"></div>
-		<div data-options="region:'west',split:true" title="功能菜单" style="width:130px;">
+		<div data-options="region:'west',split:true,border:false,"  title="功能菜单" style="width:130px;">
 			{%include 'tree_menu.html' %}
 		</div>
-		<div data-options="region:'center',">
+		<div data-options="region:'center',border:false,">
 			<div id="main_tab" class="easyui-tabs" data-options="fit:true,border:false,tools:'#tab-tools',plain:true">
 		        <div title="主页" style="padding:10px">
 		        	{%include 'main_tab.html' %}

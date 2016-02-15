@@ -10,7 +10,7 @@ import time
 from mail.models import *
 from imapclient.imapclient import IMAPClient
 
-
+#fetch_email.apply_async(countdown=10,retry=False)
 #celery -A mail worker -B -l info
 @shared_task
 def fetch_email():

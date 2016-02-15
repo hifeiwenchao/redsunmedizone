@@ -21,6 +21,8 @@ from crm import views
 urlpatterns = [
     url(r'^favicon.ico$', RedirectView.as_view(url='/static/favicon.ico')),
     url(r'^$', views.index),
+    url(r'^login/$', views.login),
+    url(r'^logout/$', views.logout),
     url(r'customer_list/$', views.customer_list),
     url(r'indexcustomer_detail/$', views.customer_detail),
     url(r'get_communication_situation/$', views.get_communication_situation),

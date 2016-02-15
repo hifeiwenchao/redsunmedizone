@@ -2,7 +2,7 @@ $(function($){
 	
 	$('#mail_account_list').datalist({
 		fit:true,
-		border:false,
+		border:true,
 		url:'/mail_account_list/',
 		columns:[[
           {field:'address',align:'left',},
