@@ -4,14 +4,19 @@
 	</div>
 </div>
 <div style="width:50%;height:50%;float:left;">
-	<div class="easyui-panel" title="备忘录" headerCls="chartPanelHeight" style="width:98%;height:98%;" data-options="iconCls:'icon-blank',border:false,">
-		<table style="width: 100%;height: 100%">
+	<div class="easyui-panel" title="备忘录" headerCls="chartPanelHeight" style="overflow-x: hidden; width:98%;height:98%;" data-options="iconCls:'icon-blank',border:false,">
+		<table style="width: 100%;height: 100%;">
 			<tr>
 				<td style="width:30%;vertical-align: top;">
-					<div style="width:180px;height:180px;" class="easyui-calendar" data-options='onSelect:function(data){alert(date.getFullYear()+":"+(date.getMonth()+1)+":"+date.getDate());},border:false,'></div>
+					<div style="width:180px;height:180px;" class="easyui-calendar" data="memoCalendar" data-options='onSelect:function(data){getMemo(data);},border:false,'></div>
+					
 				</td>
 				<td style="width:70%;vertical-align: top;">
-					<span>信息</span>
+					<span class="panel-title">备忘信息</span>
+					<span style="float: right"><a href="#" data="addMemo" class="easyui-tooltip" style="text-decoration:none;color:blue;" title="请先选中一个时间点后点击添加">添加备忘</a></span>
+					<div  style="width: 100%;height:95%;">
+						<span data="memoInfo" class="easyui-textbox" style="width: 99%;height:100%" multiline=true ></span>
+					</div>
 				</td>
 			</tr>
 		</table>
@@ -29,5 +34,5 @@
 	<span style="margin: 0 10px 0 10px;" class="panel-title">结束时间:</span>
 	<input type="text" class="easyui-datebox" data-options="editable:false," value="">
 	<span style="margin: 0 10px 0 10px;"></span>
-	<span class="easyui-linkbutton c8" >查询</span>
+	<span class="easyui-linkbutton c8 easyui-tooltip" title="开始时间小于结束时间时才可以查询">查询</span>
 </div>
