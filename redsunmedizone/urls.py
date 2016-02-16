@@ -44,6 +44,8 @@ urlpatterns = [
     url(r'mail_account_save/$', views.mail_account_save),
     url(r'email_settings_editor/$', views.email_settings_editor),
     url(r'email_send_editor/$', views.email_send_editor),
+    url(r'static_file_tree/$', views.static_file_tree),
+    url(r'add_dir/$', views.add_dir),
 ]
 
 

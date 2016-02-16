@@ -16,8 +16,9 @@ $(function($){
         method:'post',
         rownumbers:false,
         singleSelect:false,
-        toolbar:'#customer_list_tools',
         selectOnCheck:false,
+        checkOnSelect:false,
+        toolbar:'#customer_list_tools',
         rowStyler: function(index,row){
 			return 'background-color:white;'; // return inline style
 			// the function can return predefined css class and inline style

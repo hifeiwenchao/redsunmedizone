@@ -4,7 +4,8 @@ from crm.models import *
 import json
 import time
 from mail.tasks import fetch_email
-
+from django.conf import settings
+import os
 
 
 def index(request):
@@ -268,3 +269,50 @@ def mail_account_save(request):
     EmailAccount.objects.filter(id = int(request.POST.get('id'))).update(**new_data)
     return HttpResponse('done')
     
+def static_file_tree(request):
+        
+    if settings.DEBUG:
+        if request.GET.get('type') == None:
+            STATIC_ROOT = settings.STATIC_ROOT+'/static/public'
+        else:
+            STATIC_ROOT = settings.STATIC_ROOT+'/static'
+    else:
+        if request.GET.get('type') == None:
+            STATIC_ROOT = settings.STATIC_ROOT +'/public'
+        else:
+            STATIC_ROOT = settings.STATIC_ROOT
+            
+    dir_tree = path_to_dict(STATIC_ROOT)
+    
+    return HttpResponse(json.dumps([dir_tree],ensure_ascii=False))
+    
+def path_to_dict(path):
+    d = {'text': os.path.basename(path)}
+    if os.path.isdir(path):
+        d['type'] = "directory"
+        d['state'] = "closed"
+        d['iconCls'] = 'tree-folder'
+        if len([path_to_dict(os.path.join(path,x)) for x in os.listdir(path)]) == 0:
+            d['children'] = []
+        else:
+            d['children'] = [path_to_dict(os.path.join(path,x)) for x in sorted(os.listdir(path),key=lambda obj:len(obj.split('.')))]
+    else:
+        d['type'] = 'file'
+        d['iconCls'] = 'tree-file'
+    
+    return d
+    
+    
+def add_dir(request):
+    pass   
+
+def remove_dir(request):
+    pass
+
+def upload_file(request):
+    pass
+
+def remove_file(request):
+    pass
+
+

@@ -183,3 +183,9 @@ if DEBUG:
     STATIC_ROOT = os.getcwd()
 else:
     STATIC_ROOT = '/soft/static_crm'
+
+
+
+
+
+

@@ -13,9 +13,7 @@ $(function($){
         },
 	});
 	
-	
-	
-	$('#send_email_from').combobox({
+	$('#email_send_from').combobox({
 		url:'/mail_account_list/',
 	    valueField:'id',
 	    textField:'address',
