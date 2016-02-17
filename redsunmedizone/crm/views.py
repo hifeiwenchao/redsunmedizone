@@ -6,6 +6,7 @@ import time
 from mail.tasks import fetch_email
 from django.conf import settings
 import os
+import shutil
 
 
 def index(request):
@@ -304,15 +305,71 @@ def path_to_dict(path):
     
     
 def add_dir(request):
-    pass   
+    true_path = request.POST.get('true_path')
+    directory_name = request.POST.get('directory_name')
+    
+    if settings.DEBUG:
+        STATIC_ROOT = settings.STATIC_ROOT +'/static'
+    else:
+        STATIC_ROOT = settings.STATIC_ROOT
+        
+    path_list = os.listdir(path=STATIC_ROOT+true_path)
+    
+    if directory_name in path_list:
+        return HttpResponse('repeat')
+    else:
+        os.mkdir(STATIC_ROOT+true_path+'/'+directory_name)
+        return HttpResponse('done')
+
+  
 
 def remove_dir(request):
-    pass
+    try:
+        true_path = request.POST.get('true_path')
+        
+        if settings.DEBUG:
+            STATIC_ROOT = settings.STATIC_ROOT +'/static'
+        else:
+            STATIC_ROOT = settings.STATIC_ROOT
+        shutil.rmtree(STATIC_ROOT+true_path)
+        return HttpResponse('done')
+    except Exception as e:
+        print(e)
+        
+
+
 
 def upload_file(request):
-    pass
+    try:
+        path = request.POST.get('path')
+        print(path)
+        file_obj = request.FILES.getlist('files')
+        file_path = settings.STATIC_ROOT +'/static/'
+        for item in file_obj:
+            print(item.name)
+            with open(file_path + item.name,'wb') as up:
+                for chunk in item.chunks():
+                    up.write(chunk)
+            up.close()
+                
+        return HttpResponse('done')
+    except Exception as e:
+        print(e)
+
 
 def remove_file(request):
     pass
+
+
+
+
+
+
+
+
+
+
+
+
 
 
