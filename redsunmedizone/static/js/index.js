@@ -4,6 +4,20 @@ $(document).ready(function(){
 	$('#loading').fadeOut('slow')
 })
 
+$(document).keyup(function(e) { 
+	if (e.keyCode == 27) {
+		$('#customer_window').dialog('close');
+		$('#customer_settings_window').dialog('close');
+		$('#send_email').dialog('close');
+		$('#email_account_settings').dialog('close');
+		$('#email_task').dialog('close')
+		$('#email_template_settings').dialog('close')
+		
+	}
+});
+
+
+
 var timeInterval = null;
 var customer_tree = [{"id": 1,"text": "客户信息列表",}]
 var mail_tree = [{"id": 1,"text": "收件箱",},{"id": 2,"text": "发件箱",},{"id": 3,"text": "草稿箱",},{"id": 4,"text": "垃圾箱",},{"id": 5,"text": "询盘",},{"id": 6,"text": "报价",}]
@@ -17,6 +31,7 @@ var tree_id_list = ['customer_tree','mail_tree','order_tree','finance_tree','fil
 
 
 $(function($) {
+	
 	timeInterval = setTimeout(flushTime,1000);
 	$('#customer_tree').datalist({
 		fit:true,

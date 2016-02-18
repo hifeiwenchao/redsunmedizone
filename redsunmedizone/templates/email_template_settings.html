@@ -1,0 +1,18 @@
+<div id="email_template_settings" class="easyui-dialog" title="客户信息配置" 
+data-options="width:1200,height:630,closed:true,collapsible:true,resizable:true,iconCls: 'icon-save',
+buttons: [{text:'添加',iconCls:'icon-add',handler:function(){addTemplateSettings();}},
+{text:'关闭',iconCls:'icon-cancel',handler:function(){$('#email_template_settings').dialog('close');}}],">
+
+	<div id="email_template_settings_tabs" class="easyui-tabs" data-options="fit:true,border:false,plain:true,">
+	    <div title="标题配置"  param="source_of_customer" call="来源">
+	        <div data="email_subject_template"></div>
+	    </div>
+	    <div title="内容配置"  param="customer_grade" call="分级">
+	        <div data="email_body_template"></div>
+	    </div>
+	    <div title="附件配置"  param="customer_grade" call="分级">
+	        <div data="email_attachment_template"></div>
+	    </div>
+	</div>
+	
+</div>

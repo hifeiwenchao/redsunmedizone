@@ -1,3 +1,9 @@
+.icon-template{
+	background:url('icons/template.png') no-repeat center center;
+}
+.icon-send_email{
+	background:url('icons/send_email.png') no-repeat center center;
+}
 .icon-cancel2{
 	background:url('icons/cancel2.png') no-repeat center center;
 }
