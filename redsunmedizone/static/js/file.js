@@ -1,5 +1,5 @@
 var public_file_path = null
-
+var true_host = 'https://crm.redsunmedizone.com'
 $(function($){
 	
 	$('#static_file_tree').tree({
@@ -22,7 +22,7 @@ $(function($){
 					break;
 				}
 			}
-	    	$('#public_url_info').text('/static/'+path)
+	    	$('#public_url_info').text(true_host+'/static/'+path)
 		},
 		onContextMenu: function(e, node){
 			e.preventDefault();
@@ -57,7 +57,7 @@ $(function($){
 					break;
 				}
 			}
-	    	$('#static_url_info').text('/'+path)
+	    	$('#static_url_info').text(true_host+'/'+path)
 		},
 	});
 	
@@ -71,6 +71,11 @@ $(function($){
 		autoUpload: false,
 	    sequentialUploads: true,
 	    done:function(e,result){
+	    	$.messager.show({title:'<span style="color:green">上传成功</span>',
+	            msg:'上传文件成功!(窗口自动关闭)',showType:'slide',timeout:1200,
+	            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
+	        });
+	    	
 	    	ReloadStaticFileTree()
 	    	ReloadStaticFileTreeAll()
 	    },
@@ -90,8 +95,7 @@ $(function($){
 	
 });
 
-uploadButton = $('<button/>')
-.text('上传')
+uploadButton = $('<button/>').text('上传')
 .on('click', function () {
 	var $this = $(this),
 	data = $this.data();
