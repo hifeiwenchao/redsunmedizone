@@ -282,7 +282,7 @@ def static_file_tree(request):
             STATIC_ROOT = settings.STATIC_ROOT +'/public'
         else:
             STATIC_ROOT = settings.STATIC_ROOT
-            
+    
     dir_tree = path_to_dict(STATIC_ROOT)
     
     return HttpResponse(json.dumps([dir_tree],ensure_ascii=False))
@@ -335,26 +335,29 @@ def remove_dir(request):
         return HttpResponse('done')
     except Exception as e:
         print(e)
-        
-
 
 
 def upload_file(request):
-    try:
-        path = request.POST.get('path')
-        print(path)
-        file_obj = request.FILES.getlist('files')
-        file_path = settings.STATIC_ROOT +'/static/'
-        for item in file_obj:
-            print(item.name)
-            with open(file_path + item.name,'wb') as up:
-                for chunk in item.chunks():
-                    up.write(chunk)
-            up.close()
-                
+    
+    path = request.POST.get('path')
+    if '..' in path:
         return HttpResponse('done')
-    except Exception as e:
-        print(e)
+    
+    file_obj = request.FILES.getlist('files')
+    
+    if settings.DEBUG:
+        file_path = settings.STATIC_ROOT +'/static'+path +'/'
+    else:
+        file_path = settings.STATIC_ROOT + path +'/'
+    print(file_path)
+    for item in file_obj:
+        print(item.name)
+        with open(file_path + item.name,'wb') as up:
+            for chunk in item.chunks():
+                up.write(chunk)
+        up.close()
+            
+    return HttpResponse('done')
 
 
 def remove_file(request):

@@ -1,3 +1,5 @@
+var public_file_path = null
+
 $(function($){
 	
 	$('#static_file_tree').tree({
@@ -20,7 +22,7 @@ $(function($){
 					break;
 				}
 			}
-	    	$('#public_url_info').text('/'+path)
+	    	$('#public_url_info').text('/static/'+path)
 		},
 		onContextMenu: function(e, node){
 			e.preventDefault();
@@ -60,17 +62,55 @@ $(function($){
 	});
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	ReloadStaticFileTree()
 	ReloadStaticFileTreeAll()
+	
+	
+	$("#file_upload_input").fileupload({
+		url: '/upload_file/',
+		autoUpload: false,
+	    sequentialUploads: true,
+	    done:function(e,result){
+	    	ReloadStaticFileTree()
+	    	ReloadStaticFileTreeAll()
+	    },
+	}).bind('fileuploadprogress', function (e, data) {  
+        var progress = parseInt(data.loaded / data.total * 100, 10);
+        $('#upload_file_progressbar').progressbar('setValue',progress)
+    }).on('fileuploadadd', function (e, data) {
+        data.context = $('<div/>').appendTo('#upload_file_info');
+        $.each(data.files, function (index, file) {
+            var node = $('<p/>').append($('<span/>').text(file.name)).append($('<span/>').text('上传的路径为:'+public_file_path).css({'margin-left':'30px'}).attr('path',public_file_path))
+            if (!index) {
+                node.append('<br>').append(uploadButton.clone(true).data(data).tooltip({content:'点击上传文件'}));
+            }
+            node.appendTo(data.context);
+        });
+    });
+	
+});
+
+uploadButton = $('<button/>')
+.text('上传')
+.on('click', function () {
+	var $this = $(this),
+	data = $this.data();
+	var true_path = $this.parent('p').find('span[path]').attr('path')
+	$("#file_upload_input").fileupload({
+		formData:{'path':true_path},
+	});
+	$this.off('click').text('上传中').on('click', function () {
+		//$this.remove();
+		//data.abort();
+	});
+	data.submit().always(function () {
+		$this.text('完成');
+		$this.tooltip({content:'点击移除此任务'})
+		$this.off('click').on('click',function(){
+			$this.tooltip('destroy')
+			$this.parent('p').parent('div').remove()
+		});
+	});
 });
 
 function ReloadStaticFileTree(){
@@ -112,7 +152,6 @@ function CreateDirectory(){
 	}
 	
 	var true_path = '/'+path
-	
 	$.messager.prompt('信息', '将在文件夹<span style="color:red">'+path+'</span>下新建文件夹,请输入文件夹名称,<span style="color:red">不可重复</span>', function(r){
 		if(r){
 			var data={}
@@ -175,8 +214,11 @@ function DropDirectory(){
 			break;
 		}
 	}
-	
 	var true_path = '/'+path
+	
+	
+	
+	
 	$.messager.confirm('信息', '删除目录:<span style="color:red">'+path+'</span>,<span style="color:red">谨慎操作无法回退!!!</span>', function(r){
 		if(r){
 			var data={}
@@ -201,24 +243,42 @@ function DropDirectory(){
 	});
 }
 
+
+
+
 function UploadStaticFile(){
+	
+	node = $('#static_file_tree').tree('getSelected')
+	if(node.type != 'directory'){
+		node = $('#static_file_tree').tree('getParent',node.target)
+	}
+	var path = node.text
+	var children_node = node
+	while(true){
+		var parent_node = $('#static_file_tree').tree('getParent',children_node.target)
+		if(parent_node != null){
+			path = parent_node.text +'/' + path
+			children_node = parent_node
+		}else{
+			break;
+		}
+	}
+	
+	public_file_path = '/'+path
+	
+	console.log(public_file_path)
+	
+	
 	$("#file_upload_input").fileupload({
-		url: '/upload_file/',  
-	    formData:{'path':"p1"},//如果需要额外添加参数可以在这里添加
-	    sequentialUploads: true,
-	    done:function(e,result){
-	    	
-	    },
-	}).bind('fileuploadprogress', function (e, data) {  
-        var progress = parseInt(data.loaded / data.total * 100, 10);
-        $('#upload_file_progressbar').progressbar('setValue',progress)
-    })
-	
-	
-	
+		formData:{'path':public_file_path},
+	});
+	    
 	$("#file_upload_input").click()
 	
 }
+
+
+
 //删除目录需要将static_file_tree_target 改为他的父级目录
 function DropStaticFile(){
 	console.log('删除文件')
