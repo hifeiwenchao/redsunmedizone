@@ -89,7 +89,7 @@ def customer_list(request):
                 temp.__setitem__('company_name', item.company_name)
                 temp.__setitem__('name', item.name)
                 temp.__setitem__('nation', Nation.objects.filter(id = item.nation).first().nation)
-                temp.__setitem__('mail', item.email)
+                temp.__setitem__('email', item.email)
                 temp.__setitem__('website',item.website)
                 temp.__setitem__('sort',item.sort)
                 data.append(temp)

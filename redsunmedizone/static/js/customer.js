@@ -29,6 +29,7 @@ $(function($){
 			{field:'id',title:'<div style="font-size:16px;font-weight: bold;">ID<div>',width:40,align:'center',halign:'center',
 				formatter:function(value,rowData,rowIndex){
 					return '<a href="#" style="text-decoration:none;color:blue;" onclick="customerDetail('+rowData.id+')">'+rowData.id+'</a>'
+					//return $('<a/>').attr('href','#').css({'text-decoration':'none','color':'blue'})
 				},
 			},
 			{field:'company_name',title:'<span style="font-size:16px;font-weight: bold;">公司名<span>',width:fixWidth(0.13),align:'left',halign:'center',},
