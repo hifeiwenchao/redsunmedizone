@@ -6,13 +6,20 @@ buttons: [{text:'关闭',iconCls:'icon-cancel',handler:function(){$('#email_temp
 	    <div title="标题配置"  param="email_subject_template" call="标题配置">
 	    	<table style="height:100%;width:100%">
 	    		<tr height="5%">
-	    			<td style="text-align: right;">
-	    				<span data="add_email_subject_template" target="subject">添加</span><span class="panel-title" style="margin:0 10px 0 30px;">过滤:</span><span data="template_type" target="subject"></span>
+	    			<td style="text-align: right;" colspan="2">
+	    				<span class="panel-title" style="margin:0 10px 0 30px;">过滤:</span>
+	    				<span data="template_type" target="subject"></span>
+	    				<span style="margin:0 10px 0 10px;"></span>
+	    				<span data="add_email_subject_template" class=" easyui-tooltip" title="添加时根据选择种来添加,不能为全部种类<br>并且内容不能为空" >添加</span>
+	    				<span style="margin:0 10px 0 0px;"></span>
 	    			</td>
 	    		</tr>
 	    		<tr height="95%">
-	    			<td >
+	    			<td width="60%">
 	    				 <div data="email_subject_template"></div>
+	    			</td>
+	    			<td width="40%">
+	    				<div style="height:90%;width:100%" class='easyui-textbox' data="email_subject_template_content" data-options="multiline:true,"></div>
 	    			</td>
 	    		</tr>
 	    	</table>
@@ -20,22 +27,38 @@ buttons: [{text:'关闭',iconCls:'icon-cancel',handler:function(){$('#email_temp
 	    <div title="内容配置"  param="email_body_template" call="内容配置">
 	        <table style="height:100%;width:100%">
 	    		<tr height="5%">
-	    			<td style="text-align: right;">
-	    				<span class="panel-title" style="margin:0 10px 0 30px;">过滤:</span><span data="template_type" target="body"></span>
+	    			<td style="text-align: right;" colspan="3">
+	    				<span class="panel-title" style="margin:0 10px 0 10px;">过滤:</span>
+	    				<span data="template_type" target="body"></span>
+	    				<span style="margin:0 10px 0 10px;"></span>
+	    				<span data="add_email_body_template" class=" easyui-tooltip" title="添加时根据选择种来添加,不能为全部种类<br>并且内容,标题不能为空" >添加</span>
+	    				<span style="margin:0 10px 0 0px;"></span>
 	    			</td>
 	    		</tr>
 	    		<tr height="95%">
-	    			<td>
+	    			<td width="30%">
 	       				<div data="email_body_template"></div>
 	    			</td>
+	    			<td width="30%">
+	       				<div data="email_body_template_product"></div>
+	    			</td>
+	    			<td width="40%">
+	    				<div style="margin-bottom:10px;width: 100%;text-align: left;">
+	    					<span class="panel-title" >内容标题:</span>
+	    					<span class="easyui-textbox" style="width:95%;" data="email_body_template_title"></span>
+	    				</div>
+						<iframe name="email_body_template_content" src="/email_body_template_editor/" width="460px" height="430px" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="author" allowtransparency="yes"></iframe>
+	    			</td>
 	    		</tr>
+	    		
 	    	</table>
 	    </div>
 	    <div title="附件配置"  param="email_attachment_template" call="附件配置">
 	        <table style="height:100%;width:100%">
 	    		<tr height="5%">
 	    			<td style="text-align: right;">
-	    				<span class="panel-title" style="margin:0 10px 0 30px;">过滤:</span><span data="template_type" target="attachment"></span>
+	    				<span class="panel-title" style="margin:0 10px 0 30px;">过滤:</span>
+	    				<span data="template_type" target="attachment"></span>
 	    			</td>
 	    		</tr>
 	    		<tr height="95%">

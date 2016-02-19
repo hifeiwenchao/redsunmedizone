@@ -168,6 +168,7 @@ class EmailBodyTemplate(models.Model):
     type = models.IntegerField(default=0)
     content = models.TextField(default='')
     create_time = models.IntegerField(default=0)
+    title =  models.CharField(max_length=64,default='')
     class Meta:
         managed = False
         db_table = 'email_body_template'    

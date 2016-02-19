@@ -50,7 +50,9 @@ urlpatterns = [
     #url(r'remove_dir/$', views.remove_dir),
     url(r'upload_file/$', views.upload_file),
     url(r'get_subject_template/$', views.get_subject_template),
+    url(r'add_subject_template/$', views.add_subject_template),
     url(r'get_body_template/$', views.get_body_template),
+    url(r'add_body_template/$', views.add_body_template),
     url(r'get_attachment_template/$', views.get_attachment_template),
 ]
 

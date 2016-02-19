@@ -35,7 +35,13 @@ def memo_handler(request):
             return HttpResponse(obj.memo)
         
     if request.method == "POST":
-        Memo.objects.create(**request.POST.dict())
+        date = request.POST.get('date')
+        obj = Memo.objects.filter(date = date).first()
+        if obj != None:
+            obj.memo = request.POST.get('memo')
+            obj.save()
+        else:
+            Memo.objects.create(**request.POST.dict())
         return HttpResponse('done')
     
 def memo_mark(request):
@@ -236,7 +242,7 @@ def email_send_editor(request):
     return render(request,'email_send_editor.html')
 
 def email_body_template_editor(request):
-    return render(request,'email_body_template_editor.html.html')
+    return render(request,'email_body_template_editor.html')
 
 
 def mail_account_list(request):
@@ -365,7 +371,11 @@ def remove_file(request):
 
         
 def get_subject_template(request):
-    objs = EmailSubjectTemplate.objects.order_by('id').all()
+    
+    if request.GET.get('type') != None and request.GET.get('type') != 'all':
+        objs = EmailSubjectTemplate.objects.filter(type = request.GET.get('type')).order_by('id').all()
+    else:
+        objs = EmailSubjectTemplate.objects.order_by('id').all()
     data = []
     for item in objs:
         temp = {}
@@ -374,15 +384,28 @@ def get_subject_template(request):
         data.append(temp)
     return HttpResponse(json.dumps(data,ensure_ascii=False)) 
 
+def add_subject_template(request):
+    EmailSubjectTemplate.objects.create(**{'type':request.POST.get('type'),'content':request.POST.get('content'),'create_time':int(time.time())})
+    return HttpResponse('done')
+    
+    
 def get_body_template(request):
-    objs = EmailBodyTemplate.objects.order_by('id').all()
+    if request.GET.get('type') != None and request.GET.get('type') != 'all':
+        objs = EmailBodyTemplate.objects.filter(type = request.GET.get('type')).order_by('id').all()
+    else:
+        objs = EmailBodyTemplate.objects.order_by('id').all()
     data = []
     for item in objs:
         temp = {}
         temp.__setitem__('id', item.id)
-        temp.__setitem__('text', item.content)
+        temp.__setitem__('title', item.title)
         data.append(temp)
     return HttpResponse(json.dumps(data,ensure_ascii=False)) 
+
+def add_body_template(request):
+    EmailBodyTemplate.objects.create(**{'type':request.POST.get('type'),'content':request.POST.get('content'),'create_time':int(time.time())})
+    return HttpResponse('done')
+
 
 def get_attachment_template(request):
     pass
