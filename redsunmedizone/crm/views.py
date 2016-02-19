@@ -3,7 +3,6 @@ from django.http.response import HttpResponse, HttpResponseRedirect
 from crm.models import *
 import json
 import time
-from mail.tasks import fetch_email
 from django.conf import settings
 import os
 import shutil
@@ -61,14 +60,14 @@ def customer_list(request):
         end = page*rows
         
         if search != None:
-            sql='select t1.id,t1.company_name,t1.name,t1.nation,t1.email,t1.website,t2.religion,t3.nation,t4.source \
+            sql='select t1.id,t1.company_name,t1.name,t1.nation,t1.mail,t1.website,t2.religion,t3.nation,t4.source \
             from customer t1 left join religion t2 on t1.religion = t2.id \
             left join nation t3 on t1.nation = t3.id \
             left join source_of_customer t4 on t1.source_of_customer = t4.id \
             where 1=1'
             search  = search.split(' ')
             for item in search:
-                sql+=' and concat(t1.company_name,t1.name,t1.nation,t1.email,t1.website,t2.religion,t3.nation,t4.source) like "%%'+item+'%%"'
+                sql+=' and concat(t1.company_name,t1.name,t1.nation,t1.mail,t1.website,t2.religion,t3.nation,t4.source) like "%%'+item+'%%"'
             objs = Customer.objects.raw(sql +' order by t1.sort desc')
             objs = [item for item in objs]
             total = len(objs)
@@ -78,7 +77,7 @@ def customer_list(request):
             objs = Customer.objects.filter(customer_grade = int(customer_grade)).order_by('-sort')[start:end]
         else:
             total = Customer.objects.count()
-            objs = Customer.objects.raw('select id,sort,name,company_name,nation,email,website from customer order by sort desc,id desc')[start:end]
+            objs = Customer.objects.raw('select id,sort,name,company_name,nation,mail,website from customer order by sort desc,id desc')[start:end]
         data = []
         for item in objs:
             temp = {}
@@ -86,7 +85,7 @@ def customer_list(request):
             temp.__setitem__('company_name', item.company_name)
             temp.__setitem__('name', item.name)
             temp.__setitem__('nation', Nation.objects.filter(id = item.nation).first().nation)
-            temp.__setitem__('email', item.email)
+            temp.__setitem__('mail', item.email)
             temp.__setitem__('website',item.website)
             temp.__setitem__('sort',item.sort)
             data.append(temp)

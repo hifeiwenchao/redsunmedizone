@@ -145,14 +145,33 @@ class EmailLog(models.Model):
         managed = False
         db_table = 'email_log'
 
-class EmailTemplate(models.Model):
+class EmailSubjectTemplate(models.Model):
+    id = models.IntegerField(blank=True,primary_key=True)
+    type = models.IntegerField(default=0)
+    content = models.CharField(max_length=512,default='')
+    create_time = models.IntegerField(default=0)
+    class Meta:
+        managed = False
+        db_table = 'email_subject_template'
+        
+class EmailBodyTemplate(models.Model):
     id = models.IntegerField(blank=True,primary_key=True)
     type = models.IntegerField(default=0)
     content = models.TextField(default='')
     create_time = models.IntegerField(default=0)
     class Meta:
         managed = False
-        db_table = 'email_template'
+        db_table = 'email_body_template'    
+        
+class EmailAttachmentTemplate(models.Model):
+    id = models.IntegerField(blank=True,primary_key=True)
+    file_name =  models.CharField(max_length=128,default='')
+    path =  models.CharField(max_length=128,default='')
+    create_time = models.IntegerField(default=0)
+    class Meta:
+        managed = False
+        db_table = 'email_attachment_template'        
+    
 
 class Attachment(models.Model):
     id = models.IntegerField(blank=True,primary_key=True)
@@ -183,7 +202,7 @@ class Email(models.Model):
     create_time = models.IntegerField(default=0)
     class Meta:
         managed = False
-        db_table = 'email'
+        db_table = 'mail'
     
 
 

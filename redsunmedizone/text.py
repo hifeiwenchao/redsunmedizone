@@ -106,11 +106,11 @@ for parent,dirnames,filenames in os.walk(rootdir):    #三个参数：分别返�
 'message_id': u '51F22BAA.1040606',
 'sent_from': [{
 'name': u 'Martin Rusev',
-'email': 'martin@amon.cx'
+'mail': 'martin@amon.cx'
 }],
 'sent_to': [{
 'name': u 'John Doe',
-'email': 'john@gmail.com'
+'mail': 'john@gmail.com'
 }],
 'subject': u 'Hello John, How are you today'
 }

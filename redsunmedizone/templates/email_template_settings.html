@@ -4,13 +4,13 @@ buttons: [{text:'添加',iconCls:'icon-add',handler:function(){addTemplateSettin
 {text:'关闭',iconCls:'icon-cancel',handler:function(){$('#email_template_settings').dialog('close');}}],">
 
 	<div id="email_template_settings_tabs" class="easyui-tabs" data-options="fit:true,border:false,plain:true,">
-	    <div title="标题配置"  param="source_of_customer" call="来源">
+	    <div title="标题配置"  param="email_subject_template" call="标题配置">
 	        <div data="email_subject_template"></div>
 	    </div>
-	    <div title="内容配置"  param="customer_grade" call="分级">
+	    <div title="内容配置"  param="email_body_template" call="内容配置">
 	        <div data="email_body_template"></div>
 	    </div>
-	    <div title="附件配置"  param="customer_grade" call="分级">
+	    <div title="附件配置"  param="email_attachment_template" call="附件配置">
 	        <div data="email_attachment_template"></div>
 	    </div>
 	</div>
