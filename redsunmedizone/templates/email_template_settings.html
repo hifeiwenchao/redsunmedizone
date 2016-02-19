@@ -1,18 +1,52 @@
-<div id="email_template_settings" class="easyui-dialog" title="客户信息配置" 
+<div id="email_template_settings" class="easyui-dialog" title="邮件模板信息" 
 data-options="width:1200,height:630,closed:true,collapsible:true,resizable:true,iconCls: 'icon-save',
-buttons: [{text:'添加',iconCls:'icon-add',handler:function(){addTemplateSettings();}},
-{text:'关闭',iconCls:'icon-cancel',handler:function(){$('#email_template_settings').dialog('close');}}],">
+buttons: [{text:'关闭',iconCls:'icon-cancel',handler:function(){$('#email_template_settings').dialog('close');}}],">
 
 	<div id="email_template_settings_tabs" class="easyui-tabs" data-options="fit:true,border:false,plain:true,">
 	    <div title="标题配置"  param="email_subject_template" call="标题配置">
-	        <div data="email_subject_template"></div>
+	    	<table style="height:100%;width:100%">
+	    		<tr height="5%">
+	    			<td style="text-align: right;">
+	    				<span data="add_email_subject_template" target="subject">添加</span><span class="panel-title" style="margin:0 10px 0 30px;">过滤:</span><span data="template_type" target="subject"></span>
+	    			</td>
+	    		</tr>
+	    		<tr height="95%">
+	    			<td >
+	    				 <div data="email_subject_template"></div>
+	    			</td>
+	    		</tr>
+	    	</table>
 	    </div>
 	    <div title="内容配置"  param="email_body_template" call="内容配置">
-	        <div data="email_body_template"></div>
+	        <table style="height:100%;width:100%">
+	    		<tr height="5%">
+	    			<td style="text-align: right;">
+	    				<span class="panel-title" style="margin:0 10px 0 30px;">过滤:</span><span data="template_type" target="body"></span>
+	    			</td>
+	    		</tr>
+	    		<tr height="95%">
+	    			<td>
+	       				<div data="email_body_template"></div>
+	    			</td>
+	    		</tr>
+	    	</table>
 	    </div>
 	    <div title="附件配置"  param="email_attachment_template" call="附件配置">
-	        <div data="email_attachment_template"></div>
+	        <table style="height:100%;width:100%">
+	    		<tr height="5%">
+	    			<td style="text-align: right;">
+	    				<span class="panel-title" style="margin:0 10px 0 30px;">过滤:</span><span data="template_type" target="attachment"></span>
+	    			</td>
+	    		</tr>
+	    		<tr height="95%">
+	    			<td>
+	    				 <div data="email_attachment_template"></div>
+	    			</td>
+	    		</tr>
+	    	</table>
 	    </div>
 	</div>
 	
 </div>
+
+

@@ -1,6 +1,6 @@
 $(document).ready(function(){
 	console.log($(window).width())
-	$.parser.parse()
+	//$.parser.parse()
 	$('#loading').fadeOut('slow')
 })
 
@@ -27,8 +27,7 @@ var finance_tree = [{"id": 1,"text": "财务信息",}]
 var files_tree = [{"id": 1,"text": "文件目录",}]
 var task_tree = [{"id": 1,"text": "任务信息",}]
 var tree_id_list = ['customer_tree','mail_tree','order_tree','finance_tree','files_tree','settings_tree','task_tree']
-
-
+var template_type = [{'id':'all','text':'全部种类'},{'id':'0','text':'常规模板'},{'id':'1','text':'开发信'},{'id':'2','text':'新产品提醒'},{'id':'3','text':'展会提醒'},{'id':'4','text':'放假提醒'},{'id':'5','text':'节日'},{'id':'7','text':'生日'},{'id':'7','text':'跟踪'}]
 
 $(function($) {
 	

@@ -15,10 +15,8 @@ def index(request):
         return render(request, 'index.html')
 
 def login(request):
-    username = request.POST.get('username')
-    password = request.POST.get('password')
-    print(username,password)
-    if(username =='adminhou' and password == 'a1s2d3f4'):
+    obj = Users.objects.filter(**{'username':request.POST.get('username'),'password':request.POST.get('password')}).first()
+    if obj != None:
         request.session.__setitem__('username','adminhou')
         return HttpResponse('done')
     return HttpResponse('error')
@@ -46,56 +44,55 @@ def memo_mark(request):
     return HttpResponse(json.dumps(date_list,ensure_ascii=False))
     
 def customer_list(request):
-    if request.method == "POST":
-        
-        
-        customer_grade = request.POST.get('customer_grade')
-        search = request.POST.get('search')
-        
-        page = request.POST.get('page')
-        rows = request.POST.get('rows')
-        rows = int(rows)
-        page = int(page)
-        start = (page-1)*rows
-        end = page*rows
-        
-        if search != None:
-            sql='select t1.id,t1.company_name,t1.name,t1.nation,t1.mail,t1.website,t2.religion,t3.nation,t4.source \
-            from customer t1 left join religion t2 on t1.religion = t2.id \
-            left join nation t3 on t1.nation = t3.id \
-            left join source_of_customer t4 on t1.source_of_customer = t4.id \
-            where 1=1'
-            search  = search.split(' ')
-            for item in search:
-                sql+=' and concat(t1.company_name,t1.name,t1.nation,t1.mail,t1.website,t2.religion,t3.nation,t4.source) like "%%'+item+'%%"'
-            objs = Customer.objects.raw(sql +' order by t1.sort desc')
-            objs = [item for item in objs]
-            total = len(objs)
+    try:
+        if request.method == "POST":
             
-        elif customer_grade != None and customer_grade != 'all':
-            total = Customer.objects.filter(customer_grade = int(customer_grade)).count()
-            objs = Customer.objects.filter(customer_grade = int(customer_grade)).order_by('-sort')[start:end]
-        else:
-            total = Customer.objects.count()
-            objs = Customer.objects.raw('select id,sort,name,company_name,nation,mail,website from customer order by sort desc,id desc')[start:end]
-        data = []
-        for item in objs:
-            temp = {}
-            temp.__setitem__('id', item.id)
-            temp.__setitem__('company_name', item.company_name)
-            temp.__setitem__('name', item.name)
-            temp.__setitem__('nation', Nation.objects.filter(id = item.nation).first().nation)
-            temp.__setitem__('mail', item.email)
-            temp.__setitem__('website',item.website)
-            temp.__setitem__('sort',item.sort)
-            data.append(temp)
-        
-        
-        return HttpResponse(json.dumps({'total':total,'rows':data},ensure_ascii=False))
+            customer_grade = request.POST.get('customer_grade')
+            search = request.POST.get('search')
+            
+            page = request.POST.get('page')
+            rows = request.POST.get('rows')
+            rows = int(rows)
+            page = int(page)
+            start = (page-1)*rows
+            end = page*rows
+            
+            if search != None:
+                sql='select t1.id,t1.company_name,t1.name,t1.nation,t1.email,t1.website,t2.religion,t3.nation,t4.source \
+                from customer t1 left join religion t2 on t1.religion = t2.id \
+                left join nation t3 on t1.nation = t3.id \
+                left join source_of_customer t4 on t1.source_of_customer = t4.id \
+                where 1=1'
+                search  = search.split(' ')
+                for item in search:
+                    sql+=' and concat(t1.company_name,t1.name,t1.nation,t1.email,t1.website,t2.religion,t3.nation,t4.source) like "%%'+item+'%%"'
+                objs = Customer.objects.raw(sql +' order by t1.sort desc')
+                objs = [item for item in objs]
+                total = len(objs)
+                
+            elif customer_grade != None and customer_grade != 'all':
+                total = Customer.objects.filter(customer_grade = int(customer_grade)).count()
+                objs = Customer.objects.filter(customer_grade = int(customer_grade)).order_by('-sort')[start:end]
+            else:
+                total = Customer.objects.count()
+                objs = Customer.objects.raw('select id,sort,name,company_name,nation,email,website from customer order by sort desc,id desc')[start:end]
+            data = []
+            for item in objs:
+                temp = {}
+                temp.__setitem__('id', item.id)
+                temp.__setitem__('company_name', item.company_name)
+                temp.__setitem__('name', item.name)
+                temp.__setitem__('nation', Nation.objects.filter(id = item.nation).first().nation)
+                temp.__setitem__('mail', item.email)
+                temp.__setitem__('website',item.website)
+                temp.__setitem__('sort',item.sort)
+                data.append(temp)
+            
+            
+            return HttpResponse(json.dumps({'total':total,'rows':data},ensure_ascii=False))
+    except Exception as e:
+        print(e)
     
-
-
-
 def get_communication_situation(requset):
     objs = CommunicationSituation.objects.order_by('id').all()
     data = []
@@ -238,6 +235,10 @@ def email_settings_editor(request):
 def email_send_editor(request):
     return render(request,'email_send_editor.html')
 
+def email_body_template_editor(request):
+    return render(request,'email_body_template_editor.html.html')
+
+
 def mail_account_list(request):
     objs = EmailAccount.objects.filter().all()
     data = []
@@ -348,9 +349,9 @@ def upload_file(request):
         file_path = settings.STATIC_ROOT +'/static'+path +'/'
     else:
         file_path = settings.STATIC_ROOT + path +'/'
-    print(file_path)
+    
     for item in file_obj:
-        print(item.name)
+        
         with open(file_path + item.name,'wb') as up:
             for chunk in item.chunks():
                 up.write(chunk)
@@ -362,14 +363,29 @@ def upload_file(request):
 def remove_file(request):
     pass
 
+        
+def get_subject_template(request):
+    objs = EmailSubjectTemplate.objects.order_by('id').all()
+    data = []
+    for item in objs:
+        temp = {}
+        temp.__setitem__('id', item.id)
+        temp.__setitem__('text', item.content)
+        data.append(temp)
+    return HttpResponse(json.dumps(data,ensure_ascii=False)) 
 
+def get_body_template(request):
+    objs = EmailBodyTemplate.objects.order_by('id').all()
+    data = []
+    for item in objs:
+        temp = {}
+        temp.__setitem__('id', item.id)
+        temp.__setitem__('text', item.content)
+        data.append(temp)
+    return HttpResponse(json.dumps(data,ensure_ascii=False)) 
 
-
-
-
-
-
-
+def get_attachment_template(request):
+    pass
 
 
 

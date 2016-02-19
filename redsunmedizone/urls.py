@@ -44,10 +44,14 @@ urlpatterns = [
     url(r'mail_account_save/$', views.mail_account_save),
     url(r'email_settings_editor/$', views.email_settings_editor),
     url(r'email_send_editor/$', views.email_send_editor),
+    url(r'email_body_template_editor/$', views.email_body_template_editor),
     url(r'file_tree/$', views.static_file_tree),
     url(r'add_dir/$', views.add_dir),
     #url(r'remove_dir/$', views.remove_dir),
     url(r'upload_file/$', views.upload_file),
+    url(r'get_subject_template/$', views.get_subject_template),
+    url(r'get_body_template/$', views.get_body_template),
+    url(r'get_attachment_template/$', views.get_attachment_template),
 ]
 
 

@@ -1,6 +1,15 @@
 from django.db import models
 
 
+class Users(models.Model):
+    id = models.IntegerField(blank=True,primary_key=True)
+    username = models.CharField(max_length=64,default='')
+    password = models.CharField(max_length=64,default='')
+    class Meta:
+        managed = False
+        db_table = 'users'
+
+
 class CommunicationSituation(models.Model):
     id = models.IntegerField(blank=True,primary_key=True)
     situation = models.CharField(max_length=64,default='')

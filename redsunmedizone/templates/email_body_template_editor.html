@@ -1,0 +1,23 @@
+<html>
+	<head>
+		<script type="text/javascript" src="/static/niceEdit/nicEdit.js"></script>
+		<style type="text/css">
+			html { overflow-x: hidden; overflow-y: auto; } 
+		</style>
+		<script type="text/javascript">
+			bkLib.onDomLoaded(function() {
+				new nicEditor({fullPanel : true}).panelInstance('mail_signature');
+			});
+			
+			function getText(){
+				return nicEditors.findEditor('mail_signature').getContent()
+			}
+			function setText(content){
+				return nicEditors.findEditor('mail_signature').setContent(content)
+			}
+		</script>
+	</head>
+	<body>
+		<textarea style="width:540px;height:443px;"  id="mail_signature">配置邮件内容模板</textarea>
+	</body>
+</html>
