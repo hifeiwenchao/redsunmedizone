@@ -34,6 +34,7 @@ urlpatterns = [
     url(r'get_religion/$', views.get_religion),
     url(r'get_source_of_customer/$', views.get_source_of_customer),
     url(r'get_nation/$', views.get_nation),
+    url(r'get_product_category/$', views.get_product_category),
     url(r'add_customer_settings_info/$', views.add_customer_settings_info),
     url(r'add_customer/$', views.add_customer),
     url(r'save_customer/$', views.save_customer),
@@ -53,6 +54,8 @@ urlpatterns = [
     url(r'add_subject_template/$', views.add_subject_template),
     url(r'get_body_template/$', views.get_body_template),
     url(r'add_body_template/$', views.add_body_template),
+    url(r'get_body_template_detail/$', views.get_body_template_detail),
+    url(r'edit_body_template/$', views.edit_body_template),
     url(r'get_attachment_template/$', views.get_attachment_template),
 ]
 

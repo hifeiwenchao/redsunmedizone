@@ -126,10 +126,7 @@ DATABASES = {
         'HOST': DB_HOST, 
         'PORT': '3306', 
     },
-}
-
-'''
-'website': {
+     'website': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'rsmedizone', 
         'USER': 'root',
@@ -137,8 +134,8 @@ DATABASES = {
         'HOST': DB_HOST, 
         'PORT': '3306', 
     },
+}
 
-'''
 
 #日志在中间件处理,收集到所有信息
 LOGGING = {

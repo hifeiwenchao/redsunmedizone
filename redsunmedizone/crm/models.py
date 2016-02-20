@@ -9,6 +9,12 @@ class Users(models.Model):
         managed = False
         db_table = 'users'
 
+class Category(models.Model):
+    id = models.IntegerField(blank=True,primary_key=True)
+    category = models.CharField(max_length=32,default='')
+    class Meta:
+        managed = False
+        db_table = 'category' 
 
 class CommunicationSituation(models.Model):
     id = models.IntegerField(blank=True,primary_key=True)
@@ -165,6 +171,7 @@ class EmailSubjectTemplate(models.Model):
         
 class EmailBodyTemplate(models.Model):
     id = models.IntegerField(blank=True,primary_key=True)
+    category_id = models.IntegerField(default=0)
     type = models.IntegerField(default=0)
     content = models.TextField(default='')
     create_time = models.IntegerField(default=0)
@@ -212,7 +219,7 @@ class Email(models.Model):
     create_time = models.IntegerField(default=0)
     class Meta:
         managed = False
-        db_table = 'mail'
+        db_table = 'email'
     
 
 

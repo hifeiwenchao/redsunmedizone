@@ -99,6 +99,9 @@ def customer_list(request):
     except Exception as e:
         print(e)
     
+
+
+
 def get_communication_situation(requset):
     objs = CommunicationSituation.objects.order_by('id').all()
     data = []
@@ -171,6 +174,16 @@ def get_nation(requset):
         data.append(temp)
     return HttpResponse(json.dumps(data,ensure_ascii=False))
 
+
+def get_product_category(request):
+    objs = Category.objects.order_by('id').using('website').all()
+    data = []
+    for item in objs:
+        temp = {}
+        temp.__setitem__('id', item.id)
+        temp.__setitem__('category', item.category)
+        data.append(temp)
+    return HttpResponse(json.dumps(data,ensure_ascii=False))
 
 def add_customer_settings_info(requset):
     
@@ -341,6 +354,8 @@ def remove_dir(request):
         return HttpResponse('done')
     except Exception as e:
         print(e)
+        
+
 
 
 def upload_file(request):
@@ -403,14 +418,41 @@ def get_body_template(request):
     return HttpResponse(json.dumps(data,ensure_ascii=False)) 
 
 def add_body_template(request):
-    EmailBodyTemplate.objects.create(**{'type':request.POST.get('type'),'content':request.POST.get('content'),'create_time':int(time.time())})
+    data = {'title':request.POST.get('title'),'category_id':request.POST.get('category_id'),'type':request.POST.get('type'),'content':request.POST.get('content'),'create_time':int(time.time())}
+    obj = EmailBodyTemplate.objects.filter(content__contains =request.POST.get('content'),type = request.POST.get('type')).first()
+    if(obj != None):
+        return HttpResponse('repeat')
+    else:
+        EmailBodyTemplate.objects.create(**data)
+        return HttpResponse('done')
+
+def edit_body_template(request):
+    data = {'title':request.POST.get('title'),'category_id':request.POST.get('category_id'),'type':request.POST.get('type'),'content':request.POST.get('content')}
+    EmailBodyTemplate.objects.filter(id =request.POST.get('id')).update(**data)
     return HttpResponse('done')
 
 
+
+def get_body_template_detail(request):
+    obj = EmailBodyTemplate.objects.filter(id = request.GET.get('id')).first()
+    data = {}
+    data.__setitem__('title', obj.title)
+    data.__setitem__('category_id', obj.category_id)
+    data.__setitem__('type', obj.type)
+    data.__setitem__('content', obj.content)
+    return HttpResponse(json.dumps(data,ensure_ascii=False))
+    
 def get_attachment_template(request):
     pass
 
 
 
-
-
+def get_email_box(request):
+    pass
+    
+    
+    
+    
+    
+    
+    
