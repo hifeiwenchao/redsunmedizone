@@ -69,6 +69,7 @@ $(function($){
 	
 	
 	$("div[data=email_subject_template]").datagrid({
+		singleSelect:true,
 		fit:true,
 		border:false,
 		remoteSort:false,
@@ -85,6 +86,7 @@ $(function($){
 	});
 	
 	$("div[data=email_body_template]").datagrid({
+		singleSelect:true,
 		fit:true,
 		border:false,
 		remoteSort:false,
@@ -277,7 +279,7 @@ $(function($){
 		            msg:'Body修改成功!(窗口自动关闭)',showType:'slide',timeout:1200,
 		            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
 		        });
-		        
+				$("div[data=email_body_template]").datagrid('reload')
 				$('#loading').fadeOut();
 			},error:function(data){
 				$.messager.show({title:'<span style="color:red">保存失败</span>',
@@ -311,6 +313,10 @@ function LoadEmailBodyTemplate(id){
         		$("div[data=email_body_template_product]").datagrid('checkRow',i)
         	}
         }
+        if(data.category_id == 0){
+        	$("div[data=email_body_template_product]").datagrid('uncheckAll')
+        }
+        
         
 		$('#loading').fadeOut();
 	},error:function(data){
