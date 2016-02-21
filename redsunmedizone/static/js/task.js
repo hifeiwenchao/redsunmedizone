@@ -78,6 +78,9 @@ $(function($){
 		fitColumns:true,
 		url:'/get_subject_template/',
 		method:'get',
+		onSelect:function(index,row){
+			LoadEmailSubjectTemplate(row.id)
+		},
 		rownumbers:false,
 		columns:[[
 	          {field:'id',title:'<div style="font-size:16px;font-weight: bold;">ID<div>',width:40,align:'center',halign:'center'},
@@ -292,6 +295,39 @@ $(function($){
 		}
 	});
 	
+	
+	
+	$('span[data=edit_email_subject_template]').linkbutton({
+		onClick:function(){
+			target = $("div[data=email_subject_template]").datagrid('getSelected')
+			if(target ==  null){return}
+			data = {}
+			data.id = target.id
+			data.content = $('div[data=email_subject_template_content]').textbox('getText')
+			if($.trim(data.content) == ''){return}
+			
+f			$('#loading').show();
+			$.ajax({url:'/edit_subject_template/',type:'POST',data:data,success:function(data){
+				$.messager.show({title:'<span style="color:green">修改成功</span>',
+		            msg:'Subject修改成功!(窗口自动关闭)',showType:'slide',timeout:1200,
+		            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
+		        });
+				$("div[data=email_subject_template]").datagrid('reload')
+				$('#loading').fadeOut();
+			},error:function(data){
+				$.messager.show({title:'<span style="color:red">保存失败</span>',
+		            msg:'Subject保存失败!(呼叫开发者)',showType:'slide',timeout:1200,
+		            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
+		        });
+				$('#loading').fadeOut();
+				}
+			});
+		}
+	});
+	
+	
+	
+	
 });
 
 
@@ -330,6 +366,28 @@ function LoadEmailBodyTemplate(id){
 	
 	
 }
+
+function LoadEmailSubjectTemplate(id){
+	$('#loading').show();
+	$.ajax({url:'/get_subject_template_detail/',type:'GET',data:{'id':id},dataType:'json',success:function(data){
+		$.messager.show({title:'<span style="color:green">获取成功</span>',
+            msg:'Subject信息获取成功!(呼叫开发者)',showType:'slide',timeout:1200,
+            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
+        });
+		$('div[data=email_subject_template_content]').textbox('setText',data.content)
+        
+		$('#loading').fadeOut();
+	},error:function(data){
+		$.messager.show({title:'<span style="color:red">获取失败</span>',
+            msg:'Subject信息获取失败!(呼叫开发者)',showType:'slide',timeout:1200,
+            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
+        });
+		$('#loading').fadeOut();
+		}
+	});
+}
+
+
 
 
 

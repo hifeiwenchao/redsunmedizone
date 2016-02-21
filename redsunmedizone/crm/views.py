@@ -403,6 +403,15 @@ def add_subject_template(request):
     EmailSubjectTemplate.objects.create(**{'type':request.POST.get('type'),'content':request.POST.get('content'),'create_time':int(time.time())})
     return HttpResponse('done')
     
+def edit_subject_template(request):
+    EmailSubjectTemplate.objects.filter(id = request.POST.get('id')).update(content = request.POST.get('content'))
+    return HttpResponse('done')
+
+def get_subject_template_detail(request):
+    obj = EmailSubjectTemplate.objects.filter(id = request.GET.get('id')).first()
+    data = {}
+    data.__setitem__('content',obj.content)
+    return HttpResponse(json.dumps(data,ensure_ascii=False))  
     
 def get_body_template(request):
     if request.GET.get('type') != None and request.GET.get('type') != 'all':
@@ -441,7 +450,10 @@ def get_body_template_detail(request):
     data.__setitem__('type', obj.type)
     data.__setitem__('content', obj.content)
     return HttpResponse(json.dumps(data,ensure_ascii=False))
+
+
     
+
 def get_attachment_template(request):
     pass
 

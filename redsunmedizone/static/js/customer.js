@@ -26,19 +26,19 @@ $(function($){
     	},
 		columns:[[
 			{field:'ck',checkbox:true,},
-			{field:'id',title:'<div style="font-size:16px;font-weight: bold;">ID<div>',width:40,align:'center',halign:'center',
+			{field:'id',title:'<div style="font-size:16px;font-weight: bold;">ID<div>',sortable:true,width:40,align:'center',halign:'center',
 				formatter:function(value,rowData,rowIndex){
 					return '<a href="#" style="text-decoration:none;color:blue;" onclick="customerDetail('+rowData.id+')">'+rowData.id+'</a>'
 					//return $('<a/>').attr('href','#').css({'text-decoration':'none','color':'blue'})
 				},
 			},
-			{field:'company_name',title:'<span style="font-size:16px;font-weight: bold;">公司名<span>',width:fixWidth(0.13),align:'left',halign:'center',},
-			{field:'name',title:'<span style="font-size:16px;font-weight: bold;">人名<span>',width:fixWidth(0.1),align:'center',halign:'center',
+			{field:'company_name',title:'<span style="font-size:16px;font-weight: bold;">公司名<span>',sortable:true,width:fixWidth(0.13),align:'left',halign:'center',},
+			{field:'name',title:'<span style="font-size:16px;font-weight: bold;">人名<span>',sortable:true,width:fixWidth(0.1),align:'center',halign:'center',
 				formatter:function(value,rowData,rowIndex){
 					return '<a href="#" style="text-decoration:none;color:blue;" onclick="customerDetail('+rowData.id+')">'+rowData.name+'</a>'
 				},
 			},
-			{field:'nation',title:'<span style="font-size:16px;font-weight: bold;">国家<span>',width:fixWidth(0.05),align:'center',halign:'center',
+			{field:'nation',title:'<span style="font-size:16px;font-weight: bold;">国家<span>',sortable:true,width:fixWidth(0.05),align:'center',halign:'center',
                                  formatter: function(value,rowData,rowIndex){
                                            if (rowData.sort == 100){
                                                   return '<span style="color:red">'+rowData.nation+'</span>';
@@ -47,7 +47,7 @@ $(function($){
                                            }
                                  },
                         },
-			{field:'email',title:'<span style="font-size:16px;font-weight: bold;">邮箱<span>',width:fixWidth(0.15),align:'center',halign:'center',
+			{field:'email',title:'<span style="font-size:16px;font-weight: bold;">邮箱<span>',sortable:true,width:fixWidth(0.15),align:'center',halign:'center',
                 formatter:function(value,row,index){
                 	var email = $.trim(row.email)
                 	email = email.split('\n')
@@ -62,7 +62,7 @@ $(function($){
                 	return content
                 }
 			},
-			{field:'website',title:'<span style="font-size:16px;font-weight: bold;">网站<span>',width:fixWidth(0.11),align:'center',halign:'center',
+			{field:'website',title:'<span style="font-size:16px;font-weight: bold;">网站<span>',sortable:true,width:fixWidth(0.11),align:'center',halign:'center',
 				formatter:function(value,rowData,rowIndex){
 					if($.trim(rowData.website) == ''){
 						return rowData.website

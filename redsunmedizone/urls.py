@@ -52,6 +52,8 @@ urlpatterns = [
     url(r'upload_file/$', views.upload_file),
     url(r'get_subject_template/$', views.get_subject_template),
     url(r'add_subject_template/$', views.add_subject_template),
+    url(r'edit_subject_template/$', views.edit_subject_template),
+    url(r'get_subject_template_detail/$', views.get_subject_template_detail),
     url(r'get_body_template/$', views.get_body_template),
     url(r'add_body_template/$', views.add_body_template),
     url(r'get_body_template_detail/$', views.get_body_template_detail),
