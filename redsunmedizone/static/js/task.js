@@ -1,4 +1,47 @@
 $(function($){
+	
+	
+	$('#email_task_target').datalist({
+		singleSelect:false,
+		fit:true,
+		border:false,
+		remoteSort:false,
+		nowrap:false,
+		autoRowHeight:true,
+		fitColumns:true,
+		loadMsg:'加载中...',
+		rownumbers:false,
+		showHeader:true,
+		columns:[[
+			  {field:'ck',checkbox:true,},
+			  {field:'email',align:'left',halign:'center',text:' ',fixed:true},
+			  {field:'id',align:'center',hidden:true,}
+        ]],
+	});
+	
+	
+	$('#email_task_send').datalist({
+		singleSelect:false,
+		checkbox: true,
+		fit:true,
+		border:false,
+		remoteSort:false,
+		nowrap:false,
+		autoRowHeight:true,
+		fitColumns:true,
+		loadMsg:'加载中...',
+		url:'/mail_account_list/',
+		method:'get',
+		rownumbers:false,
+		showHeader:true,
+		columns:[[
+          {field:'address',align:'left',},
+          {field:'id',align:'center',hidden:true,}
+	      ]],
+	});
+	
+	
+	
 	$("#email_task_subject").datalist({
 		singleSelect:false,
 		checkbox: true,
@@ -8,11 +51,13 @@ $(function($){
 		nowrap:false,
 		autoRowHeight:true,
 		fitColumns:true,
+		loadMsg:'加载中...',
 		url:'/get_subject_template/',
 		method:'get',
 		rownumbers:false,
+		showHeader:true,
 		columns:[[
-	          {field:'text',title:'<span style="font-size:16px;font-weight: bold;">Subject<span>',width:fixWidth(0.13),align:'center',halign:'center',},
+	          {field:'text',title:' ',width:fixWidth(0.13),align:'center',halign:'center',},
         ]],
 	});
 	
@@ -25,11 +70,13 @@ $(function($){
 		nowrap:false,
 		autoRowHeight:true,
 		fitColumns:true,
+		loadMsg:'加载中...',
 		url:'/get_body_template/',
 		method:'get',
 		rownumbers:false,
+		showHeader:true,
 		columns:[[
-	          {field:'title',title:'<span style="font-size:16px;font-weight: bold;" class="easyui-tooltip" title="点击title名,可以加载信息">内容标题<span>',width:fixWidth(0.13),align:'center',halign:'center',},
+	          {field:'title',title:' ',width:fixWidth(0.13),align:'center',halign:'center',},
         ]],
 	});
 	
@@ -42,22 +89,28 @@ $(function($){
 		    textField:'text',
 		    editable:false,
 		    onSelect:function(record){
-		    	/*
-		    	var param 
-		    	if(record == undefined){
-		    		param = 'all'
-		    	}else{
-		    		param = record.id
+		    	var target  = $(this).attr('render')
+		    	if(target  == 'subject'){
+		    		$('#email_task_subject').datagrid({
+			    		queryParams:{
+			    			type:record.id
+			    		}
+			    	});
 		    	}
-    			$('div[data=email_subject_template]').datagrid({
-		    		queryParams:{
-		    			type:param
-		    		}
-		    	});	
-	    		*/
+		    	if(target == 'body'){
+		    		$('#email_task_body').datagrid({
+			    		queryParams:{
+			    			type:record.id
+			    		}
+			    	});
+		    	}
+		    	if(target == 'attachment'){
+		    		
+		    	}
+		    	
 		    }
 		});
-		$this.combobox('select','全部种类');
+		$this.combobox('setValue','全部种类');
 	});
 	
 	
@@ -306,7 +359,7 @@ $(function($){
 			data.content = $('div[data=email_subject_template_content]').textbox('getText')
 			if($.trim(data.content) == ''){return}
 			
-f			$('#loading').show();
+			$('#loading').show();
 			$.ajax({url:'/edit_subject_template/',type:'POST',data:data,success:function(data){
 				$.messager.show({title:'<span style="color:green">修改成功</span>',
 		            msg:'Subject修改成功!(窗口自动关闭)',showType:'slide',timeout:1200,
@@ -388,23 +441,61 @@ function LoadEmailSubjectTemplate(id){
 }
 
 
-
-
-
-function addTemplateSettings(){
-	alert('1')
-}
-
-
-
-
-
 function openTaskWindow(){
+	addEmailTaskTarget()
+	
 	$('#email_task').dialog('open')
 }
 
+function addEmailTaskTarget(){
+	var new_data = $('#customer_list').datagrid('getChecked')
+	var old_data = $('#email_task_target').datalist('getRows')
+	for(j in new_data){
+		if(old_data.indexOf(new_data[j]) == -1){
+			$('#email_task_target').datalist('appendRow',new_data[j])
+		}
+	}
+	
+	
+}
 
+function removeEmailTaskTarget(){
+	
+	
+	
+	
+}
 
 function addTesk(){
-	alert('1')
+	var name = $('input[data=email_task_name]').textbox('getValue')
+	var remark = $('input[data=email_task_remark]').textbox('getValue')
+	var interval = $('input[data=email_task_interval]').numberbox('getValue')
+	var status = $('input[data=email_task_status]').switchbutton('options').checked
+	if($.trim(name) == '' || $.trim(interval) == '' ){return}
+	data = {}
+	data.name = name
+	data.remark =remark
+	data.interval = interval
+	status = status==true?1:0
+	data.status = status
+	
+	var target = $('#email_task_target').datalist('getChecked')
+	if(target.length == 0){AlertInfo('red','信息错误','至少选择一个收件人');return}
+	var send_from = $('#email_task_send').datalist('getChecked')
+	if(send_from.length == 0){AlertInfo('red','信息错误','至少选择一个发件人');return}
+	var subject = $("#email_task_subject").datalist('getChecked')
+	if(subject.length == 0){AlertInfo('red','信息错误','至少选择一个subject模板');return}
+	var body = $("#email_task_body").datalist('getChecked')		
+	if(body.length == 0){AlertInfo('red','信息错误','至少选择一个body模板');return}
+	
+	
+	
+	
+	console.log(data)
+	
 }
+
+
+
+
+

@@ -27,7 +27,7 @@ var finance_tree = [{"id": 1,"text": "财务信息",}]
 var files_tree = [{"id": 1,"text": "文件目录",}]
 var task_tree = [{"id": 1,"text": "任务信息",}]
 var tree_id_list = ['customer_tree','mail_tree','order_tree','finance_tree','files_tree','settings_tree','task_tree']
-var template_type = [{'id':'all','text':'全部种类'},{'id':'0','text':'常规模板'},{'id':'1','text':'开发信'},{'id':'2','text':'新产品提醒'},{'id':'3','text':'展会提醒'},{'id':'4','text':'放假提醒'},{'id':'5','text':'节日'},{'id':'7','text':'生日'},{'id':'7','text':'跟踪'}]
+var template_type = [{'id':'all','text':'全部种类'},{'id':'0','text':'常规模板'},{'id':'1','text':'开发信'},{'id':'2','text':'新产品提醒'},{'id':'3','text':'展会提醒'},{'id':'4','text':'放假提醒'},{'id':'5','text':'节日'},{'id':'6','text':'生日'},{'id':'7','text':'跟踪'}]
 
 $(function($) {
 	
@@ -278,6 +278,14 @@ Date.prototype.Format = function (fmt) { //author: meizz
     for (var k in o)
     if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
     return fmt;
+}
+
+
+function AlertInfo(color,title,body){
+	$.messager.show({title:'<span style="color:'+color+'">'+title+'</span>',
+        msg:body,showType:'slide',timeout:1200,
+        style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
+    });
 }
 
 

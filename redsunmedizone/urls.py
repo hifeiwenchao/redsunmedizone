@@ -59,6 +59,7 @@ urlpatterns = [
     url(r'get_body_template_detail/$', views.get_body_template_detail),
     url(r'edit_body_template/$', views.edit_body_template),
     url(r'get_attachment_template/$', views.get_attachment_template),
+    url(r'add_email_task/$', views.add_email_task),
 ]
 
 

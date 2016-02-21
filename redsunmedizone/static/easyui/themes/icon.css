@@ -1,3 +1,9 @@
+.icon-unchekced{
+	background:url('icons/unchecked.png') no-repeat center center;
+}
+.icon-checked{
+	background:url('icons/checked.png') no-repeat center center;
+}
 .icon-template{
 	background:url('icons/template.png') no-repeat center center;
 }

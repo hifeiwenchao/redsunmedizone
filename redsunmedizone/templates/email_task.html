@@ -6,46 +6,45 @@ buttons: [{text:'添加',iconCls:'icon-add',handler:function(){addTesk();}},
 	
 	<table style="width:1180px;height:94%">
 		<tr >
-			<td width="20%" style="border:1px solid red;">
-				<div class="easyui-panel" title="收件人列表" headerCls="chartPanelHeight"  data-options="fit:true,border:false,tools:[{iconCls:'icon-reload',handler:function(){alert('reload')}}]">
+			<td width="20%" style="border-right:1px solid #95B8E7;">
+				<div class="easyui-panel" title="收件人列表" headerCls="chartPanelHeight"  data-options="fit:true,border:false,tools:[{iconCls:'icon-cancel',handler:function(){ removeEmailTaskTarget() }},{iconCls:'icon-add',handler:function(){ addEmailTaskTarget() }}]">
 					<div id="email_task_target" ></div>
 				</div>
 			</td>
-			<td width="20%" style="border:1px solid red;">
-				<div class="easyui-panel" title="Subject模板" headerCls="chartPanelHeight"  data-options="fit:true,border:false,">
+			<td width="20%" style="border-right:1px solid #95B8E7;">
+				<div class="easyui-panel" title="Subject模板" headerCls="chartPanelHeight"  data-options="fit:true,border:false,tools:[{iconCls:'icon-reload',handler:function(){ $('#email_task_subject').datalist('reload') }}]">
 					<div style="height:93%">
 						<div id="email_task_subject" ></div>
 					</div>
 					<div style="height:7%">
 						<span class="panel-title" style="margin:0 10px 0 10px;">过滤:</span>
-						<span name="email_task_template_filter"></span>
+						<span name="email_task_template_filter" render="subject"></span>
 					</div>
 				</div>
 			</td>
-			<td width="20%" style="border:1px solid red;">
-				<div class="easyui-panel" title="Body模板" headerCls="chartPanelHeight" data-options="fit:true,border:false,">
+			<td width="20%" style="border-right:1px solid #95B8E7;">
+				<div class="easyui-panel" title="Body模板" headerCls="chartPanelHeight" data-options="fit:true,border:false,tools:[{iconCls:'icon-reload',handler:function(){ $('#email_task_body').datalist('reload') }}]">
 					<div style="height:93%">
 						<div id="email_task_body" ></div>
-						<div id="email_task_subject" ></div>
 					</div>
 					<div style="height:7">
 						<span class="panel-title" style="margin:0 10px 0 10px;">过滤:</span>
-						<span name="email_task_template_filter"></span>
+						<span name="email_task_template_filter" render="body"></span>
 					</div>
 				</div>
 			</td>
-			<td width="20%" style="border:1px solid red;">
+			<td width="20%" style="border-right:1px solid #95B8E7;">
 				<div class="easyui-panel" title="Attachment模板" headerCls="chartPanelHeight"  data-options="fit:true,border:false,">
 					<div style="height:93%">
 						<div id="email_task_attachment" ></div>
 					</div>
 					<div style="height:7%">
 						<span class="panel-title" style="margin:0 10px 0 10px;">过滤:</span>
-						<span name="email_task_template_filter"></span>
+						<span name="email_task_template_filter" render="attachment" ></span>
 					</div>
 				</div>
 			</td>
-			<td width="20%" style="border:1px solid red;">
+			<td width="20%" >
 				<div class="easyui-panel" title="配置发件人" headerCls="chartPanelHeight" style="padding:10px 10px;height:50%" data-options="border:false,">
 					<div id="email_task_send" ></div>
 				</div>
