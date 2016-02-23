@@ -424,7 +424,7 @@ function LoadEmailSubjectTemplate(id){
 	$('#loading').show();
 	$.ajax({url:'/get_subject_template_detail/',type:'GET',data:{'id':id},dataType:'json',success:function(data){
 		$.messager.show({title:'<span style="color:green">获取成功</span>',
-            msg:'Subject信息获取成功!(呼叫开发者)',showType:'slide',timeout:1200,
+            msg:'Subject信息获取成功!',showType:'slide',timeout:1200,
             style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
         });
 		$('div[data=email_subject_template_content]').textbox('setText',data.content)
@@ -489,9 +489,18 @@ function addTesk(){
 	if(body.length == 0){AlertInfo('red','信息错误','至少选择一个body模板');return}
 	
 	
-	
-	
 	console.log(data)
+	
+	$('#loading').show();
+	$.ajax({url:'/add_email_task/',type:'POST',data:data,success:function(data){
+		AlertInfo('green','发布任务成功','发布任务成功!')
+		$('#loading').fadeOut();
+	},error:function(data){
+		AlertInfo('red','发布任务失败','发布任务失败!(呼叫开发者)')
+		$('#loading').fadeOut();
+		}
+	});
+	
 	
 }
 

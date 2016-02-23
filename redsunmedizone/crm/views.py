@@ -466,6 +466,7 @@ def get_email_box(request):
     
     
 def add_email_task(request):
-    pass
+    print(request.POST.dict())
+    return HttpResponse('done')
     
     

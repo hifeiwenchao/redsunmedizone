@@ -37,13 +37,18 @@ CACHES = {
 from celery.schedules import crontab
 
 CELERYBEAT_SCHEDULE = {
-    'fetch': {
+    'fetch_email': {
         'task':'mail.tasks.fetch_email',
         'schedule': crontab(),
         'args': (),
     },
+    'process_task': {
+        'task':'mail.tasks.process_task',
+        'schedule': crontab(minute='*/5'),
+        'args': (),
+    },
 }
-
+#'*/12'
 
 CELERY_ACCEPT_CONTENT=['pickle']
 
@@ -143,7 +148,7 @@ LOGGING = {
     'disable_existing_loggers': False,
     'handlers': {
         'file': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': '/soft/log/debug.log',
         },
@@ -156,7 +161,7 @@ LOGGING = {
         },
         'django.db.backends': {
             'handlers': ['file'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': True,
         },
     },

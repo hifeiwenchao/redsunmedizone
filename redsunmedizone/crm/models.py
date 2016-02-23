@@ -198,6 +198,7 @@ class Attachment(models.Model):
     finance = models.IntegerField(default=0)
     file_name =  models.CharField(max_length=128,default='')
     path =  models.CharField(max_length=128,default='')
+    size = models.IntegerField(default=0)
     create_time = models.IntegerField(default=0)
     class Meta:
         managed = False
