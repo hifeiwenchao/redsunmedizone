@@ -39,7 +39,7 @@ from celery.schedules import crontab
 CELERYBEAT_SCHEDULE = {
     'fetch_email': {
         'task':'mail.tasks.fetch_email',
-        'schedule': crontab(),
+        'schedule': crontab(minute='*/5'),
         'args': (),
     },
     'process_task': {
@@ -48,7 +48,7 @@ CELERYBEAT_SCHEDULE = {
         'args': (),
     },
 }
-#'*/12'
+
 
 CELERY_ACCEPT_CONTENT=['pickle']
 

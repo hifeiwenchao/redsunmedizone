@@ -22,6 +22,39 @@ $(function($){
 	});
 	
 	
+	
+	
+	$('#email_list').datagrid({
+		fit:true,
+		border:false,
+		remoteSort:false,
+		nowrap:false,
+		autoRowHeight:true,
+		fitColumns:true,
+		singleSelect:true,//是否单选 
+        pagination:true,//分页控件 
+        pageSize:20,
+        pageList:[20,40,60,100],
+        url:'/email_list/',
+        method:'post',
+        rownumbers:false,
+        rowStyler: function(index,row){
+        	if(row.read == 0){
+        		return 'font-weight: bold'
+        	}
+			// return inline style
+			// the function can return predefined css class and inline style
+			//return {class:'nothover'};	
+    	},
+		columns:[[
+			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.07),align:'left',halign:'center',},
+			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.1),align:'left',halign:'center',},
+			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.15),align:'left',halign:'center',},
+			{field:'date',title:'日期',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
+		]],
+	});
+	
+	
 });
 
 

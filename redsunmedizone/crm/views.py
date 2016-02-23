@@ -470,3 +470,54 @@ def add_email_task(request):
     return HttpResponse('done')
     
     
+def email_list(request):
+    try:
+        if request.method == "POST":
+            '''
+            customer_grade = request.POST.get('customer_grade')
+            search = request.POST.get('search')
+            '''
+            page = request.POST.get('page')
+            rows = request.POST.get('rows')
+            rows = int(rows)
+            page = int(page)
+            start = (page-1)*rows
+            end = page*rows
+            '''
+            if search != None:
+                sql='select t1.id,t1.company_name,t1.name,t1.nation,t1.email,t1.website,t2.religion,t3.nation,t4.source \
+                from customer t1 left join religion t2 on t1.religion = t2.id \
+                left join nation t3 on t1.nation = t3.id \
+                left join source_of_customer t4 on t1.source_of_customer = t4.id \
+                where 1=1'
+                search  = search.split(' ')
+                for item in search:
+                    sql+=' and concat(t1.company_name,t1.name,t1.nation,t1.email,t1.website,t2.religion,t3.nation,t4.source) like "%%'+item+'%%"'
+                objs = Customer.objects.raw(sql +' order by t1.sort desc')
+                objs = [item for item in objs]
+                total = len(objs)
+                
+            elif customer_grade != None and customer_grade != 'all':
+                total = Customer.objects.filter(customer_grade = int(customer_grade)).count()
+                objs = Customer.objects.filter(customer_grade = int(customer_grade)).order_by('-sort')[start:end]
+            else:
+                total = Customer.objects.count()
+                objs = Customer.objects.raw('select id,sort,name,company_name,nation,email,website from customer order by sort desc,id desc')[start:end]
+            data = []
+            '''
+            total = Email.objects.count()
+            objs = Email.objects.order_by('-date')[start:end]
+            data = []
+            for item in objs:
+                temp = {}
+                temp.__setitem__('id', item.id)
+                temp.__setitem__('uid', item.uid)
+                temp.__setitem__('sent_from', eval(item.sent_from)[0]['email'])
+                temp.__setitem__('sent_to', eval(item.send_to)[0]['email'])
+                temp.__setitem__('subject', item.subject)
+                temp.__setitem__('date',item.date)
+                temp.__setitem__('read',item.read)
+                data.append(temp)
+            return HttpResponse(json.dumps({'total':total,'rows':data},ensure_ascii=False))
+    except Exception as e:
+        print(e)

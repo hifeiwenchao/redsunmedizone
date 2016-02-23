@@ -31,6 +31,10 @@ def fetch_email():
         imbox = Imbox(item.imap,item.address,item.password,ssl=True)
         all_messages = imbox.messages(unread=True)
         for uid,email in all_messages:
+            
+            if Email.objects.filter(uid = uid.decode()).first() == None:
+                continue
+            
             log.info('抓取邮件uid为%s,时间为%s' % (uid.decode(),time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()))))
             temp = {}
             temp.__setitem__('uid', uid.decode())
@@ -86,12 +90,13 @@ def fetch_email():
                     file_object.write(att['content'].getvalue())
                     file_object.close()
                     
-            
+            imbox.mark_seen(uid)
             
         imbox.logout()
         log.info('邮箱%s抓取完毕 ,时间为%s' % (item.address,time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()))))
     
     log.info('当前时间,%s' % time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())))
+
     
     
 @shared_task
