@@ -47,8 +47,8 @@ $(function($){
 			//return {class:'nothover'};	
     	},
 		columns:[[
-			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.07),align:'left',halign:'center',},
-			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.1),align:'left',halign:'center',},
+			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.07),align:'center',halign:'center',},
+			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.1),align:'center',halign:'center',},
 			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.15),align:'left',halign:'center',},
 			{field:'date',title:'日期',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
 		]],

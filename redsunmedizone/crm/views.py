@@ -1,12 +1,12 @@
 from django.shortcuts import render
-from django.http.response import HttpResponse, HttpResponseRedirect
+from django.http.response import HttpResponse, HttpResponseRedirect,\
+    StreamingHttpResponse
 from crm.models import *
 import json
 import time
 from django.conf import settings
 import os
 import shutil
-
 
 def index(request):
     if request.session.__contains__('username') == False:
@@ -295,12 +295,12 @@ def static_file_tree(request):
         if request.GET.get('type') == None:
             STATIC_ROOT = settings.STATIC_ROOT+'/static/public'
         else:
-            STATIC_ROOT = settings.STATIC_ROOT+'/static'
+            STATIC_ROOT = '/soft/files'
     else:
         if request.GET.get('type') == None:
             STATIC_ROOT = settings.STATIC_ROOT +'/public'
         else:
-            STATIC_ROOT = settings.STATIC_ROOT
+            STATIC_ROOT = '/soft/files'
     
     dir_tree = path_to_dict(STATIC_ROOT)
     
@@ -340,7 +340,19 @@ def add_dir(request):
         os.mkdir(STATIC_ROOT+true_path+'/'+directory_name)
         return HttpResponse('done')
 
-  
+def add_dir_all(request):
+    true_path = request.POST.get('true_path')
+    directory_name = request.POST.get('directory_name')
+    
+    STATIC_ROOT = '/soft'
+        
+    path_list = os.listdir(path=STATIC_ROOT+true_path)
+    
+    if directory_name in path_list:
+        return HttpResponse('repeat')
+    else:
+        os.mkdir(STATIC_ROOT+true_path+'/'+directory_name)
+        return HttpResponse('done')  
 
 def remove_dir(request):
     try:
@@ -380,7 +392,54 @@ def upload_file(request):
             
     return HttpResponse('done')
 
+def upload_file_all(request):
+    
+    path = request.POST.get('path')
+    if '..' in path:
+        return HttpResponse('done')
+    
+    file_obj = request.FILES.getlist('files')
+    
+    file_path = '/soft'+path +'/'
+    
+    for item in file_obj:
+        
+        with open(file_path + item.name,'wb') as up:
+            for chunk in item.chunks():
+                up.write(chunk)
+        up.close()
+            
+    return HttpResponse('done')
 
+def file_iterator(file_name,buf_size=8192):
+    with open(file_name,'w+') as f:
+        while True:
+            c = f.read(buf_size)
+            if c:
+                yield c
+            else:
+                break
+    f.close()
+
+def get_file(request):
+    if request.method == 'GET':
+        path = request.GET.get('path')
+        name = request.GET.get('name')
+        path = '/soft'+path
+        '''
+        response = HttpResponse(content_type ='application/force-download')
+        response['Content-Disposition'] = 'attachment;filename="%s"'% smart_str(name)
+        response['X-Sendfile'] = smart_str(path)
+        
+        return response
+        '''
+        print(path)
+        response = StreamingHttpResponse(file_iterator(path))
+        response['Content-Type'] = 'application/octet-stream'
+        response['Content-Disposition'] = 'attachment;filename="%s"'% name
+     
+        return response
+            
 def remove_file(request):
     pass
 

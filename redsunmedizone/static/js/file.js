@@ -43,21 +43,15 @@ $(function($){
 	    editable:false,
 	    lines:true,
 	    animate:true,
-	    onClick: function(node){
-	    	static_file_tree_all_target = node.target
-	    	if(node.type == 'directory'){return}
-	    	var path = node.text
-	    	var children_node = node
-			while(true){
-				var parent_node = $(this).tree('getParent',children_node.target)
-				if(parent_node != null){
-					path = parent_node.text +'/' + path
-					children_node = parent_node
-				}else{
-					break;
-				}
-			}
-	    	$('#static_url_info').text(true_host+'/'+path)
+	    onContextMenu: function(e, node){
+			e.preventDefault();
+			$('#static_file_tree_all').tree('select', node.target);
+		
+			$('#static_file_tree_all_menu').menu('show', {
+				left: e.pageX,
+				top: e.pageY
+			});
+			
 		},
 	});
 	
@@ -67,7 +61,6 @@ $(function($){
 	
 	
 	$("#file_upload_input").fileupload({
-		url: '/upload_file/',
 		autoUpload: false,
 	    sequentialUploads: true,
 	    done:function(e,result){
@@ -274,6 +267,7 @@ function UploadStaticFile(){
 	
 	
 	$("#file_upload_input").fileupload({
+		url: '/upload_file/',
 		formData:{'path':public_file_path},
 	});
 	    
@@ -292,4 +286,121 @@ function DropStaticFile(){
 
 
 
+function DownStaticFile(){
+	node = $('#static_file_tree_all').tree('getSelected')
+	if(node.type == 'directory'){
+		return
+	}
+	var path = node.text
+	var children_node = node
+	while(true){
+		var parent_node = $('#static_file_tree_all').tree('getParent',children_node.target)
+		if(parent_node != null){
+			path = parent_node.text +'/' + path
+			children_node = parent_node
+		}else{
+			break;
+		}
+	}
+	public_file_path = '/'+path
+	console.log(public_file_path);
+	window.open('/get_file/?name='+node.text+'&path='+public_file_path);
+}
 
+
+function UploadStaticFileAll(){
+	
+	node = $('#static_file_tree_all').tree('getSelected')
+	if(node.type != 'directory'){
+		node = $('#static_file_tree_all').tree('getParent',node.target)
+	}
+	var path = node.text
+	var children_node = node
+	while(true){
+		var parent_node = $('#static_file_tree_all').tree('getParent',children_node.target)
+		if(parent_node != null){
+			path = parent_node.text +'/' + path
+			children_node = parent_node
+		}else{
+			break;
+		}
+	}
+	
+	public_file_path = '/'+path
+	
+	console.log(public_file_path)
+	
+	
+	$("#file_upload_input").fileupload({
+		url: '/upload_file_all/',
+		formData:{'path':public_file_path},
+	});
+	    
+	$("#file_upload_input").click()
+	
+}
+
+function CreateDirectoryAll(){
+	
+	node = $('#static_file_tree_all').tree('getSelected')
+	
+	if(node.type != 'directory'){
+		node = $('#static_file_tree_all').tree('getParent',node.target)
+	}
+	var path = node.text
+	var children_node = node
+	while(true){
+		var parent_node = $('#static_file_tree_all').tree('getParent',children_node.target)
+		if(parent_node != null){
+			path = parent_node.text +'/' + path
+			children_node = parent_node
+		}else{
+			break;
+		}
+	}
+	
+	var true_path = '/'+path
+	$.messager.prompt('信息', '将在文件夹<span style="color:red">'+path+'</span>下新建文件夹,请输入文件夹名称,<span style="color:red">不可重复</span>', function(r){
+		if(r){
+			var data={}
+			data.true_path = true_path
+			data.directory_name = r
+			if($.trim(data.directory_name) == ''){return}
+			$('#loading').show();
+			$.ajax({url:'/add_dir_all/',type:'POST',data:data,success:function(data){
+				if(data == 'repeat'){
+					$.messager.show({title:'<span style="color:red">新建失败</span>',
+			            msg:'新建目录失败名字重复了!(呼叫开发者)',showType:'slide',timeout:1200,
+			            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
+			        });
+				}else{
+					$.messager.show({title:'<span style="color:green">新建成功</span>',
+			            msg:'新建目录成功!(窗口自动关闭)',showType:'slide',timeout:1200,
+			            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
+			        });
+					
+					$('#static_file_tree_all').tree('append', {
+						parent: node.target,
+						data: [{
+							iconCls:'tree-folder',
+							text: r,
+							state: 'open',
+							type:'directory',
+						}]
+					});
+					
+				}
+				$('#loading').fadeOut();
+			},error:function(data){
+				$.messager.show({title:'<span style="color:red">新建失败</span>',
+		            msg:'新建目录失败!(呼叫开发者)',showType:'slide',timeout:1200,
+		            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
+		        });
+				$('#loading').fadeOut();
+				}
+			});
+			
+		}
+	});
+	
+}

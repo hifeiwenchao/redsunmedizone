@@ -38,8 +38,8 @@ from celery.schedules import crontab
 
 CELERYBEAT_SCHEDULE = {
     'fetch_email': {
-        'task':'mail.tasks.fetch_email',
-        'schedule': crontab(minute='*/5'),
+        'task':'mail.tasks.main_fetch_email',
+        'schedule': crontab(minute='*/4'),
         'args': (),
     },
     'process_task': {

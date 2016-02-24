@@ -1,3 +1,9 @@
+.icon-upload{
+	background:url('icons/upload.png') no-repeat center center;
+}
+.icon-download{
+	background:url('icons/download.png') no-repeat center center;
+}
 .icon-unchekced{
 	background:url('icons/unchecked.png') no-repeat center center;
 }

@@ -7,14 +7,23 @@
 						<div class="menu-sep"></div>
 						<div onclick="CreateDirectory()" data-options="iconCls:'tree-folder'">新建<span style="color:red;">子目录</span></div>
 						<div class="menu-sep"></div>
-						<div onclick="UploadStaticFile()" data-options="iconCls:'tree-file'">上传子文件</div>
+						<div onclick="UploadStaticFile()" data-options="iconCls:'icon-upload'">上传子文件</div>
 						<div class="menu-sep"></div>
 					</div>
 				</div>
 			</td>
 			<td width="30%" >
-				<div class="easyui-panel" data-options="fit:true,tools:[{iconCls:'icon-reload',handler:function(){ReloadStaticFileTreeAll();}}]" title="网站文件目录" headerCls="chartPanelHeight">
+				<div class="easyui-panel" data-options="fit:true,tools:[{iconCls:'icon-reload',handler:function(){ReloadStaticFileTreeAll();}}]" title="私密文件目录" headerCls="chartPanelHeight">
 					<span id=static_file_tree_all></span>
+					<div id="static_file_tree_all_menu" class="easyui-menu" style="width:120px;">
+						<div class="menu-sep"></div>
+						<div onclick="CreateDirectoryAll()" data-options="iconCls:'tree-folder'">新建<span style="color:red;">子目录</span></div>
+						<div class="menu-sep"></div>
+						<div onclick="UploadStaticFileAll()" data-options="iconCls:'icon-upload'">上传文件</div>
+						<div class="menu-sep"></div>
+						<div onclick="DownStaticFile()" data-options="iconCls:'icon-download'">下载文件</div>
+						<div class="menu-sep"></div>
+					</div>
 				</div>
 			</td>
 			<td width="40%" >
@@ -25,8 +34,6 @@
 							<div style="margin: 10px 0 10px 0"></div>
 							<div class="panel-title">选中公共目录文件路径地址:</div>
 							<div id="public_url_info" style="margin:7px 0 7px 10px">未有选中</div>
-							<div class="panel-title">选中网站目录文件路径地址:</div>
-							<div id="static_url_info" style="margin:7px 0 7px 10px">未有选中</div>
 						</td>
 					</tr>
 					<tr height="50%">
