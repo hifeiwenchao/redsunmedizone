@@ -52,3 +52,4 @@ if __name__ == '__main__':
     obj.send_email('matt@redsunmedizone.com', 'info@redsunmedizone.com', None, 'test2 %s' % time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())), '123', [])
     obj.logout()
 '''
+        

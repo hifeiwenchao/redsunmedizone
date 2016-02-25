@@ -426,20 +426,27 @@ def get_file(request):
         path = request.GET.get('path')
         name = request.GET.get('name')
         path = '/soft'+path
+        c = open(path,'rb').read()
+        response = HttpResponse()
+        response['Content-Disposition'] = 'attachment;filename="%s"' % name
+        response.write(c)
+        return response
         '''
         response = HttpResponse(content_type ='application/force-download')
         response['Content-Disposition'] = 'attachment;filename="%s"'% smart_str(name)
         response['X-Sendfile'] = smart_str(path)
         
         return response
-        '''
-        print(path)
+            
+        
+    
         response = StreamingHttpResponse(file_iterator(path))
         response['Content-Type'] = 'application/octet-stream'
         response['Content-Disposition'] = 'attachment;filename="%s"'% name
      
         return response
-            
+        '''
+       
 def remove_file(request):
     pass
 
@@ -572,7 +579,10 @@ def email_list(request):
                 temp.__setitem__('id', item.id)
                 temp.__setitem__('uid', item.uid)
                 temp.__setitem__('sent_from', eval(item.sent_from)[0]['email'])
-                temp.__setitem__('sent_to', eval(item.send_to)[0]['email'])
+                to_list = []
+                for each in eval(item.send_to):
+                    to_list.append(each['email'].split('@')[0])
+                temp.__setitem__('sent_to', ','.join(to_list))
                 temp.__setitem__('subject', item.subject)
                 temp.__setitem__('date',item.date)
                 temp.__setitem__('read',item.read)
@@ -580,3 +590,40 @@ def email_list(request):
             return HttpResponse(json.dumps({'total':total,'rows':data},ensure_ascii=False))
     except Exception as e:
         print(e)
+
+def email_mark_seen(request):
+    email_id = request.GET.get('id')
+    Email.objects.filter(id = email_id).update(read = 1)
+    
+    return HttpResponse('done')
+
+
+def email_detail(request):
+    email_id = request.GET.get('id')
+    
+    obj = Email.objects.filter(id = email_id).first()
+    sent_from = ','.join([item['email']for item in eval(obj.sent_from)])
+    send_to = ','.join([item['email']for item in eval(obj.send_to)])
+    send_cc = ','.join([item['email']for item in eval(obj.send_cc)])
+    subject = obj.subject
+    
+    att = Attachment.objects.filter(email_id = obj.uid).all()
+    
+    
+    return render(request, 'email_detail.html',{'att':att,'obj':obj,'sent_from':sent_from,'send_to':send_to,'send_cc':send_cc,'subject':subject})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

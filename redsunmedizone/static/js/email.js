@@ -48,9 +48,16 @@ $(function($){
     	},
 		columns:[[
 			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.07),align:'center',halign:'center',},
-			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.1),align:'center',halign:'center',},
+			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.04),align:'center',halign:'center',},
 			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.15),align:'left',halign:'center',},
-			{field:'date',title:'日期',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
+			{field:'date',title:'接收日期',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
+			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.04),align:'center',halign:'center',
+				formatter:function(value,row,index){
+					return'<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetail(this)">查看</a>'+
+					'<span style="margin:0 5px 0 5px"></span>'
+					
+				}
+			},
 		]],
 	});
 	
@@ -202,3 +209,26 @@ function sendEmail(){
 	});
 }
  */
+
+function EmailDetail(obj){
+	$obj = $(obj)
+	var iframe = '<div style="overflow-x:hidden;overflow-y:hidden;height:100%;width:100%"><iframe src="/email_detail/?id='+$obj.attr('data')+'" width="100%" height="100%" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="author" allowtransparency="yes"></iframe></div>'
+	$('#main_tab').tabs('add',{
+		title:'邮件详情',
+		closable:true,
+		content:iframe,
+	});
+	
+	
+	$.ajax({url:'/email_mark_seen/',type:'GET',data:{'id':$obj.attr('data')},success:function(data){
+        $('#email_list').datagrid('reload')
+	},error:function(data){
+		AlertInfo('red','标记失败','标记已读状态失败!(呼叫开发者)!')
+		
+		}
+	});
+	
+}
+
+
+

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RedSunMediZoneCRM</title>
+    {%include 'head.html' %}
+    <script type="text/javascript">
+	    $(document).ready(function(){
+	    	console.log($(window).width())
+	    	//$.parser.parse()
+	    	$('#loading').fadeOut('slow')
+	    })
+	    
+	    function EmailReply(){
+	    	alert('正在开发中')
+	    }
+	    
+    </script>
+    <style type="text/css">
+    	.PanelHeight{
+			height:20px;
+			background:white;
+		}
+		.window .window-header .panel-icon{
+		  top:20%;
+		  right: 1px;
+		}
+		body { 
+			overflow-x : hidden ; 
+		}
+		.PositionFix{
+			margin:10px 0 15px 0;
+		}
+    </style>
+</head>
+<div id='loading' style="position:absolute;z-index:10000;top:0px;left:0px;width:100%;height:100%;text-align:center;background:#fff;opacity:0.4;">
+ 	<img style="margin-top:20%" src="/static/img/loading.gif" height="62" width="64">
+</div>
+
+<body class="easyui-layout">
+		<div data-options="region:'center',border:false,fit:true," style="padding:5px 15px 15px 15px;overflow-x : hidden ; ">
+			<div class="easyui-panel" headerCls="PanelHeight" title="邮件详情" style="padding-top:10px;"  data-options="iconCls:'icon-blank',border:false,tools:'#email_info_tool'">
+			<div class="PositionFix">
+				<span class="panel-title">发件人:</span><span style="margin-left: 20px;">{{sent_from}}</span>
+			</div>
+			<div class="PositionFix">
+				<span class="panel-title">收件人:</span><span style="margin-left: 20px;">{{send_to}}</span>
+			</div>
+			<div class="PositionFix">
+				<span class="panel-title">抄送:</span><span style="margin-left: 20px;">{{send_cc}}</span>
+			</div>
+			<div class="PositionFix">
+				<span class="panel-title">主题:</span><span style="margin-left: 20px;">{{subject}}</span>
+			</div>
+			<div class="PositionFix">
+				<span class="panel-title">相关附件:</span>
+				{% for item in att%}
+					<span style="margin-right:15px;">	
+					<a href="{{item.path}}" style="text-decoration:none;color:blue;" target="_blank">{{item.file_name}}</a><span style="margin-left:10px;">size:{{item.size//1024}}K</span>
+					</span>
+				{%endfor%}
+				
+			</div>
+			<div style="margin-bottom: 50px">
+			</div>
+			{% autoescape off %}
+			   {{obj.content}}
+			{% endautoescape %}
+			</div>
+		</div>
+</body>
+<div id="email_info_tool" style="width:50px;">
+	<a href="#" class="icon-reply" onclick="EmailReply()"></a>
+</div>
+</html>
