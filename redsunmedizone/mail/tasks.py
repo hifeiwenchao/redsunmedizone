@@ -5,30 +5,77 @@ Created on 2016年2月9日
 '''
 from __future__ import absolute_import
 from celery import shared_task
+from imbox import Imbox
+import os
 import logging
 import time
 import random
+from django.conf import settings
 from mail.utils import SendEmail
 from crm.models import EmailAccount, EmailSubjectTemplate, EmailBodyTemplate,\
-    Email, Attachment, Customer
-from imbox import Imbox
-from django.conf import settings
-import os
+    Email, Attachment, Customer, EmailTask, EmailTaskDetail, EmailLog
 
 #fetch_email.apply_async(countdown=10,retry=False)
 #celery -A mail worker -B -l info
+    
+@shared_task
+def process_task():
+    log = logging.getLogger('task')
+    log.info('执行发送邮件任务主程序')
+    objs = EmailTask.objects.filter(status = 1).all()
+    for obj in objs:
+        process_task_detail.delay(obj)
+    log.info('执行完毕')
+    
+@shared_task
+def process_task_detail(obj):
+    log = logging.getLogger('task')
+    log.info('开始时间,%s' % time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())))
+    
+    interval_second = obj.interval * 60
+    difference = int(time.time()) - interval_second
+    
+    process_obj = EmailTaskDetail.objects.filter(email_task_id = obj.id,status = 0,update_time__lt = difference).first()
+    
+    if process_obj == None:
+        obj.status = 2
+        obj.save()
+    else:
+        account = EmailAccount.objects.filter(id = process_obj.email_account_id).first()
+        
+        mail_handler = SendEmail()
+        mail_handler.set_info(account.smtp,account.address,account.password)
+        log.info('发件人%s,收件人%s,' % (account.address, process_obj.sned_to) )
+        try:
+            mail_handler.send_email(account.address, process_obj.sned_to, None, process_obj.subject,process_obj.content, [])
+            process_obj.result = 0
+            process_obj.status = 1
+            process_obj.process_time = int(time.time())
+            process_obj.save()
+            log.info('执行成功,%s' % time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())))
+        except Exception as e:
+            process_obj.result = 1
+            process_obj.status = 1
+            process_obj.info(str(e))
+            process_obj.process_time = int(time.time())
+            process_obj.save()
+            log.info('执行失败,%s,信息:%s' % (time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())),str(e)))
+        mail_handler.logout()
+        
+    EmailTaskDetail.objects.filter(email_task_id = obj.id,status =0).upadte(update_time = int(time.time())).first()
+    log.info('结束时间,%s' % time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())))
+    
+    
+    
 @shared_task
 def main_fetch_email():
-    log = logging.getLogger('django')
+    log = logging.getLogger('fetch')
     log.info('执行抓取邮件主程序')
     objs = EmailAccount.objects.filter(status = 1).all()
     for obj in objs:
         fetch_email.delay(obj)
     
     
-@shared_task
-def process_task():
-    pass
     
     
 @shared_task
@@ -37,7 +84,7 @@ def fetch_email(obj):
         path = settings.STATIC_ROOT +'/static/attachment/'
     else:
         path = settings.STATIC_ROOT +'/attachment/'
-    log = logging.getLogger('django')
+    log = logging.getLogger('fetch')
     log.info('当前时间,%s' % time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())))
     
     log.info('邮件%s抓取邮件,时间为%s' % (obj.address,time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()))))
@@ -103,6 +150,8 @@ def fetch_email(obj):
         imbox.mark_seen(uid)
         
     imbox.logout()
+    
+    
     log.info('邮箱%s抓取完毕 ,时间为%s' % (obj.address,time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()))))
     
     log.info('当前时间,%s' % time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())))

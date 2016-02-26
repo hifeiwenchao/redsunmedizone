@@ -130,6 +130,7 @@ class EmailTask(models.Model):
         
 class EmailTaskDetail(models.Model):
     id = models.IntegerField(blank=True,primary_key=True)
+    email_account_id = models.IntegerField(default=0)
     email_task_id = models.IntegerField(default=0)
     customer_id = models.IntegerField(default=0)
     status = models.IntegerField(default=0)

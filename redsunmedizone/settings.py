@@ -152,10 +152,25 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'filename': '/soft/log/debug.log',
         },
+        'task': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': '/soft/log/task.log',
+        },
+        'fetch': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': '/soft/log/fetch.log',
+        },
     },
     'loggers': {
-        'django': {
-            'handlers': ['file'],
+        'fetch': {
+            'handlers': ['fetch'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'task': {
+            'handlers': ['task'],
             'level': 'INFO',
             'propagate': True,
         },
