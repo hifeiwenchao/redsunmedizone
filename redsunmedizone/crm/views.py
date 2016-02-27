@@ -7,6 +7,7 @@ import time
 from django.conf import settings
 import os
 import shutil
+import random
 
 def index(request):
     if request.session.__contains__('username') == False:
@@ -532,7 +533,41 @@ def get_email_box(request):
     
     
 def add_email_task(request):
-    print(request.POST.dict())
+    
+    data = request.POST.dict()
+    if EmailTask.objects.filter(name__contains = data['name']).first() != None:
+        return HttpResponse('repeat')
+    task_name = data['name']
+    task_interval = data['interval']
+    task_remark = data['remark']
+    task_status = data['status']
+    
+    et = EmailTask.objects.create(status = task_status,name = task_name,interval = task_interval,remark=task_remark,create_time = int(time.time()))
+    email_task = EmailTask.objects.filter(name = task_name).first()
+    email_task_id = email_task.id
+    
+    
+    send_pool = (data['send']).split(',')
+    target_pool = (data['target']).split(',')
+    subject_pool = (data['subject']).split(',')
+    body_pool = (data['body']).split(',')
+        
+    for item in target_pool:
+        
+        to_obj = Customer.objects.filter(id =  item).first()
+        send_tos = (to_obj.email).split('\n')
+        for each in send_tos:
+            send_to = each.replace(' ','').replace(',','').strip(' ')
+            temp_send_id = random.choice(send_pool)
+            account = EmailAccount.objects.filter(id = temp_send_id).first()
+            subject = EmailSubjectTemplate.objects.filter(id = random.choice(subject_pool)).first()
+            body = EmailBodyTemplate.objects.filter(id = random.choice(body_pool)).first()
+            content =  body.content.replace('%s',to_obj.name)
+            content = content + '<div style="margin:10px"></div>' + account.signature
+            EmailTaskDetail.objects.create(email_account_id = temp_send_id,email_task_id = email_task_id,customer_id = item,
+                send_from = account.address,send_to = send_to,subject = subject.content,content = content,update_time = int(time.time())+int(task_interval)*60)
+    
+
     return HttpResponse('done')
     
     

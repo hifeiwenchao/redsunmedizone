@@ -6,6 +6,7 @@ Created on 2016年2月13日
 from imapclient.imapclient import IMAPClient
 import os
 from functools import cmp_to_key
+import random
 
 '''
 client = IMAPClient('imap.alibaba.com',ssl=False)
@@ -16,7 +17,7 @@ for item in folders_list:
 
 
 client.logout()
-'''
+
 
 
 path = '/soft/workbench'
@@ -50,8 +51,11 @@ def path_to_dict(path):
 data = path_to_dict(path)
 
 print(data)
+'''
 
 
 
 
+
+print(random.choice())
 

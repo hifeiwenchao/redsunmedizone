@@ -459,19 +459,16 @@ function addEmailTaskTarget(){
 	
 }
 
-function removeEmailTaskTarget(){
-	
-	
-	
-	
-}
 
 function addTesk(){
 	var name = $('input[data=email_task_name]').textbox('getValue')
 	var remark = $('input[data=email_task_remark]').textbox('getValue')
 	var interval = $('input[data=email_task_interval]').numberbox('getValue')
 	var status = $('input[data=email_task_status]').switchbutton('options').checked
-	if($.trim(name) == '' || $.trim(interval) == '' ){return}
+	if($.trim(name) == '' || $.trim(interval) == '' ){
+		AlertInfo('red','信息错误','任务名与任务间隔必须填')
+		return;
+	}
 	data = {}
 	data.name = name
 	data.remark =remark
@@ -488,12 +485,19 @@ function addTesk(){
 	var body = $("#email_task_body").datalist('getChecked')		
 	if(body.length == 0){AlertInfo('red','信息错误','至少选择一个body模板');return}
 	
+	data.target = GetDataId($('#email_task_target').datalist('getChecked'))
+	data.subject = GetDataId($('#email_task_subject').datalist('getChecked'))
+	data.body = GetDataId($('#email_task_body').datalist('getChecked'))
+	data.send =  GetDataId($('#email_task_send').datalist('getChecked'))
 	
-	console.log(data)
 	
 	$('#loading').show();
 	$.ajax({url:'/add_email_task/',type:'POST',data:data,success:function(data){
-		AlertInfo('green','发布任务成功','发布任务成功!')
+		if(data == 'repeat'){
+			AlertInfo('red','发布任务失败','有重复发部')
+		}else{
+			AlertInfo('green','发布任务成功','发布任务成功!')
+		}
 		$('#loading').fadeOut();
 	},error:function(data){
 		AlertInfo('red','发布任务失败','发布任务失败!(呼叫开发者)')
@@ -501,10 +505,15 @@ function addTesk(){
 		}
 	});
 	
-	
 }
 
 
 
-
+function GetDataId(obj){
+	id_list = []
+	for(i in obj){
+		id_list.push(obj[i].id)
+	}
+	return id_list.join(',')
+}
 

@@ -35,19 +35,19 @@ def process_task_detail(obj):
     interval_second = obj.interval * 60
     difference = int(time.time()) - interval_second
     
-    process_obj = EmailTaskDetail.objects.filter(email_task_id = obj.id,status = 0,update_time__lt = difference).first()
-    
-    if process_obj == None:
+    process_obj = EmailTaskDetail.objects.filter(email_task_id = obj.id,status = 0,update_time__lt = int(time.time())).first()
+    process_objs = EmailTaskDetail.objects.filter(email_task_id = obj.id,status = 0).all()
+    if process_obj == None and len(process_objs) == 0:
         obj.status = 2
         obj.save()
     else:
+        if process_obj == None:return
         account = EmailAccount.objects.filter(id = process_obj.email_account_id).first()
-        
         mail_handler = SendEmail()
         mail_handler.set_info(account.smtp,account.address,account.password)
-        log.info('发件人%s,收件人%s,' % (account.address, process_obj.sned_to) )
+        log.info('发件人%s,收件人%s,' % (account.address, process_obj.send_to) )
         try:
-            mail_handler.send_email(account.address, process_obj.sned_to, None, process_obj.subject,process_obj.content, [])
+            mail_handler.send_email(account.address, process_obj.send_to, None, process_obj.subject,process_obj.content, [])
             process_obj.result = 0
             process_obj.status = 1
             process_obj.process_time = int(time.time())
@@ -56,14 +56,14 @@ def process_task_detail(obj):
         except Exception as e:
             process_obj.result = 1
             process_obj.status = 1
-            process_obj.info(str(e))
+            process_obj.info = str(e)
             process_obj.process_time = int(time.time())
             process_obj.save()
             log.info('执行失败,%s,信息:%s' % (time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())),str(e)))
         mail_handler.logout()
         
-    EmailTaskDetail.objects.filter(email_task_id = obj.id,status =0).upadte(update_time = int(time.time())).first()
-    log.info('结束时间,%s' % time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())))
+        EmailTaskDetail.objects.filter(email_task_id = obj.id,status =0).update(update_time = int(time.time())+interval_second)
+        log.info('结束时间,%s' % time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())))
     
     
     
