@@ -11,15 +11,14 @@
     <script type="text/javascript" src="/static/js/order.js"></script>
     <script type="text/javascript" src="/static/js/file.js"></script>
     <script type="text/javascript" src="/static/js/task.js"></script>
+    <!-- 
     <script type="text/javascript" src="/static/js/chart.js"></script>
+     -->
     {%include 'fileupload.html' %}
     <script type="text/javascript">
    	 	var date = date || new Date()
     
-	    $(window).resize(function(){
-	    	var chart = $('#email_situation').highcharts();
-	    	chart.reflow();
-	    });
+	   
     </script>
     <style type="text/css">
     	.chartPanelHeight{
@@ -51,7 +50,7 @@
 		</div>
 		<div data-options="region:'south',split:true,border:false," style="height:30px;overflow-x: hidden;overflow-y: hidden;">
 		</div>
-		<div data-options="region:'west',split:true,border:true,"  title="功能菜单" style="width:130px;">
+		<div data-options="region:'west',split:true,border:true,collapsed:true,"  title="功能菜单" style="width:130px;">
 			{%include 'tree_menu.html' %}
 		</div>
 		<div data-options="region:'center',border:false,">
@@ -63,7 +62,26 @@
 		        	<div id="customer_list"></div>
 		        </div>
 		        <div title="邮件列表">
-		        	<div id="email_list"></div>
+		        	<div id="mail_tab"  class="easyui-tabs" data-options="fit:true,border:false,plain:true,pill:true,tabPosition:'top',">
+			        	<div title="收件箱" >
+			        		<div id="email_list" ></div>
+			        	</div>
+			        	<div title="发件箱">
+			        		
+			        	</div>
+			        	<div title="草稿箱">
+			        		
+			        	</div>
+			        	<div title="垃圾箱">
+			        		
+			        	</div>
+			        	<div title="询盘">
+			        		
+			        	</div>
+			        	<div title="报价">
+			        		
+			        	</div>
+		        	</div>
 		        </div>
 		        <div title="任务列表">
 		        	<div id="task_list"></div>

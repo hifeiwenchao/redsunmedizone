@@ -294,17 +294,11 @@ function addUser(){
 			
 			$('#loading').show();
 			$.ajax({url:'/add_customer/',type:'POST',data:data,success:function(data){
-		        $.messager.show({title:'<span style="color:green">保存成功</span>',
-		            msg:'信息保存成功!(窗口自动关闭)',showType:'slide',timeout:1200,
-		            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
-		        });
+				AlertInfo('green','保存成功','信息保存成功!(窗口自动关闭)')
 		        $('#customer_list').datagrid('reload')
 				$('#loading').fadeOut();
 			},error:function(data){
-				$.messager.show({title:'<span style="color:red">保存失败</span>',
-		            msg:'信息保存失败!(呼叫开发者)',showType:'slide',timeout:1200,
-		            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
-		        });
+				AlertInfo('red','保存失败','信息保存失败!(呼叫开发者)')
 				$('#loading').fadeOut();
 				}
 			});
@@ -317,10 +311,7 @@ function addUser(){
 function customerDetail(id){
 	$('#loading').show();
 	$.ajax({url:'/customer_detail/',type:'POST',data:{'id':id},dataType:"json",success:function(data){
-        $.messager.show({title:'<span style="color:green">获取成功</span>',
-            msg:'获取成功!(窗口自动关闭)',showType:'slide',timeout:1200,
-            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
-        });
+		AlertInfo('green','获取成功','获取成功!(窗口自动关闭)')
         
         $('span[render=value]').each(function(){
 			var key = $(this).attr('data')
@@ -341,10 +332,7 @@ function customerDetail(id){
         
         $('#customer_window').dialog('open');
 	},error:function(data){
-		$.messager.show({title:'<span style="color:red">获取失败</span>',
-            msg:'获取信息失败!(呼叫开发者)',showType:'slide',timeout:1200,
-            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
-        });
+		AlertInfo('red','获取失败','获取信息失败!(呼叫开发者)')
 		$('#loading').fadeOut();
 		}
 	});
@@ -389,17 +377,11 @@ function saveUser(){
 				
 				$('#loading').show();
 				$.ajax({url:'/save_customer/',type:'POST',data:data,success:function(data){
-			        $.messager.show({title:'<span style="color:green">保存成功</span>',
-			            msg:'信息保存成功!(窗口自动关闭)',showType:'slide',timeout:1200,
-			            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
-			        });
+					AlertInfo('green','保存成功','信息保存成功!(窗口自动关闭)')
 			        $('#customer_list').datagrid('reload')
 					$('#loading').fadeOut();
 				},error:function(data){
-					$.messager.show({title:'<span style="color:red">保存失败</span>',
-			            msg:'信息保存失败!(呼叫开发者)',showType:'slide',timeout:1200,
-			            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
-			        });
+					AlertInfo('red','保存失败','信息保存失败!(呼叫开发者)')
 					$('#loading').fadeOut();
 					}
 				});
@@ -429,24 +411,15 @@ function addSettings(){
 	    	$('#loading').show();
 	    	$.ajax({url:'/add_customer_settings_info/',type:'POST',data:{'data':r,'type':data_type},success:function(data){
 	    		if(data == 'repeat'){
-	    			$.messager.show({title:'<span style="color:red">添加失败</span>',
-		                msg:'添加信息有重复!(窗口自动关闭)',showType:'slide',timeout:1200,
-		                style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
-		            });
+	    			AlertInfo('red','添加失败','添加信息有重复!(窗口自动关闭)')
 	    		}else{
-	    			$.messager.show({title:'<span style="color:green">添加成功</span>',
-		                msg:'获取信息成功!(窗口自动关闭)',showType:'slide',timeout:1200,
-		                style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
-		            });
+	    			AlertInfo('green','添加成功','获取信息成功!(窗口自动关闭)')
 		            reloadSettingsInfo(param)
 	    		}
 	            
 	    		$('#loading').fadeOut();
 	    	},error:function(data){
-	    		$.messager.show({title:'<span style="color:red">添加失败</span>',
-	                msg:'添加信息失败!(呼叫开发者)',showType:'slide',timeout:1200,
-	                style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
-	            });
+	    		AlertInfo('red','添加失败','添加信息失败!(呼叫开发者)')
 	    		$('#loading').fadeOut();
 	    		}
 	    	});

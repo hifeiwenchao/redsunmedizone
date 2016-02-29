@@ -3,8 +3,8 @@ data-options="width:1200,height:630,closed:true,collapsible:true,resizable:true,
 buttons: [{text:'添加',iconCls:'icon-add',handler:function(){addSettings();}},
 {text:'关闭',iconCls:'icon-cancel',handler:function(){$('#customer_settings_window').dialog('close');}}],">
 
-	<div id="customer_settings_tabs" class="easyui-tabs" data-options="fit:true,border:false,plain:true,">
-	    <div title="分级" related="0" param="customer_grade" call="分级">
+	<div id="customer_settings_tabs" class="easyui-tabs" data-options="fit:true,border:false,plain:true," >
+	    <div title="分级" related="0" param="customer_grade" call="分级" >
 	        <div data="customer_grade"></div>
 	    </div>
 	    <div title="来源" related="2" param="source_of_customer" call="来源">

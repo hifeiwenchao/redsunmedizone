@@ -6,12 +6,33 @@
     <script type="text/javascript">
 	    $(document).ready(function(){
 	    	console.log($(window).width())
-	    	//$.parser.parse()
 	    	$('#loading').fadeOut('slow')
 	    })
 	    
+	    var sent_from = '{{sent_from}}'
+    	var send_to = '{{send_to}}'
+    	var send_cc = '{{send_cc}}'
+    	var subject = '{{subject}}'
+	    
+    	$(function($){
+    		$('a[data=cancel]').linkbutton({
+    			onClick:function(){
+    				$('#replay').hide()
+    				reply_content.window.setText('')
+    		    	$('#mail_info').show()
+    			}
+    		});
+    	});
+    	
+    	var history = '<br/><br/><br/><br/><br/><br/><br/><div style="border-bottom:1px solid gray;width:500px">history</div>'
+    	
+	    
 	    function EmailReply(){
-	    	alert('正在开发中')
+    		content =$('#content').html()
+    		
+	    	reply_content.window.setText(content)
+	    	$('#replay').show()
+	    	$('#mail_info').hide()
 	    }
 	    
     </script>
@@ -30,6 +51,9 @@
 		.PositionFix{
 			margin:10px 0 15px 0;
 		}
+		.PositionFixReply{
+			margin:4px 0 4px 0;
+		}
     </style>
 </head>
 <div id='loading' style="position:absolute;z-index:10000;top:0px;left:0px;width:100%;height:100%;text-align:center;background:#fff;opacity:0.4;">
@@ -38,7 +62,45 @@
 
 <body class="easyui-layout">
 		<div data-options="region:'center',border:false,fit:true," style="padding:5px 15px 15px 15px;overflow-x : hidden ; ">
-			<div class="easyui-panel" headerCls="PanelHeight" title="邮件详情" style="padding-top:10px;"  data-options="iconCls:'icon-blank',border:false,tools:'#email_info_tool'">
+			<div class="easyui-panel" headerCls="PanelHeight" title="邮件详情" style="padding-top:10px;"  data-options="iconCls:'icon-blank',border:false,">
+			<div style="float: right;margin-right:10px">
+				<a href="javascript:void(0)" class="easyui-menubutton" data-options="menu:'#operate',iconCls:'icon-settings',menuAlign:'right'">操作</a>
+				<div id="operate" style="width:150px;">
+					<div class="menu-sep"></div>
+				    <div onclick="EmailReply()">回复</div>
+				    <div>回复全部</div>
+				    <div>回复全部(带附件)</div>
+				    <div class="menu-sep"></div>
+				    <div>转发</div>
+				    <div class="menu-sep"></div>
+				    <div>给TA发信</div>
+				</div>
+			</div>
+			
+			<div id="replay" class="PositionFix" style="display: none;">
+				<div style="text-align: right;margin-right:10%;float: right">
+					<a href="#" class="easyui-linkbutton" iconCls="icon-mail">发送</a>
+					<span style="margin-left:30px;"></span>
+					<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" data="cancel">取消</a>
+				</div>
+				<div class="PositionFixReply">
+					<span class="panel-title" style="margin-right:30px;">发件人:</span><input style="width: 730px;" class="easyui-textbox" value="{{sent_from}}">
+				</div>
+				<div class="PositionFixReply">
+					<span class="panel-title" style="margin-right:30px;">收件人:</span><input style="width: 730px;" class="easyui-textbox" value="{{send_to}}">
+				</div>
+				<div class="PositionFixReply">
+					<span class="panel-title" style="margin-right:30px;">抄&nbsp;&nbsp;&nbsp;送:</span><input style="width: 730px;" class="easyui-textbox" value="{{send_cc}}">
+				</div>
+				<div class="PositionFixReply">
+					<span class="panel-title" style="margin-right:30px;">主&nbsp;&nbsp;&nbsp;题:</span><input style="width: 730px;" class="easyui-textbox" value="Re:{{subject}}">
+				</div>
+				<iframe name="reply_content" src="/email_reply_editor/" width="100%" height="550px" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="author" allowtransparency="yes"></iframe>
+			</div>
+			
+			
+			<div id="mail_info">
+			
 			<div class="PositionFix">
 				<span class="panel-title">发件人:</span><span style="margin-left: 20px;">{{sent_from}}</span>
 			</div>
@@ -60,15 +122,15 @@
 				{%endfor%}
 				
 			</div>
-			<div style="margin-bottom: 50px">
-			</div>
+			<div style="margin-bottom: 50px"></div>
+			<div  id="content">
 			{% autoescape off %}
 			   {{obj.content}}
 			{% endautoescape %}
+			</div>			
+			</div>
+			
 			</div>
 		</div>
 </body>
-<div id="email_info_tool" style="width:50px;">
-	<a href="#" class="icon-reply" onclick="EmailReply()"></a>
-</div>
 </html>

@@ -30,18 +30,18 @@ def process_task():
 @shared_task
 def process_task_detail(obj):
     log = logging.getLogger('task')
-    log.info('开始时间,%s' % time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())))
     
     interval_second = obj.interval * 60
-    difference = int(time.time()) - interval_second
     
     process_obj = EmailTaskDetail.objects.filter(email_task_id = obj.id,status = 0,update_time__lt = int(time.time())).first()
     process_objs = EmailTaskDetail.objects.filter(email_task_id = obj.id,status = 0).all()
     if process_obj == None and len(process_objs) == 0:
+        log.info('任务执行完毕,%s' % time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())))
         obj.status = 2
         obj.save()
     else:
         if process_obj == None:return
+        log.info('开始时间,%s' % time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())))
         account = EmailAccount.objects.filter(id = process_obj.email_account_id).first()
         mail_handler = SendEmail()
         mail_handler.set_info(account.smtp,account.address,account.password)
@@ -63,7 +63,6 @@ def process_task_detail(obj):
         mail_handler.logout()
         
         EmailTaskDetail.objects.filter(email_task_id = obj.id,status =0).update(update_time = int(time.time())+interval_second)
-        log.info('结束时间,%s' % time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())))
     
     
     

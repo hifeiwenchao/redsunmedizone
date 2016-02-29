@@ -1,3 +1,9 @@
+.icon-task{
+	background:url('icons/task.png') no-repeat center center;
+}
+.icon-memo{
+	background:url('icons/memo.png') no-repeat center center;
+}
 .icon-reply{
 	background:url('icons/reply.png') no-repeat center center;
 }

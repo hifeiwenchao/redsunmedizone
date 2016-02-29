@@ -11,7 +11,7 @@ FINANCE_STATUS = {0:'收入',1:'支出'}
 
 EMAIL_TASK_STATUS = {0:'未开始',1:'执行中',2:'执行完成'}
 
-EMAIL_TASK_DETAIL_STATUS = {0:'等待中',1:'执行完成'}
+EMAIL_TASK_DETAIL_STATUS = {0:'等待中',1:'执行中',2:'执行完成'}
 
 EMAIL_TASK_DETAIL_RESULT = {0:'成功',1:'失败'}
 

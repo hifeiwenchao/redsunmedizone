@@ -381,6 +381,45 @@ $(function($){
 	
 	
 	
+	
+	$('#task_list_main').datagrid({
+		fit:true,
+		remoteSort:false,
+		nowrap:false,
+		autoRowHeight:true,
+		fitColumns:true,
+		singleSelect:true,//是否单选 
+        url:'/task_list_main/',
+        method:'post',
+        rownumbers:false,
+        rowStyler: function(index,row){
+        	if(row.read == 0){
+        		return 'font-weight: bold'
+        	}
+    	},
+		columns:[[
+	          {field:'id',align:'center',hidden:true,},
+			  {field:'name',align:'center',halign:'center',fixed:true,title:"任务名",width:fixWidth(0.2),
+	        	  formatter:function(value,row,index){
+	        		  return '<a href="#" style="text-decoration:none;color:blue;" class="easyui-tooltip" title="'+row.remark+'">'+row.name+'</a>'
+	        	  }
+			  },
+			  {field:'total',align:'center',halign:'center',fixed:true,title:"总量",width:fixWidth(0.09),},
+			  {field:'finish',align:'center',halign:'center',fixed:true,title:"完成",width:fixWidth(0.09),},
+			  {field:'operate',align:'center',halign:'center',fixed:true,title:"操作",width:fixWidth(0.07),
+				  formatter:function(value,row,index){
+					  if(row.status == 0){
+						  return'<a href="#" style="text-decoration:none;color:blue;" task="'+row.id+'" data="1" onclick="ChangeTaskStatus(this)">开始</a>'
+					  }else{
+						  return'<a href="#" style="text-decoration:none;color:blue;" task="'+row.id+'" data="0"  onclick="ChangeTaskStatus(this)">暂停</a>'
+					  }
+					  
+				  }
+			  },
+        ]],
+	});
+	
+	
 });
 
 
@@ -515,5 +554,26 @@ function GetDataId(obj){
 		id_list.push(obj[i].id)
 	}
 	return id_list.join(',')
+}
+
+function ChangeTaskStatus(obj){
+	var status = $(obj).attr('data')
+	var task_id = $(obj).attr('task')
+	$('#task_list_main').datagrid('loading');
+	$.ajax({url:'/change_task_status/',type:'POST',data:{'status':status,'task_id':task_id},success:function(data){
+		if(status == 1){
+			AlertInfo('green','修改成功','任务启动成功!')
+		}else{
+			AlertInfo('green','修改成功','任务暂停成功!')
+		}
+		$('#task_list_main').datagrid('reload');
+	},error:function(data){
+		AlertInfo('red','修改失败','状态修改成功!(呼叫开发者)')
+		$('#task_list_main').datagrid('loaded');
+		}
+	});
+	
+	
+	
 }
 

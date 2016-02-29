@@ -45,6 +45,7 @@ urlpatterns = [
     url(r'mail_account_save/$', views.mail_account_save),
     url(r'email_settings_editor/$', views.email_settings_editor),
     url(r'email_send_editor/$', views.email_send_editor),
+    url(r'email_reply_editor/$', views.email_reply_editor),
     url(r'email_body_template_editor/$', views.email_body_template_editor),
     url(r'file_tree/$', views.static_file_tree),
     url(r'add_dir/$', views.add_dir),
@@ -65,6 +66,8 @@ urlpatterns = [
     url(r'email_list/$', views.email_list),
     url(r'email_mark_seen/$', views.email_mark_seen),
     url(r'email_detail/$', views.email_detail),
+    url(r'task_list_main/$', views.task_list_main),
+    url(r'change_task_status/$', views.change_task_status),
 ]
 
 

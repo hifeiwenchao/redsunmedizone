@@ -8,6 +8,7 @@ from django.conf import settings
 import os
 import shutil
 import random
+import re
 
 def index(request):
     if request.session.__contains__('username') == False:
@@ -258,6 +259,8 @@ def email_send_editor(request):
 def email_body_template_editor(request):
     return render(request,'email_body_template_editor.html')
 
+def email_reply_editor(request):
+    return render(request,'email_reply_editor.html')
 
 def mail_account_list(request):
     objs = EmailAccount.objects.filter().all()
@@ -632,7 +635,7 @@ def email_mark_seen(request):
     
     return HttpResponse('done')
 
-
+#需修改
 def email_detail(request):
     email_id = request.GET.get('id')
     
@@ -642,23 +645,46 @@ def email_detail(request):
     send_cc = ','.join([item['email']for item in eval(obj.send_cc)])
     subject = obj.subject
     
-    att = Attachment.objects.filter(email_id = obj.uid).all()
+    '''
+    imgs = re.findall('<img.*>', obj.content, re.I)
     
+    
+    for item in imgs:
+        re_height = re.search('height:.*(\d+)px',item, re.I)
+        height = ''.join([m.group() for m in re.compile(r'\d+').finditer(re_height.group(0))])
+        print('高:',height)
+    '''
+        
+    att = Attachment.objects.filter(email_id = obj.uid).all()
     
     return render(request, 'email_detail.html',{'att':att,'obj':obj,'sent_from':sent_from,'send_to':send_to,'send_cc':send_cc,'subject':subject})
 
 
 
+def task_list_main(request):
+    #EMAIL_TASK_STATUS = {0:'未开始',1:'执行中',2:'执行完成'}
+    objs = EmailTask.objects.exclude(status = 2).all()
+    data = []
+    for item in objs:
+        temp = {}
+        temp.__setitem__('id', item.id)
+        temp.__setitem__('status', item.status)
+        temp.__setitem__('name',item.name)
+        temp.__setitem__('interval', item.interval)
+        temp.__setitem__('remark', item.remark)
+        temp.__setitem__('total', EmailTaskDetail.objects.filter(email_task_id = item.id).count())
+        temp.__setitem__('finish', EmailTaskDetail.objects.filter(email_task_id = item.id,status=2).count())
+        temp.__setitem__('create_time',time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(item.create_time)))
+        data.append(temp)
+    return HttpResponse(json.dumps(data,ensure_ascii=False))
 
-
-
-
-
-
-
-
-
-
-
-
-
+def change_task_status(request):
+    task_id = request.POST.get('task_id')
+    status = request.POST.get('status')
+    
+    EmailTask.objects.filter(id = task_id).update(status = status)
+    
+    return HttpResponse('done')
+    
+    
+    

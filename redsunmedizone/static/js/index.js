@@ -59,6 +59,26 @@ $(function($) {
         onClickRow:function(inde,row){
         	unSelect('mail_tree')
         	$('#main_tab').tabs('select','邮件列表')
+        	
+        	if(row.id == 1){
+        		$('#mail_tab').tabs('select',row.text)
+        	}
+        	if(row.id == 2){
+        		$('#mail_tab').tabs('select',row.text)
+        	}
+        	if(row.id == 3){
+        		$('#mail_tab').tabs('select',row.text)
+        	}
+        	if(row.id == 4){
+        		$('#mail_tab').tabs('select',row.text)
+        	}
+        	if(row.id == 5){
+        		$('#mail_tab').tabs('select',row.text)
+        	}
+        	if(row.id == 6){
+        		$('#mail_tab').tabs('select',row.text)
+        	}
+        	
         },
 	});
 	

@@ -207,6 +207,7 @@ class Attachment(models.Model):
 
 class Email(models.Model):
     id = models.IntegerField(blank=True,primary_key=True)
+    customer_id = models.IntegerField(default=0)
     status = models.IntegerField(default=0)
     type = models.IntegerField(default=0)
     read = models.IntegerField(default=0)

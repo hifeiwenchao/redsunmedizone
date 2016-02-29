@@ -62,6 +62,11 @@ $(function($){
 	});
 	
 	
+	
+	
+	
+	
+	
 });
 
 
@@ -89,10 +94,7 @@ function emailAccountDetail(id){
         
 		$('#loading').fadeOut();
 	},error:function(data){
-		$.messager.show({title:'<span style="color:red">保存失败</span>',
-            msg:'获取信息失败!(呼叫开发者)',showType:'slide',timeout:1200,
-            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
-        });
+		AlertInfo('red','保存失败','获取信息失败!(呼叫开发者)')
 		$('#loading').fadeOut();
 		}
 	});
@@ -118,25 +120,15 @@ function addMailAccount(){
 	$('#loading').show();
 	$.ajax({url:'/mail_account_add/',type:'POST',data:data,success:function(data){
 		if(data == 'repeat'){
-			$.messager.show({title:'<span style="color:red">添加失败</span>',
-	            msg:'邮件地址有重复!(窗口自动关闭)',showType:'slide',timeout:1200,
-	            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
-	        });
+			AlertInfo('red','添加失败','邮件地址有重复!(窗口自动关闭)')
 		}else{
-			$.messager.show({title:'<span style="color:green">添加成功</span>',
-	            msg:'信息添加成功!(窗口自动关闭)',showType:'slide',timeout:1200,
-	            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
-	        });
+			AlertInfo('greed','添加成功','信息添加成功!(窗口自动关闭)')
 	        $('#mail_account_list').datalist('reload')
 		}
-		
         
 		$('#loading').fadeOut();
 	},error:function(data){
-		$.messager.show({title:'<span style="color:red">保存失败</span>',
-            msg:'信息添加失败!(呼叫开发者)',showType:'slide',timeout:1200,
-            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
-        });
+		AlertInfo('red','保存失败','信息添加失败!(呼叫开发者)');
 		$('#loading').fadeOut();
 		}
 	});
@@ -163,17 +155,11 @@ function saveMailAccount(){
 	
 	$('#loading').show();
 	$.ajax({url:'/mail_account_save/',type:'POST',data:data,success:function(data){
-        $.messager.show({title:'<span style="color:green">保存成功</span>',
-            msg:'信息保存成功!(窗口自动关闭)',showType:'slide',timeout:1200,
-            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
-        });
+		AlertInfo('greed','保存成功','信息保存成功!(窗口自动关闭)');
         $('#mail_account_list').datalist('reload')
 		$('#loading').fadeOut();
 	},error:function(data){
-		$.messager.show({title:'<span style="color:red">保存失败</span>',
-            msg:'信息保存失败!(呼叫开发者)',showType:'slide',timeout:1200,
-            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
-        });
+		AlertInfo('red','保存失败','信息保存失败!(呼叫开发者)');
 		$('#loading').fadeOut();
 		}
 	});
@@ -213,18 +199,16 @@ function sendEmail(){
 function EmailDetail(obj){
 	$obj = $(obj)
 	var iframe = '<div style="overflow-x:hidden;overflow-y:hidden;height:100%;width:100%"><iframe src="/email_detail/?id='+$obj.attr('data')+'" width="100%" height="100%" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="author" allowtransparency="yes"></iframe></div>'
-	$('#main_tab').tabs('add',{
+	$('#mail_tab').tabs('add',{
 		title:'邮件详情',
 		closable:true,
 		content:iframe,
 	});
 	
-	
 	$.ajax({url:'/email_mark_seen/',type:'GET',data:{'id':$obj.attr('data')},success:function(data){
         $('#email_list').datagrid('reload')
 	},error:function(data){
 		AlertInfo('red','标记失败','标记已读状态失败!(呼叫开发者)!')
-		
 		}
 	});
 	
