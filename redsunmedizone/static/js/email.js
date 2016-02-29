@@ -47,10 +47,10 @@ $(function($){
 			//return {class:'nothover'};	
     	},
 		columns:[[
-			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.07),align:'center',halign:'center',},
-			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.04),align:'center',halign:'center',},
+			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
+			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
 			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.15),align:'left',halign:'center',},
-			{field:'date',title:'接收日期',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
+			{field:'date',title:'接收日期',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
 			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.04),align:'center',halign:'center',
 				formatter:function(value,row,index){
 					return'<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetail(this)">查看</a>'+

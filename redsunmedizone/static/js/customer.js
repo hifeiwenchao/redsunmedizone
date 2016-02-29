@@ -26,13 +26,18 @@ $(function($){
     	},
 		columns:[[
 			{field:'ck',checkbox:true,},
-			{field:'id',title:'<div style="font-size:16px;font-weight: bold;">ID<div>',sortable:true,width:40,align:'center',halign:'center',
+			{field:'id',title:'<span style="font-size:16px;font-weight: bold;">ID<span>',sortable:true,width:40,align:'center',halign:'center',
 				formatter:function(value,rowData,rowIndex){
 					return '<a href="#" style="text-decoration:none;color:blue;" onclick="customerDetail('+rowData.id+')">'+rowData.id+'</a>'
 					//return $('<a/>').attr('href','#').css({'text-decoration':'none','color':'blue'})
 				},
 			},
-			{field:'company_name',title:'<span style="font-size:16px;font-weight: bold;">公司名<span>',sortable:true,width:fixWidth(0.13),align:'left',halign:'center',},
+			{field:'history',title:'历史',sortable:true,width:35,align:'center',halign:'center',
+				formatter:function(value,rowData,rowIndex){
+					return '<a href="#" style="text-decoration:none;color:blue;" class="icon-mail">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>'
+				},
+			},
+			{field:'company_name',title:'<span style="font-size:16px;font-weight: bold;">公司名<span>',sortable:true,width:fixWidth(0.12),align:'left',halign:'center',},
 			{field:'name',title:'<span style="font-size:16px;font-weight: bold;">人名<span>',sortable:true,width:fixWidth(0.1),align:'center',halign:'center',
 				formatter:function(value,rowData,rowIndex){
 					return '<a href="#" style="text-decoration:none;color:blue;" onclick="customerDetail('+rowData.id+')">'+rowData.name+'</a>'

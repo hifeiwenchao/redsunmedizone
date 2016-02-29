@@ -673,7 +673,7 @@ def task_list_main(request):
         temp.__setitem__('interval', item.interval)
         temp.__setitem__('remark', item.remark)
         temp.__setitem__('total', EmailTaskDetail.objects.filter(email_task_id = item.id).count())
-        temp.__setitem__('finish', EmailTaskDetail.objects.filter(email_task_id = item.id,status=2).count())
+        temp.__setitem__('finish', EmailTaskDetail.objects.filter(email_task_id = item.id,status=1).count())
         temp.__setitem__('create_time',time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(item.create_time)))
         data.append(temp)
     return HttpResponse(json.dumps(data,ensure_ascii=False))
@@ -688,3 +688,59 @@ def change_task_status(request):
     
     
     
+def task_list(request):
+    #EMAIL_TASK_STATUS = {0:'未开始',1:'执行中',2:'执行完成'}
+    page = request.POST.get('page')
+    rows = request.POST.get('rows')
+    rows = int(rows)
+    page = int(page)
+    start = (page-1)*rows
+    end = page*rows
+    total = EmailTask.objects.count()
+    objs = EmailTask.objects.order_by('-create_time')[start:end]
+    data = []
+    for item in objs:
+        temp = {}
+        temp.__setitem__('id', item.id)
+        temp.__setitem__('status', item.status)
+        temp.__setitem__('name',item.name)
+        temp.__setitem__('interval', item.interval)
+        temp.__setitem__('remark', item.remark)
+        temp.__setitem__('total', EmailTaskDetail.objects.filter(email_task_id = item.id).count())
+        temp.__setitem__('finish', EmailTaskDetail.objects.filter(email_task_id = item.id,status=1).count())
+        temp.__setitem__('create_time',time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(item.create_time)))
+        data.append(temp)
+    return HttpResponse(json.dumps({'total':total,'rows':data},ensure_ascii=False))
+
+def task_detail(request):
+    #EMAIL_TASK_STATUS = {0:'未开始',1:'执行中',2:'执行完成'}
+    task_id = request.POST.get('task_id')
+    page = request.POST.get('page')
+    rows = request.POST.get('rows')
+    rows = int(rows)
+    page = int(page)
+    start = (page-1)*rows
+    end = page*rows
+    
+    if task_id == None:
+        total = EmailTaskDetail.objects.count()
+        objs = EmailTaskDetail.objects.order_by('-process_time')[start:end]
+    else:
+        total = EmailTaskDetail.objects.filter(email_task_id = task_id).count()
+        objs = EmailTaskDetail.objects.filter(email_task_id = task_id).order_by('-process_time')[start:end]
+    data = []
+    for item in objs:
+        temp = {}
+        temp.__setitem__('id', item.id)
+        cs_obj = Customer.objects.filter(id = item.customer_id).first()
+        temp.__setitem__('name', cs_obj.name)
+        temp.__setitem__('status', item.status)
+        temp.__setitem__('send_from',item.send_from)
+        temp.__setitem__('send_to', item.send_to)
+        temp.__setitem__('subject', item.subject)
+        temp.__setitem__('result', item.result)
+        temp.__setitem__('info', item.info)
+        temp.__setitem__('process_time',time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(item.process_time)))
+        data.append(temp)
+    return HttpResponse(json.dumps({'total':total,'rows':data},ensure_ascii=False))
+

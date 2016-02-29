@@ -410,8 +410,12 @@ $(function($){
 				  formatter:function(value,row,index){
 					  if(row.status == 0){
 						  return'<a href="#" style="text-decoration:none;color:blue;" task="'+row.id+'" data="1" onclick="ChangeTaskStatus(this)">开始</a>'
-					  }else{
+					  }
+					  if(row.status == 1){
 						  return'<a href="#" style="text-decoration:none;color:blue;" task="'+row.id+'" data="0"  onclick="ChangeTaskStatus(this)">暂停</a>'
+					  }
+					  if(row.status == 2){
+						  return'已完成'
 					  }
 					  
 				  }
@@ -419,6 +423,101 @@ $(function($){
         ]],
 	});
 	
+	
+	
+	
+	$('#task_list').datagrid({
+		fit:true,
+		remoteSort:false,
+		nowrap:false,
+		autoRowHeight:true,
+		fitColumns:true,
+		singleSelect:true,//是否单选 
+        pagination:true,//分页控件 
+        pageSize:20,
+        pageList:[20,40,60,100],
+        url:'/task_list/',
+        method:'post',
+        rownumbers:false,
+		columns:[[
+	          {field:'id',align:'center',hidden:true,},
+			  {field:'name',align:'center',halign:'center',fixed:true,title:"任务名",width:fixWidth(0.17),
+	        	  formatter:function(value,row,index){
+	        		  return '<a href="#" style="text-decoration:none;color:blue;" class="easyui-tooltip" title="'+row.remark+'">'+row.name+'</a>'
+	        	  }
+			  },
+			  {field:'interval',align:'center',halign:'center',fixed:true,title:"间隔",width:fixWidth(0.03),},
+			  {field:'operate',align:'center',halign:'center',fixed:true,title:"操作",width:fixWidth(0.08),
+				  formatter:function(value,row,index){
+					  if(row.status == 0){
+						  return'<a href="#" style="text-decoration:none;color:blue;" task="'+row.id+'" data="1" onclick="ChangeTaskStatus(this)">开始</a><span style="margin-left:10px;"></span><a href="#" style="text-decoration:none;color:blue;" task="'+row.id+'"  onclick="TaskDetail(this)">详情</a>'
+					  }
+					  if(row.status == 1){
+						  return'<a href="#" style="text-decoration:none;color:blue;" task="'+row.id+'" data="0"  onclick="ChangeTaskStatus(this)">暂停</a><span style="margin-left:10px;"></span><a href="#" style="text-decoration:none;color:blue;" task="'+row.id+'"  onclick="TaskDetail(this)">详情</a>'
+					  }
+					  if(row.status == 2){
+						  return'已完成<span style="margin-left:10px;"></span><a href="#" style="text-decoration:none;color:blue;" task="'+row.id+'"  onclick="TaskDetail(this)">详情</a>'
+					  }
+				  }
+			  },
+        ]],
+        onLoadSuccess:function(data){
+        	var pager = $(this).datagrid('getPager')
+        	$(pager).pagination({
+        		buttons: [{
+        			iconCls:'icon-edit',
+        			handler:function(){alert('edit')}
+        		}]
+        	});
+        },
+	});
+	
+	
+	$('#task_detail_list').datagrid({
+		fit:true,
+		remoteSort:false,
+		nowrap:false,
+		autoRowHeight:true,
+		fitColumns:true,
+		singleSelect:true,//是否单选 
+        pagination:true,//分页控件 
+        pageSize:20,
+        pageList:[20,40,60,100],
+        url:'/task_detail/',
+        method:'post',
+        rownumbers:false,
+		columns:[[
+	          {field:'id',align:'center',hidden:true,},
+			  {field:'name',align:'center',halign:'center',fixed:true,title:"客户名",width:fixWidth(0.10),},
+			  {field:'send_to',align:'center',halign:'center',fixed:true,title:"发往",width:fixWidth(0.18),},
+			  {field:'subject',align:'center',halign:'center',fixed:true,title:"Subject",width:fixWidth(0.23),},
+			  {field:'status',align:'center',halign:'center',fixed:true,title:"状态",width:fixWidth(0.05),
+				  formatter:function(value,row,index){
+					  if(row.status == 0){
+						  return '等待中'
+					  }
+					  if(row.status == 1){
+						  return '执行完成'
+					  }
+				  }
+			  },
+			  {field:'result',align:'center',halign:'center',fixed:true,title:"结果",width:fixWidth(0.05),
+				  formatter:function(value,row,index){
+					  if(row.result == 0){
+						  return '成功'
+					  }
+					  if(row.result == 1){
+						  return '失败'
+					  }
+				  }
+			  },
+			  {field:'operate',align:'center',halign:'center',fixed:true,title:"操作",width:fixWidth(0.05),
+				  formatter:function(value,row,index){
+					  return'<a href="#" style="text-decoration:none;color:blue;" >详情</a>'
+				  }
+			  },
+        ]],
+	});
 	
 });
 
@@ -573,7 +672,14 @@ function ChangeTaskStatus(obj){
 		}
 	});
 	
-	
-	
 }
+
+function TaskDetail(obj){
+	$('#task_detail_list').datagrid({
+		queryParams: {
+			task_id: $(obj).attr('task'),
+		}
+	})
+}
+
 

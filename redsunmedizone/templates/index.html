@@ -84,7 +84,14 @@
 		        	</div>
 		        </div>
 		        <div title="任务列表">
-		        	<div id="task_list"></div>
+		        	<div class="easyui-layout" style="width:100%;height:100%;" data-options="border:false,">
+					    <div data-options="region:'west',title:'任务明细',split:true,border:false,collapsible:false"  headerCls="chartPanelHeight" style="width:30%;">
+				        	<div id="task_list"></div>
+					    </div>
+					    <div data-options="region:'center',title:'任务详情',border:false,"  headerCls="chartPanelHeight">
+					    	<div id="task_detail_list"></div>
+					    </div>
+					</div>
 		        </div>
 		        <div title="产品列表">
 		        	<div id="product_list"></div>

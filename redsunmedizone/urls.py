@@ -68,6 +68,8 @@ urlpatterns = [
     url(r'email_detail/$', views.email_detail),
     url(r'task_list_main/$', views.task_list_main),
     url(r'change_task_status/$', views.change_task_status),
+    url(r'task_list/$', views.task_list),
+    url(r'task_detail/$', views.task_detail),
 ]
 
 
