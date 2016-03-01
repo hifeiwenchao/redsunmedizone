@@ -128,7 +128,11 @@ def fetch_email(obj):
         try:
             temp.__setitem__('content', email.body['html'][0].decode('utf-8'))
         except Exception as e:
-            temp.__setitem__('content', email.body['html'][0])
+            try:
+                temp.__setitem__('content', email.body['html'][0])
+            except:
+                temp.__setitem__('content', email.body['plain'][0])
+            
         cs_obj = Customer.objects.filter(email__contains = email.sent_from[0]['email']).first()
         if cs_obj !=None:
             temp.__setitem__('customer_id', cs_obj.id)

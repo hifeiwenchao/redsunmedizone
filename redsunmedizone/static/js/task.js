@@ -494,20 +494,20 @@ $(function($){
 			  {field:'status',align:'center',halign:'center',fixed:true,title:"状态",width:fixWidth(0.05),
 				  formatter:function(value,row,index){
 					  if(row.status == 0){
-						  return '等待中'
+						  return '<span style="color:gray">等待中</span>'
 					  }
 					  if(row.status == 1){
-						  return '执行完成'
+						  return '<span style="color:#95B8E7">执行完成</span>'
 					  }
 				  }
 			  },
 			  {field:'result',align:'center',halign:'center',fixed:true,title:"结果",width:fixWidth(0.05),
 				  formatter:function(value,row,index){
 					  if(row.result == 0){
-						  return '成功'
+						  return '<span style="color:green">成功</span>'
 					  }
 					  if(row.result == 1){
-						  return '失败'
+						  return '<span style="color:red">失败</span>'
 					  }
 				  }
 			  },
