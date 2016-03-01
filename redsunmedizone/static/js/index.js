@@ -20,7 +20,7 @@ $(document).keyup(function(e) {
 
 var timeInterval = null;
 var customer_tree = [{"id": 1,"text": "客户信息列表",}]
-var mail_tree = [{"id": 1,"text": "收件箱",},{"id": 2,"text": "发件箱",},{"id": 3,"text": "草稿箱",},{"id": 4,"text": "垃圾箱",},{"id": 5,"text": "询盘",},{"id": 6,"text": "报价",}]
+var mail_tree = [{"id": 0,"text": "未读",},{"id": 1,"text": "已读",},{"id": 2,"text": "发件箱",},{"id": 3,"text": "草稿箱",},{"id": 4,"text": "垃圾箱",},{"id": 5,"text": "询盘",},{"id": 6,"text": "报价",}]
 var product_tree = [{"id": 1,"text": "产品列表",}]
 var order_tree = [{"id": 1,"text": "订单信息",}]
 var finance_tree = [{"id": 1,"text": "财务信息",}]
@@ -59,7 +59,9 @@ $(function($) {
         onClickRow:function(inde,row){
         	unSelect('mail_tree')
         	$('#main_tab').tabs('select','邮件列表')
-        	
+        	if(row.id == 0){
+        		$('#mail_tab').tabs('select',row.text)
+        	}
         	if(row.id == 1){
         		$('#mail_tab').tabs('select',row.text)
         	}

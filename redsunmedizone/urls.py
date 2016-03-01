@@ -63,13 +63,16 @@ urlpatterns = [
     url(r'edit_body_template/$', views.edit_body_template),
     url(r'get_attachment_template/$', views.get_attachment_template),
     url(r'add_email_task/$', views.add_email_task),
-    url(r'email_list/$', views.email_list),
+    url(r'email_list_unread/$', views.email_list_unread),
+    url(r'email_list_read/$', views.email_list_read),
+    url(r'email_list_send/$', views.email_list_send),
     url(r'email_mark_seen/$', views.email_mark_seen),
     url(r'email_detail/$', views.email_detail),
     url(r'task_list_main/$', views.task_list_main),
     url(r'change_task_status/$', views.change_task_status),
     url(r'task_list/$', views.task_list),
     url(r'task_detail/$', views.task_detail),
+    url(r'reply_email/$', views.reply_email),
 ]
 
 

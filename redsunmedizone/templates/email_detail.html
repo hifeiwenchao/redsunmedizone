@@ -22,15 +22,70 @@
     		    	$('#mail_info').show()
     			}
     		});
+    		
+    		
+    		
+    		$('a[data=send_mail]').linkbutton({
+    			onClick:function(){
+    				var send = $('input[render=send]').textbox('getText')
+    				var receive = $('input[render=receive]').textbox('getText')
+    				var cc = $('input[render=cc]').textbox('getText')
+    				var subject = $('input[render=subject]').textbox('getText')
+    				var content = replycontent.window.getText()
+    				
+    				$.messager.confirm('回复邮件', '确定回复邮件吗?', function(r){
+        				if(r){
+        					var data = new FormData();
+        					var file = $('input[name=files]')[0].files;
+        					if(file.length != 0){
+        						for(var i=0;i<file.length;i++){
+        							data.append("files",file[i])
+        						}
+        					}
+        					
+        					data.append('send_from',send)
+        					data.append('send_to',receive)
+        					data.append('send_cc',cc)
+        					data.append('subject',subject)
+        					data.append('content', content)
+        					
+        					$('#loading').show()
+        					$.ajax({url:'/reply_email/', type: 'POST',
+        						xhr: function() {
+        					        myXhr = $.ajaxSettings.xhr();
+        					        return myXhr;
+        					    },
+        					    success: function(data){
+        					    	$('#loading').fadeOut('slow')
+        					    	window.parent.AlertInfo('greed','发送成功','邮件发送成功!(窗口自动关闭)')
+        					    },
+        					    error: function(data){
+        					    	$('#loading').fadeOut('slow')
+        					    	window.parent.AlertInfo('red','发送失败','邮件发送失败!(请联系管理员)')
+        					    },
+        					    data: data,
+        					    cache: false,
+        					    contentType: false,
+        					    processData: false
+        					});
+        				}
+        			});
+    				
+    				
+    			}
+    		});
+    		
+    		
+    		
+    		
+    		
+    		
     	});
     	
-    	var history = '<br/><br/><br/><br/><br/><br/><br/><div style="border-bottom:1px solid gray;width:500px">history</div>'
-    	
-	    
+	    var line = '<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><div style="border-bottom:1px solid gray;width:500px">At {{obj.date}} , {{sent_from}} wrote:</div><br/>'
 	    function EmailReply(){
     		content =$('#content').html()
-    		
-	    	reply_content.window.setText(content)
+	    	replycontent.window.setText(line+$.trim(content))
 	    	$('#replay').show()
 	    	$('#mail_info').hide()
 	    }
@@ -52,14 +107,16 @@
 			margin:10px 0 15px 0;
 		}
 		.PositionFixReply{
-			margin:4px 0 4px 0;
+			margin:8px 0 8px 0;
 		}
     </style>
 </head>
 <div id='loading' style="position:absolute;z-index:10000;top:0px;left:0px;width:100%;height:100%;text-align:center;background:#fff;opacity:0.4;">
  	<img style="margin-top:20%" src="/static/img/loading.gif" height="62" width="64">
 </div>
-
+<div id="line" style="display: none;">
+<br/><br/><br/><br/><br/><br/><br/><div style="border-bottom:1px solid gray;width:500px">History</div>
+</div>
 <body class="easyui-layout">
 		<div data-options="region:'center',border:false,fit:true," style="padding:5px 15px 15px 15px;overflow-x : hidden ; ">
 			<div class="easyui-panel" headerCls="PanelHeight" title="邮件详情" style="padding-top:10px;"  data-options="iconCls:'icon-blank',border:false,">
@@ -79,23 +136,26 @@
 			
 			<div id="replay" class="PositionFix" style="display: none;">
 				<div style="text-align: right;margin-right:10%;float: right">
-					<a href="#" class="easyui-linkbutton" iconCls="icon-mail">发送</a>
+					<a href="#" class="easyui-linkbutton" iconCls="icon-mail" data="send_mail">发送</a>
 					<span style="margin-left:30px;"></span>
 					<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" data="cancel">取消</a>
 				</div>
 				<div class="PositionFixReply">
-					<span class="panel-title" style="margin-right:30px;">发件人:</span><input style="width: 730px;" class="easyui-textbox" value="{{sent_from}}">
+					<span class="panel-title" style="margin-right:30px;">发件人:</span><input render="send" style="width: 730px;" class="easyui-textbox" value="{{send_to}}">
 				</div>
 				<div class="PositionFixReply">
-					<span class="panel-title" style="margin-right:30px;">收件人:</span><input style="width: 730px;" class="easyui-textbox" value="{{send_to}}">
+					<span class="panel-title" style="margin-right:30px;">收件人:</span><input render="receive" style="width: 730px;" class="easyui-textbox" value="{{sent_from}}">
 				</div>
 				<div class="PositionFixReply">
-					<span class="panel-title" style="margin-right:30px;">抄&nbsp;&nbsp;&nbsp;送:</span><input style="width: 730px;" class="easyui-textbox" value="{{send_cc}}">
+					<span class="panel-title" style="margin-right:30px;">抄&nbsp;&nbsp;&nbsp;送:</span><input render="cc" style="width: 730px;" class="easyui-textbox" value="{{send_cc}}">
 				</div>
 				<div class="PositionFixReply">
-					<span class="panel-title" style="margin-right:30px;">主&nbsp;&nbsp;&nbsp;题:</span><input style="width: 730px;" class="easyui-textbox" value="Re:{{subject}}">
+					<span class="panel-title" style="margin-right:30px;">主&nbsp;&nbsp;&nbsp;题:</span><input render="subject" style="width: 730px;" class="easyui-textbox" value="Re:{{subject}}">
 				</div>
-				<iframe name="reply_content" src="/email_reply_editor/" width="100%" height="550px" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="author" allowtransparency="yes"></iframe>
+				<div class="PositionFixReply">
+					<span class="panel-title" style="margin-right:30px;">添加附件:</span><input id="files" name="files" type="file" style="width:200px;" multiple="multiple" >
+				</div>
+				<iframe name="replycontent" src="/email_reply_editor/" width="100%" height="540px" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="author" allowtransparency="yes"></iframe>
 			</div>
 			
 			

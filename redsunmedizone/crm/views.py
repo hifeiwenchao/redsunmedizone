@@ -9,6 +9,7 @@ import os
 import shutil
 import random
 import re
+from mail.utils import SendEmail
 
 def index(request):
     if request.session.__contains__('username') == False:
@@ -574,7 +575,7 @@ def add_email_task(request):
     return HttpResponse('done')
     
     
-def email_list(request):
+def email_list_unread(request):
     try:
         if request.method == "POST":
             '''
@@ -609,8 +610,8 @@ def email_list(request):
                 objs = Customer.objects.raw('select id,sort,name,company_name,nation,email,website from customer order by sort desc,id desc')[start:end]
             data = []
             '''
-            total = Email.objects.count()
-            objs = Email.objects.order_by('-date')[start:end]
+            total = Email.objects.filter(read = 0,status=1).count()
+            objs = Email.objects.filter(read = 0,status=1).order_by('-date')[start:end]
             data = []
             for item in objs:
                 temp = {}
@@ -629,6 +630,119 @@ def email_list(request):
     except Exception as e:
         print(e)
 
+def email_list_read(request):
+    try:
+        if request.method == "POST":
+            '''
+            customer_grade = request.POST.get('customer_grade')
+            search = request.POST.get('search')
+            '''
+            page = request.POST.get('page')
+            rows = request.POST.get('rows')
+            rows = int(rows)
+            page = int(page)
+            start = (page-1)*rows
+            end = page*rows
+            '''
+            if search != None:
+                sql='select t1.id,t1.company_name,t1.name,t1.nation,t1.email,t1.website,t2.religion,t3.nation,t4.source \
+                from customer t1 left join religion t2 on t1.religion = t2.id \
+                left join nation t3 on t1.nation = t3.id \
+                left join source_of_customer t4 on t1.source_of_customer = t4.id \
+                where 1=1'
+                search  = search.split(' ')
+                for item in search:
+                    sql+=' and concat(t1.company_name,t1.name,t1.nation,t1.email,t1.website,t2.religion,t3.nation,t4.source) like "%%'+item+'%%"'
+                objs = Customer.objects.raw(sql +' order by t1.sort desc')
+                objs = [item for item in objs]
+                total = len(objs)
+                
+            elif customer_grade != None and customer_grade != 'all':
+                total = Customer.objects.filter(customer_grade = int(customer_grade)).count()
+                objs = Customer.objects.filter(customer_grade = int(customer_grade)).order_by('-sort')[start:end]
+            else:
+                total = Customer.objects.count()
+                objs = Customer.objects.raw('select id,sort,name,company_name,nation,email,website from customer order by sort desc,id desc')[start:end]
+            data = []
+            '''
+            total = Email.objects.filter(read = 1,status=1).count()
+            objs = Email.objects.filter(read = 1,status=1).order_by('-date')[start:end]
+            data = []
+            for item in objs:
+                temp = {}
+                temp.__setitem__('id', item.id)
+                temp.__setitem__('uid', item.uid)
+                temp.__setitem__('sent_from', eval(item.sent_from)[0]['email'])
+                to_list = []
+                for each in eval(item.send_to):
+                    to_list.append(each['email'].split('@')[0])
+                temp.__setitem__('sent_to', ','.join(to_list))
+                temp.__setitem__('subject', item.subject)
+                temp.__setitem__('date',item.date)
+                temp.__setitem__('read',item.read)
+                data.append(temp)
+            return HttpResponse(json.dumps({'total':total,'rows':data},ensure_ascii=False))
+    except Exception as e:
+        print(e)
+
+
+def email_list_send(request):
+    try:
+        if request.method == "POST":
+            '''
+            customer_grade = request.POST.get('customer_grade')
+            search = request.POST.get('search')
+            '''
+            page = request.POST.get('page')
+            rows = request.POST.get('rows')
+            rows = int(rows)
+            page = int(page)
+            start = (page-1)*rows
+            end = page*rows
+            '''
+            if search != None:
+                sql='select t1.id,t1.company_name,t1.name,t1.nation,t1.email,t1.website,t2.religion,t3.nation,t4.source \
+                from customer t1 left join religion t2 on t1.religion = t2.id \
+                left join nation t3 on t1.nation = t3.id \
+                left join source_of_customer t4 on t1.source_of_customer = t4.id \
+                where 1=1'
+                search  = search.split(' ')
+                for item in search:
+                    sql+=' and concat(t1.company_name,t1.name,t1.nation,t1.email,t1.website,t2.religion,t3.nation,t4.source) like "%%'+item+'%%"'
+                objs = Customer.objects.raw(sql +' order by t1.sort desc')
+                objs = [item for item in objs]
+                total = len(objs)
+                
+            elif customer_grade != None and customer_grade != 'all':
+                total = Customer.objects.filter(customer_grade = int(customer_grade)).count()
+                objs = Customer.objects.filter(customer_grade = int(customer_grade)).order_by('-sort')[start:end]
+            else:
+                total = Customer.objects.count()
+                objs = Customer.objects.raw('select id,sort,name,company_name,nation,email,website from customer order by sort desc,id desc')[start:end]
+            data = []
+            '''
+            total = Email.objects.filter(read = 1,status=2).count()
+            objs = Email.objects.filter(read = 1,status=2).order_by('-date')[start:end]
+            data = []
+            for item in objs:
+                temp = {}
+                temp.__setitem__('id', item.id)
+                temp.__setitem__('uid', item.uid)
+                temp.__setitem__('sent_from', eval(item.sent_from)[0]['email'])
+                to_list = []
+                for each in eval(item.send_to):
+                    to_list.append(each['email'].split('@')[0])
+                temp.__setitem__('sent_to', ','.join(to_list))
+                temp.__setitem__('subject', item.subject)
+                temp.__setitem__('date',item.date)
+                temp.__setitem__('read',item.read)
+                data.append(temp)
+            return HttpResponse(json.dumps({'total':total,'rows':data},ensure_ascii=False))
+    except Exception as e:
+        print(e)
+
+
+
 def email_mark_seen(request):
     email_id = request.GET.get('id')
     Email.objects.filter(id = email_id).update(read = 1)
@@ -644,6 +758,8 @@ def email_detail(request):
     send_to = ','.join([item['email']for item in eval(obj.send_to)])
     send_cc = ','.join([item['email']for item in eval(obj.send_cc)])
     subject = obj.subject
+    
+    
     
     '''
     imgs = re.findall('<img.*>', obj.content, re.I)
@@ -743,4 +859,55 @@ def task_detail(request):
         temp.__setitem__('process_time',time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(item.process_time)))
         data.append(temp)
     return HttpResponse(json.dumps({'total':total,'rows':data},ensure_ascii=False))
+
+
+def reply_email(request):
+    
+    data = request.POST.dict()
+    send_from = data['send_from']
+    send_to = data['send_to']
+    send_cc = data['send_cc']
+    subject = data['subject']
+    content = data['content']
+    
+    account = EmailAccount.objects.filter(address__contains = send_from).first()
+    
+    now_time = int(time.time())
+    Email.objects.create(status=2,read=1,uid='10000',sent_from = send_from,send_to = send_to,send_cc = send_cc,
+         subject = subject,server_id = 'local',date = time.strftime('%Y-%m-%d %X', time.localtime(time.time())),
+         content = content,create_time = now_time)
+    
+    obj = Email.objects.filter(sent_from = send_from,send_to = send_to,content = content,create_time = now_time).order_by('-create_time').first()
+    obj.uid = '100000'+str(obj.id)
+    obj.save()
+    print(obj.id)
+    
+    if settings.DEBUG:
+        path = settings.STATIC_ROOT +'/static/attachment/'
+    else:
+        path = settings.STATIC_ROOT +'/attachment/'
+    
+    file_obj = request.FILES.getlist('files')
+    try:
+        os.mkdir(path+str(obj.uid))
+    except Exception as e:
+        pass
+    attachment = []
+    for item in file_obj:
+        attachment.append({'path':path +str(obj.uid)+'/'+ item.name,'name':item.name})
+        Attachment.objects.create(create_time = int(time.time(  )),size = 0,email_id = str(obj.uid),file_name = item.name,path='/static/attachment/'+str(obj.uid)+'/'+ item.name)
+        with open(path +str(obj.uid)+'/'+ item.name,'wb') as up:
+            for chunk in item.chunks():
+                up.write(chunk)
+        up.close()
+    
+    
+    obj = SendEmail()
+    obj.set_info(account.smtp,account.address,account.password)
+    obj.send_email(account.address,send_to, None, subject,content,attachment)
+    obj.logout()
+    
+    
+    return HttpResponse('done')
+
 

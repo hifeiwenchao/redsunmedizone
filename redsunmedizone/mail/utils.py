@@ -32,9 +32,9 @@ class SendEmail(object):
     
         #构造附件
         for item in attachment:
-            att = MIMEText(open(item.get('url'), 'rb').read(), 'base64', 'utf8')
+            att = MIMEText(open(item.get('path'), 'rb').read(), 'base64', 'utf8')
             att["Content-Type"] = 'application/octet-stream'
-            att["Content-Disposition"] = 'attachment; filename=%s' % item.get('name') #这里的filename可以任意写，写什么名字，邮件中显示什么名字
+            att["Content-Disposition"] = 'attachment; filename="%s"' % item.get('name') #这里的filename可以任意写，写什么名字，邮件中显示什么名字
             msg.attach(att)
                     
         if cc:
