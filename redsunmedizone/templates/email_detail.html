@@ -18,7 +18,7 @@
     		$('a[data=cancel]').linkbutton({
     			onClick:function(){
     				$('#replay').hide()
-    				reply_content.window.setText('')
+    				replycontent.window.setText('')
     		    	$('#mail_info').show()
     			}
     		});
@@ -57,11 +57,11 @@
         					    },
         					    success: function(data){
         					    	$('#loading').fadeOut('slow')
-        					    	window.parent.AlertInfo('greed','发送成功','邮件发送成功!(窗口自动关闭)')
+        					    	window.parent.AlertInfoHard('greed','发送成功','邮件发送成功!')
         					    },
         					    error: function(data){
         					    	$('#loading').fadeOut('slow')
-        					    	window.parent.AlertInfo('red','发送失败','邮件发送失败!(请联系管理员)')
+        					    	window.parent.AlertInfoHard('red','发送失败','邮件发送失败!(请联系管理员)')
         					    },
         					    data: data,
         					    cache: false,
@@ -82,7 +82,7 @@
     		
     	});
     	
-	    var line = '<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><div style="border-bottom:1px solid gray;width:500px">At {{obj.date}} , {{sent_from}} wrote:</div><br/>'
+	    var line = '<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><div data="signature">签名位上下1格勿删,自动替换</div><br/><br/><div style="border-bottom:1px solid gray;width:500px">At {{obj.date}} , {{sent_from}} wrote:</div><br/>'
 	    function EmailReply(){
     		content =$('#content').html()
 	    	replycontent.window.setText(line+$.trim(content))
@@ -125,8 +125,6 @@
 				<div id="operate" style="width:150px;">
 					<div class="menu-sep"></div>
 				    <div onclick="EmailReply()">回复</div>
-				    <div>回复全部</div>
-				    <div>回复全部(带附件)</div>
 				    <div class="menu-sep"></div>
 				    <div>转发</div>
 				    <div class="menu-sep"></div>
@@ -137,11 +135,13 @@
 			<div id="replay" class="PositionFix" style="display: none;">
 				<div style="text-align: right;margin-right:10%;float: right">
 					<a href="#" class="easyui-linkbutton" iconCls="icon-mail" data="send_mail">发送</a>
-					<span style="margin-left:30px;"></span>
+					<span style="margin-left:10px;"></span>
+					<a href="#" class="easyui-linkbutton" iconCls="icon-draft" data="draft">保存草稿</a>
+					<span style="margin-left:10px;"></span>
 					<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" data="cancel">取消</a>
 				</div>
 				<div class="PositionFixReply">
-					<span class="panel-title" style="margin-right:30px;">发件人:</span><input render="send" style="width: 730px;" class="easyui-textbox" value="{{send_to}}">
+					<span class="panel-title" style="margin-right:30px;">发件人:</span><input render="send" style="width: 530px;" class="easyui-textbox" value="{{send_to}}">
 				</div>
 				<div class="PositionFixReply">
 					<span class="panel-title" style="margin-right:30px;">收件人:</span><input render="receive" style="width: 730px;" class="easyui-textbox" value="{{sent_from}}">

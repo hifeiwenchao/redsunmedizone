@@ -6,7 +6,8 @@ Created on 2016年2月14日
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-
+from email.mime.base import MIMEBase
+from email import encoders
 class SendEmail(object):
     
     #发送邮件初始化
@@ -32,9 +33,15 @@ class SendEmail(object):
     
         #构造附件
         for item in attachment:
+            att = MIMEBase('application','octet-stream')
+            att.set_payload(open(item.get('path'),'rb').read())
+            att.add_header('Content-Disposition','attachment',filename=('gbk','',item.get('name')))
+            encoders.encode_base64(att)
+            '''
             att = MIMEText(open(item.get('path'), 'rb').read(), 'base64', 'utf8')
             att["Content-Type"] = 'application/octet-stream'
             att["Content-Disposition"] = 'attachment; filename="%s"' % item.get('name') #这里的filename可以任意写，写什么名字，邮件中显示什么名字
+            '''
             msg.attach(att)
                     
         if cc:

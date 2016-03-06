@@ -310,5 +310,8 @@ function AlertInfo(color,title,body){
     });
 }
 
+function AlertInfoHard(color,title,body){
+	$.messager.alert('<span style="color:'+color+'">'+title+'</span>',body,'info');
+}
 
 

@@ -22,8 +22,6 @@ $(function($){
 	});
 	
 	
-	
-	
 	$('#email_list_unread').datagrid({
 		fit:true,
 		border:false,
@@ -52,7 +50,9 @@ $(function($){
 				formatter:function(value,row,index){
 					return'<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetail(this)">查看</a>'+
 					'<span style="margin:0 5px 0 5px"></span>'+
-					'<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="MarkSeen(this)">已读</a>'
+					'<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="MarkSeen(this)">已读</a>' +
+					'<span style="margin:0 5px 0 5px"></span>'+
+					'<a href="#" style="text-decoration:none;color:blue;"  onclick="ChangeEmailStatus('+row.id+',4)">垃圾</a>'
 				}
 			},
 		]],
@@ -79,21 +79,33 @@ $(function($){
         	}
     	},
 		columns:[[
+            {field:'type',title:' ',width:fixWidth(0.01),align:'center',halign:'center',
+            	formatter:function(value,row,index){
+            		if(row.type == 1){
+            			return '<img src="/static/img/inquiry.png" />'
+            		}else{
+            			return ''
+            		}
+            	}
+            },
 			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
 			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
-			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.15),align:'left',halign:'center',},
+			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.14),align:'left',halign:'center',},
 			{field:'date',title:'接收日期',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
 			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.04),align:'center',halign:'center',
 				formatter:function(value,row,index){
 					return'<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetailRead(this)">查看</a>'+
-					'<span style="margin:0 5px 0 5px"></span>'
+					'<span style="margin:0 5px 0 5px"></span>'+
+					'<a href="#" style="text-decoration:none;color:blue;"  onclick="ChangeEmailType('+row.id+',1)">询盘</a>'+
+					'<span style="margin:0 5px 0 5px"></span>'+
+					'<a href="#" style="text-decoration:none;color:blue;"  onclick="ChangeEmailStatus('+row.id+',4)">垃圾</a>'
 					
 				}
 			},
 		]],
 	});
 	
-	/*
+	
 	$('#email_list_send').datagrid({
 		fit:true,
 		border:false,
@@ -105,7 +117,105 @@ $(function($){
         pagination:true,//分页控件 
         pageSize:20,
         pageList:[20,40,60,100],
-        url:'/email_list_send/',
+        url:'/email_list_sent/',
+        method:'post',
+        rownumbers:false,
+		columns:[[
+			{field:'type',title:' ',width:fixWidth(0.01),align:'center',halign:'center',
+				formatter:function(value,row,index){
+					if(row.type == 2){
+						return '<img src="/static/img/quotation.png" />'
+					}else{
+						return ''
+					}
+				}
+			},
+			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
+			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
+			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.14),align:'left',halign:'center',},
+			{field:'date',title:'发送日期',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
+			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.04),align:'center',halign:'center',
+				formatter:function(value,row,index){
+					return'<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetailRead(this)">查看</a>'+
+					'<span style="margin:0 5px 0 5px"></span>'+
+					'<a href="#" style="text-decoration:none;color:blue;"  onclick="ChangeEmailType('+row.id+',2)">报价</a>'
+				}
+			},
+		]],
+	});
+	
+	
+	$('#email_list_draft').datagrid({
+		fit:true,
+		border:false,
+		remoteSort:false,
+		nowrap:false,
+		autoRowHeight:true,
+		fitColumns:true,
+		singleSelect:true,//是否单选 
+        pagination:true,//分页控件 
+        pageSize:20,
+        pageList:[20,40,60,100],
+        url:'/email_list_draft/',
+        method:'post',
+        rownumbers:false,
+		columns:[[
+			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
+			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
+			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.15),align:'left',halign:'center',},
+			{field:'date',title:'发送日期',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
+			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.04),align:'center',halign:'center',
+				formatter:function(value,row,index){
+					return'<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetailRead(this)">查看</a>'+
+					'<span style="margin:0 5px 0 5px"></span>'
+				}
+			},
+		]],
+	});
+	
+	$('#email_list_trash').datagrid({
+		fit:true,
+		border:false,
+		remoteSort:false,
+		nowrap:false,
+		autoRowHeight:true,
+		fitColumns:true,
+		singleSelect:true,//是否单选 
+        pagination:true,//分页控件 
+        pageSize:20,
+        pageList:[20,40,60,100],
+        url:'/email_list_trash/',
+        method:'post',
+        rownumbers:false,
+		columns:[[
+			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
+			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
+			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.12),align:'left',halign:'center',},
+			{field:'date',title:'发送日期',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
+			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.04),align:'center',halign:'center',
+				formatter:function(value,row,index){
+					return'<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetailRead(this)">查看</a>'+
+					'<span style="margin:0 5px 0 5px"></span>'+
+					'<a href="#" style="text-decoration:none;color:blue;"  onclick="MatchCustomer('+row.id+')">匹配客户</a>'
+				}
+			},
+		]],
+	});
+	
+	
+	
+	$('#email_list_inquiry').datagrid({
+		fit:true,
+		border:false,
+		remoteSort:false,
+		nowrap:false,
+		autoRowHeight:true,
+		fitColumns:true,
+		singleSelect:true,//是否单选 
+        pagination:true,//分页控件 
+        pageSize:20,
+        pageList:[20,40,60,100],
+        url:'/email_list_inquiry/',
         method:'post',
         rownumbers:false,
         rowStyler: function(index,row){
@@ -117,16 +227,50 @@ $(function($){
 			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
 			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
 			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.15),align:'left',halign:'center',},
-			{field:'date',title:'发送日期',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
+			{field:'date',title:'接收日期',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
 			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.04),align:'center',halign:'center',
 				formatter:function(value,row,index){
 					return'<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetailRead(this)">查看</a>'+
-					'<span style="margin:0 5px 0 5px"></span>'
+					'<span style="margin:0 5px 0 5px"></span>'+
+					'<a href="#" style="text-decoration:none;color:blue;"  onclick="ChangeEmailType('+row.id+',1)">询盘</a>'
+					'<span style="margin:0 5px 0 5px"></span>'+
+					'<a href="#" style="text-decoration:none;color:blue;"  onclick="ChangeEmailStatus('+row.id+',4)">垃圾</a>'
+					
 				}
 			},
 		]],
 	});
-	*/
+	
+	
+	$('#email_list_quotation').datagrid({
+		fit:true,
+		border:false,
+		remoteSort:false,
+		nowrap:false,
+		autoRowHeight:true,
+		fitColumns:true,
+		singleSelect:true,//是否单选 
+        pagination:true,//分页控件 
+        pageSize:20,
+        pageList:[20,40,60,100],
+        url:'/email_list_quotation/',
+        method:'post',
+        rownumbers:false,
+		columns:[[
+			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
+			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
+			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.15),align:'left',halign:'center',},
+			{field:'date',title:'发送日期',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
+			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.04),align:'center',halign:'center',
+				formatter:function(value,row,index){
+					return'<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetailRead(this)">查看</a>'+
+					'<span style="margin:0 5px 0 5px"></span>'+
+					'<a href="#" style="text-decoration:none;color:blue;"  onclick="ChangeEmailType('+row.id+',2)">报价</a>'
+				}
+			},
+		]],
+	});
+	
 });
 
 
@@ -233,28 +377,50 @@ function openFromCustomerList(address){
 
 
 function sendEmail(){
-	alert('1')
-}
-/**
- function emailAccountDetail(id){
-	$('#loading').show();
-	$.ajax({url:'/save_customer/',type:'POST',data:{'id':id},success:function(data){
-        $.messager.show({title:'<span style="color:green">获取信息成功</span>',
-            msg:'信息获取成功!(窗口自动关闭)',showType:'slide',
-            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
-        });
-        $('#customer_list').datagrid('reload')
-		$('#loading').fadeOut();
-	},error:function(data){
-		$.messager.show({title:'<span style="color:red">保存失败</span>',
-            msg:'信息保存失败!(呼叫开发者)',showType:'slide',
-            style:{right:'',top:'',bottom:-document.body.scrollTop-document.documentElement.scrollTop}
-        });
-		$('#loading').fadeOut();
+	var send_from = $('#email_send_from').combobox('getValue')
+	if(send_from == ''){AlertInfoHard('red','发件人必须选择','发件人必须选择!')}
+	var send_to = $('#email_send_to').textbox('getValue')
+	if($.trim(send_to) == ''){AlertInfoHard('red','收件人必须选择','收件人必须选择!')}
+	var send_cc = $('#email_send_cc').textbox('getValue')
+	var subject = $('#email_subject').textbox('getValue')
+	var content = email_send_content.window.getText()
+	var data = new FormData();
+	var file = $('#files')[0].files;
+	if(file.length != 0){
+		for(var i=0;i<file.length;i++){
+			data.append("files",file[i])
 		}
+	}
+	
+	data.append('send_from',send_from)
+	data.append('send_to',send_to)
+	data.append('send_cc',send_cc)
+	data.append('subject',subject)
+	data.append('content', content)
+	
+	$('#loading').show()
+	$.ajax({url:'/send_email/', type: 'POST',
+		xhr: function() {
+	        myXhr = $.ajaxSettings.xhr();
+	        return myXhr;
+	    },
+	    success: function(data){
+	    	$('#email_list_send').datagrid('reload')
+	    	$('#loading').fadeOut('slow')
+	    	AlertInfoHard('greed','发送成功','邮件发送成功!')
+	    },
+	    error: function(data){
+	    	$('#loading').fadeOut('slow')
+	    	AlertInfoHard('red','发送失败','邮件发送失败!(请联系管理员)')
+	    },
+	    data: data,
+	    cache: false,
+	    contentType: false,
+	    processData: false
 	});
+	
+	
 }
- */
 
 function EmailDetail(obj){
 	$obj = $(obj)
@@ -294,3 +460,33 @@ function MarkSeen(obj){
 		}
 	});
 }
+
+function ChangeEmailStatus(id,status){
+	$.ajax({url:'/change_email_status/',type:'POST',data:{'email_id':id,'status':status},success:function(data){
+        $('#email_list_unread').datagrid('reload')
+        $('#email_list_read').datagrid('reload')
+	},error:function(data){
+		AlertInfo('red','标记失败','标记状态失败!(呼叫开发者)!')
+		}
+	});
+}
+
+function ChangeEmailType(id,type){
+	console.log(id)
+	console.log(type)
+	$.ajax({url:'/change_email_type/',type:'POST',data:{'email_id':id,'type':type},success:function(data){
+        $('#email_list_send').datagrid('reload')
+        $('#email_list_read').datagrid('reload')
+        $('#email_list_quotation').datagrid('reload')
+        $('#email_list_inquiry').datagrid('reload')
+        AlertInfo('green','标记成功','标记类型成功!')
+	},error:function(data){
+		AlertInfo('red','标记失败','标记类型失败!(呼叫开发者)!')
+		}
+	});
+}
+
+function MatchCustomer(id){
+	console.log(id)
+}
+

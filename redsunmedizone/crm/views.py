@@ -625,6 +625,7 @@ def email_list_unread(request):
                 temp.__setitem__('subject', item.subject)
                 temp.__setitem__('date',item.date)
                 temp.__setitem__('read',item.read)
+                temp.__setitem__('type',item.type)
                 data.append(temp)
             return HttpResponse(json.dumps({'total':total,'rows':data},ensure_ascii=False))
     except Exception as e:
@@ -680,49 +681,89 @@ def email_list_read(request):
                 temp.__setitem__('subject', item.subject)
                 temp.__setitem__('date',item.date)
                 temp.__setitem__('read',item.read)
+                temp.__setitem__('type',item.type)
                 data.append(temp)
             return HttpResponse(json.dumps({'total':total,'rows':data},ensure_ascii=False))
     except Exception as e:
         print(e)
 
 
-def email_list_send(request):
+def email_list_sent(request):
     try:
         if request.method == "POST":
-            '''
-            customer_grade = request.POST.get('customer_grade')
-            search = request.POST.get('search')
-            '''
             page = request.POST.get('page')
             rows = request.POST.get('rows')
             rows = int(rows)
             page = int(page)
             start = (page-1)*rows
             end = page*rows
-            '''
-            if search != None:
-                sql='select t1.id,t1.company_name,t1.name,t1.nation,t1.email,t1.website,t2.religion,t3.nation,t4.source \
-                from customer t1 left join religion t2 on t1.religion = t2.id \
-                left join nation t3 on t1.nation = t3.id \
-                left join source_of_customer t4 on t1.source_of_customer = t4.id \
-                where 1=1'
-                search  = search.split(' ')
-                for item in search:
-                    sql+=' and concat(t1.company_name,t1.name,t1.nation,t1.email,t1.website,t2.religion,t3.nation,t4.source) like "%%'+item+'%%"'
-                objs = Customer.objects.raw(sql +' order by t1.sort desc')
-                objs = [item for item in objs]
-                total = len(objs)
-                
-            elif customer_grade != None and customer_grade != 'all':
-                total = Customer.objects.filter(customer_grade = int(customer_grade)).count()
-                objs = Customer.objects.filter(customer_grade = int(customer_grade)).order_by('-sort')[start:end]
-            else:
-                total = Customer.objects.count()
-                objs = Customer.objects.raw('select id,sort,name,company_name,nation,email,website from customer order by sort desc,id desc')[start:end]
-            data = []
-            '''
             total = Email.objects.filter(read = 1,status=2).count()
             objs = Email.objects.filter(read = 1,status=2).order_by('-date')[start:end]
+            data = []
+            for item in objs:
+                temp = {}
+                temp.__setitem__('id', item.id)
+                temp.__setitem__('uid', item.uid)
+                temp.__setitem__('sent_from',item.sent_from.split('@')[0])
+                '''
+                to_list = []
+                for each in eval(item.send_to):
+                    to_list.append(each['email'].split('@')[0])
+                '''
+                temp.__setitem__('sent_to', item.send_to)
+                temp.__setitem__('subject', item.subject)
+                temp.__setitem__('date',item.date)
+                temp.__setitem__('read',item.read)
+                temp.__setitem__('type',item.type)
+                data.append(temp)
+            return HttpResponse(json.dumps({'total':total,'rows':data},ensure_ascii=False))
+    except Exception as e:
+        print(e)
+
+def email_list_draft(request):
+    try:
+        if request.method == "POST":
+            page = request.POST.get('page')
+            rows = request.POST.get('rows')
+            rows = int(rows)
+            page = int(page)
+            start = (page-1)*rows
+            end = page*rows
+            total = Email.objects.filter(read = 1,status=3).count()
+            objs = Email.objects.filter(read = 1,status=3).order_by('-date')[start:end]
+            data = []
+            for item in objs:
+                temp = {}
+                temp.__setitem__('id', item.id)
+                temp.__setitem__('uid', item.uid)
+                temp.__setitem__('sent_from',item.sent_from.split('@')[0])
+                '''
+                to_list = []
+                for each in eval(item.send_to):
+                    to_list.append(each['email'].split('@')[0])
+                '''
+                temp.__setitem__('sent_to', item.send_to)
+                temp.__setitem__('subject', item.subject)
+                temp.__setitem__('date',item.date)
+                temp.__setitem__('read',item.read)
+                temp.__setitem__('type',item.type)
+                data.append(temp)
+            return HttpResponse(json.dumps({'total':total,'rows':data},ensure_ascii=False))
+    except Exception as e:
+        print(e)
+
+
+def email_list_trash(request):
+    try:
+        if request.method == "POST":
+            page = request.POST.get('page')
+            rows = request.POST.get('rows')
+            rows = int(rows)
+            page = int(page)
+            start = (page-1)*rows
+            end = page*rows
+            total = Email.objects.filter(read = 1,status=4).exclude(server_id = 'local').count()
+            objs = Email.objects.filter(read = 1,status=4).exclude(server_id = 'local').order_by('-date')[start:end]
             data = []
             for item in objs:
                 temp = {}
@@ -736,11 +777,68 @@ def email_list_send(request):
                 temp.__setitem__('subject', item.subject)
                 temp.__setitem__('date',item.date)
                 temp.__setitem__('read',item.read)
+                temp.__setitem__('type',item.type)
                 data.append(temp)
             return HttpResponse(json.dumps({'total':total,'rows':data},ensure_ascii=False))
     except Exception as e:
         print(e)
 
+def email_list_inquiry(request):
+    try:
+        if request.method == "POST":
+            page = request.POST.get('page')
+            rows = request.POST.get('rows')
+            rows = int(rows)
+            page = int(page)
+            start = (page-1)*rows
+            end = page*rows
+            total = Email.objects.filter(read = 1,type=1).count()
+            objs = Email.objects.filter(read = 1,type=1).order_by('-date')[start:end]
+            data = []
+            for item in objs:
+                temp = {}
+                temp.__setitem__('id', item.id)
+                temp.__setitem__('uid', item.uid)
+                temp.__setitem__('sent_from', eval(item.sent_from)[0]['email'])
+                to_list = []
+                for each in eval(item.send_to):
+                    to_list.append(each['email'].split('@')[0])
+                temp.__setitem__('sent_to', ','.join(to_list))
+                temp.__setitem__('subject', item.subject)
+                temp.__setitem__('date',item.date)
+                temp.__setitem__('read',item.read)
+                temp.__setitem__('type',item.type)
+                data.append(temp)
+            return HttpResponse(json.dumps({'total':total,'rows':data},ensure_ascii=False))
+    except Exception as e:
+        print(e)
+
+def email_list_quotation(request):
+    try:
+        if request.method == "POST":
+            page = request.POST.get('page')
+            rows = request.POST.get('rows')
+            rows = int(rows)
+            page = int(page)
+            start = (page-1)*rows
+            end = page*rows
+            total = Email.objects.filter(read = 1,type=2).count()
+            objs = Email.objects.filter(read = 1,type=2).order_by('-date')[start:end]
+            data = []
+            for item in objs:
+                temp = {}
+                temp.__setitem__('id', item.id)
+                temp.__setitem__('uid', item.uid)
+                temp.__setitem__('sent_from',item.sent_from.split('@')[0])
+                temp.__setitem__('sent_to', item.send_to)
+                temp.__setitem__('subject', item.subject)
+                temp.__setitem__('date',item.date)
+                temp.__setitem__('read',item.read)
+                temp.__setitem__('type',item.type)
+                data.append(temp)
+            return HttpResponse(json.dumps({'total':total,'rows':data},ensure_ascii=False))
+    except Exception as e:
+        print(e)
 
 
 def email_mark_seen(request):
@@ -749,17 +847,82 @@ def email_mark_seen(request):
     
     return HttpResponse('done')
 
+def change_email_status(request):
+    Email.objects.filter(id = request.POST.get('email_id')).update(status = request.POST.get('status'))
+    return HttpResponse('done')
+
+def change_email_type(request):
+    Email.objects.filter(id = request.POST.get('email_id')).update(type = request.POST.get('type'))
+    return HttpResponse('done')
+
+
+def send_email(request):
+    
+    data = request.POST.dict()
+    send_from = data['send_from']
+    send_to = data['send_to']
+    send_cc = None if data['send_cc'] == "" else data['send_cc']
+    subject = data['subject']
+    content = data['content']
+    
+    account = EmailAccount.objects.filter(id = send_from).first()
+    content = content +'<br><br><br>'+account.signature
+    
+    now_time = int(time.time())
+    uid = '1'+str(int(time.time()))
+    Email.objects.create(status=2,read=1,uid=uid,sent_from = account.address,send_to = send_to,send_cc = data['send_cc'],
+         subject = subject,server_id = 'local',date = time.strftime('%Y-%m-%d %X', time.localtime(time.time())),
+         content = content,create_time = now_time)
+    
+    if settings.DEBUG:
+        path = settings.STATIC_ROOT +'/static/attachment/'
+    else:
+        path = settings.STATIC_ROOT +'/attachment/'
+    
+    file_obj = request.FILES.getlist('files')
+    try:
+        os.mkdir(path+str(uid))
+    except Exception as e:
+        pass
+    attachment = []
+    for item in file_obj:
+        attachment.append({'path':path +str(uid)+'/'+ item.name,'name':item.name})
+        Attachment.objects.create(create_time = int(time.time(  )),size = 0,email_id = str(uid),file_name = item.name,path='/static/attachment/'+str(uid)+'/'+ item.name)
+        with open(path +str(uid)+'/'+ item.name,'wb') as up:
+            for chunk in item.chunks():
+                up.write(chunk)
+        up.close()
+    
+    
+    obj = SendEmail()
+    obj.set_info(account.smtp,account.address,account.password)
+    obj.send_email(account.address,send_to, send_cc, subject,content,attachment)
+    obj.logout()
+    
+    
+    return HttpResponse('done')
+
+
+
 #需修改
 def email_detail(request):
     email_id = request.GET.get('id')
     
     obj = Email.objects.filter(id = email_id).first()
-    sent_from = ','.join([item['email']for item in eval(obj.sent_from)])
-    send_to = ','.join([item['email']for item in eval(obj.send_to)])
-    send_cc = ','.join([item['email']for item in eval(obj.send_cc)])
+    try:
+        sent_from = ','.join([item['email']for item in eval(obj.sent_from)])
+    except Exception as e :
+        sent_from = obj.sent_from
+    
+    try:
+        send_to = ','.join([item['email']for item in eval(obj.send_to)])
+    except Exception as e :
+        send_to = obj.send_to
+    try:
+        send_cc = ','.join([item['email']for item in eval(obj.send_cc)])
+    except Exception as e :
+        send_cc = obj.send_cc
     subject = obj.subject
-    
-    
     
     '''
     imgs = re.findall('<img.*>', obj.content, re.I)
@@ -774,6 +937,7 @@ def email_detail(request):
     att = Attachment.objects.filter(email_id = obj.uid).all()
     
     return render(request, 'email_detail.html',{'att':att,'obj':obj,'sent_from':sent_from,'send_to':send_to,'send_cc':send_cc,'subject':subject})
+
 
 
 
@@ -871,16 +1035,13 @@ def reply_email(request):
     content = data['content']
     
     account = EmailAccount.objects.filter(address__contains = send_from).first()
+    content = content.replace('<div data="signature">签名位上下1格勿删,自动替换</div>',account.signature)
     
     now_time = int(time.time())
-    Email.objects.create(status=2,read=1,uid='10000',sent_from = send_from,send_to = send_to,send_cc = send_cc,
+    uid = '1'+str(int(time.time()))
+    Email.objects.create(status=2,read=1,uid=uid,sent_from = send_from,send_to = send_to,send_cc = send_cc,
          subject = subject,server_id = 'local',date = time.strftime('%Y-%m-%d %X', time.localtime(time.time())),
          content = content,create_time = now_time)
-    
-    obj = Email.objects.filter(sent_from = send_from,send_to = send_to,content = content,create_time = now_time).order_by('-create_time').first()
-    obj.uid = '100000'+str(obj.id)
-    obj.save()
-    print(obj.id)
     
     if settings.DEBUG:
         path = settings.STATIC_ROOT +'/static/attachment/'
@@ -889,14 +1050,14 @@ def reply_email(request):
     
     file_obj = request.FILES.getlist('files')
     try:
-        os.mkdir(path+str(obj.uid))
+        os.mkdir(path+str(uid))
     except Exception as e:
         pass
     attachment = []
     for item in file_obj:
-        attachment.append({'path':path +str(obj.uid)+'/'+ item.name,'name':item.name})
-        Attachment.objects.create(create_time = int(time.time(  )),size = 0,email_id = str(obj.uid),file_name = item.name,path='/static/attachment/'+str(obj.uid)+'/'+ item.name)
-        with open(path +str(obj.uid)+'/'+ item.name,'wb') as up:
+        attachment.append({'path':path +str(uid)+'/'+ item.name,'name':item.name})
+        Attachment.objects.create(create_time = int(time.time(  )),size = 0,email_id = str(uid),file_name = item.name,path='/static/attachment/'+str(uid)+'/'+ item.name)
+        with open(path +str(uid)+'/'+ item.name,'wb') as up:
             for chunk in item.chunks():
                 up.write(chunk)
         up.close()

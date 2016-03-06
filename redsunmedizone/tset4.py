@@ -7,6 +7,7 @@ from imapclient.imapclient import IMAPClient
 import os
 from functools import cmp_to_key
 import random
+import time
 
 '''
 client = IMAPClient('imap.alibaba.com',ssl=False)
@@ -52,8 +53,6 @@ data = path_to_dict(path)
 
 print(data)
 '''
-
-
 
 
 
