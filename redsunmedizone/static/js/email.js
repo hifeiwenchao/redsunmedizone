@@ -271,6 +271,75 @@ $(function($){
 		]],
 	});
 	
+	
+	$('#trash_like_info').datagrid({
+		fit:true,
+		border:false,
+		remoteSort:false,
+		nowrap:false,
+		autoRowHeight:true,
+		fitColumns:true,
+		singleSelect:true,//是否单选 
+        pagination:false,//分页控件 
+        url:'/match_customer/',
+        method:'post',
+        rownumbers:false,
+		columns:[[
+			{field:'id',title:'<span style="font-size:16px;font-weight: bold;">ID<span>',sortable:true,width:40,align:'center',halign:'center',
+				formatter:function(value,rowData,rowIndex){
+					return '<a href="#" style="text-decoration:none;color:blue;" onclick="customerDetail('+rowData.id+')">'+rowData.id+'</a>'
+					//return $('<a/>').attr('href','#').css({'text-decoration':'none','color':'blue'})
+				},
+			},
+			{field:'history',title:'历史',sortable:true,width:35,align:'center',halign:'center',
+				formatter:function(value,rowData,rowIndex){
+					return '<a href="#" style="text-decoration:none;color:blue;" class="icon-mail">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>'
+				},
+			},
+			{field:'company_name',title:'<span style="font-size:16px;font-weight: bold;">公司名<span>',sortable:true,width:fixWidth(0.12),align:'left',halign:'center',},
+			{field:'name',title:'<span style="font-size:16px;font-weight: bold;">人名<span>',sortable:true,width:fixWidth(0.1),align:'center',halign:'center',
+				formatter:function(value,rowData,rowIndex){
+					return '<a href="#" style="text-decoration:none;color:blue;" onclick="customerDetail('+rowData.id+')">'+rowData.name+'</a>'
+				},
+			},
+			{field:'nation',title:'<span style="font-size:16px;font-weight: bold;">国家<span>',sortable:true,width:fixWidth(0.05),align:'center',halign:'center',
+                                 formatter: function(value,rowData,rowIndex){
+                                           if (rowData.sort == 100){
+                                                  return '<span style="color:red">'+rowData.nation+'</span>';
+                                           }else{
+                                                  return rowData.nation;
+                                           }
+                                 },
+                        },
+			{field:'email',title:'<span style="font-size:16px;font-weight: bold;">邮箱<span>',sortable:true,width:fixWidth(0.15),align:'center',halign:'center',
+                formatter:function(value,row,index){
+                	var email = $.trim(row.email)
+                	email = email.split('\n')
+                	var content = ''
+                	var format_address = ''
+                	for(j in email){
+                		format_address += email[j] +';'
+                	}
+                	for(i in email){
+                		content += '<div><a style="text-decoration:none;color:blue;" href="#" onclick="openFromCustomerList(\''+format_address+'\')">'+email[i]+'</a></div>'
+                	}
+                	return content
+                }
+			},
+			{field:'website',title:'<span style="font-size:16px;font-weight: bold;">网站<span>',sortable:true,width:fixWidth(0.11),align:'center',halign:'center',
+				formatter:function(value,rowData,rowIndex){
+					if($.trim(rowData.website) == ''){
+						return rowData.website
+					}else{
+						return '<a style="text-decoration:none;color:blue;" href="http://'+rowData.website+'" target="_blank">'+rowData.website+'</a>'
+					}
+				},
+			},
+		]],
+	});
+	
+	
+	
 });
 
 
@@ -472,8 +541,6 @@ function ChangeEmailStatus(id,status){
 }
 
 function ChangeEmailType(id,type){
-	console.log(id)
-	console.log(type)
 	$.ajax({url:'/change_email_type/',type:'POST',data:{'email_id':id,'type':type},success:function(data){
         $('#email_list_send').datagrid('reload')
         $('#email_list_read').datagrid('reload')
@@ -487,6 +554,42 @@ function ChangeEmailType(id,type){
 }
 
 function MatchCustomer(id){
-	console.log(id)
+	$('#trash_customer_info').fadeIn()
+	
+	$('#trash_like_info').datagrid({
+		queryParams:{
+			email_id:id,
+		}
+	});
+	/*
+	$('#loading').show()
+	$.ajax({url:'/match_customer/',type:'POST',data:{'email_id':id},success:function(data){
+		$('#loading').fadeOut()
+		
+		AlertInfo('green','匹配成功','匹配成功!')
+	},error:function(data){
+		$('#loading').fadeOut()
+		AlertInfo('red','匹配失败','匹配失败,服务器出错!(呼叫开发者)!')
+		}
+	});
+	*/
 }
+
+function AddBlackList(){
+	var row_data = $('#trash_like_info').datagrid('getSelected')
+	if(row_data == null){return}
+	console.log(row_data.id)
+	
+	$('#loading').show()
+	$.ajax({url:'/add_black_list/',type:'POST',data:{'id':row_data.id},success:function(data){
+		$('#loading').fadeOut()
+		AlertInfo('green','转移成功','转移到无效客户中!')
+	},error:function(data){
+		$('#loading').fadeOut()
+		AlertInfo('red','转移失败','转移失败,服务器出错!(呼叫开发者)!')
+		}
+	});
+}
+
+
 

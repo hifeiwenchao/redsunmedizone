@@ -80,6 +80,8 @@ urlpatterns = [
     url(r'task_detail/$', views.task_detail),
     url(r'reply_email/$', views.reply_email),
     url(r'send_email/$', views.send_email),
+    url(r'match_customer/$', views.match_customer),
+    url(r'add_black_list/$', views.add_black_list),
 ]
 
 

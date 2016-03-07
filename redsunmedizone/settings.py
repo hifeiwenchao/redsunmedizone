@@ -37,11 +37,11 @@ CACHES = {
 from celery.schedules import crontab
 
 CELERYBEAT_SCHEDULE = {
-    #'fetch_email': {
-    #    'task':'mail.tasks.main_fetch_email',
-    #    'schedule': crontab(minute='*/4'),
-    #    'args': (),
-    #},
+    'fetch_email': {
+        'task':'mail.tasks.main_fetch_email',
+        'schedule': crontab(minute='*/4'),
+        'args': (),
+    },
     'process_task': {
         'task':'mail.tasks.process_task',
         'schedule': crontab(),
@@ -55,7 +55,7 @@ CELERY_ACCEPT_CONTENT=['pickle']
 BROKER_URL = 'redis://127.0.0.1:6379/0'
 CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379/1"
 CELERYD_CONCURRENCY = 4
-CELERYD_MAX_TASKS_PER_CHILD = 12
+CELERYD_MAX_TASKS_PER_CHILD = 10
 CELERYD_POOL_RESTARTS = True
 BROKER_CONNECTION_TIMEOUT = 10
 CELERY_TASK_RESULT_EXPIRES = 3600

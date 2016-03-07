@@ -71,7 +71,7 @@ def customer_list(request):
                 from customer t1 left join religion t2 on t1.religion = t2.id \
                 left join nation t3 on t1.nation = t3.id \
                 left join source_of_customer t4 on t1.source_of_customer = t4.id \
-                where 1=1'
+                where t1.customer_grade <> 4 and  1=1'
                 search  = search.split(' ')
                 for item in search:
                     sql+=' and concat(t1.company_name,t1.name,t1.nation,t1.email,t1.website,t2.religion,t3.nation,t4.source) like "%%'+item+'%%"'
@@ -83,8 +83,8 @@ def customer_list(request):
                 total = Customer.objects.filter(customer_grade = int(customer_grade)).count()
                 objs = Customer.objects.filter(customer_grade = int(customer_grade)).order_by('-sort')[start:end]
             else:
-                total = Customer.objects.count()
-                objs = Customer.objects.raw('select id,sort,name,company_name,nation,email,website from customer order by sort desc,id desc')[start:end]
+                total = Customer.objects.exclude(customer_grade = 4).count()
+                objs = Customer.objects.raw('select id,sort,name,company_name,nation,email,website from customer where customer_grade <> 4 order by sort desc,id desc')[start:end]
             data = []
             for item in objs:
                 temp = {}
@@ -679,7 +679,7 @@ def email_list_read(request):
                     to_list.append(each['email'].split('@')[0])
                 temp.__setitem__('sent_to', ','.join(to_list))
                 temp.__setitem__('subject', item.subject)
-                temp.__setitem__('date',item.date)
+                temp.__setitem__('date', '2016-01-01 00:00:00' if item.date == 'None' else item.date)
                 temp.__setitem__('read',item.read)
                 temp.__setitem__('type',item.type)
                 data.append(temp)
@@ -869,7 +869,7 @@ def send_email(request):
     content = content +'<br><br><br>'+account.signature
     
     now_time = int(time.time())
-    uid = '1'+str(int(time.time()))
+    uid = '1'+str(int(time.time()))[-5:]
     Email.objects.create(status=2,read=1,uid=uid,sent_from = account.address,send_to = send_to,send_cc = data['send_cc'],
          subject = subject,server_id = 'local',date = time.strftime('%Y-%m-%d %X', time.localtime(time.time())),
          content = content,create_time = now_time)
@@ -1038,7 +1038,7 @@ def reply_email(request):
     content = content.replace('<div data="signature">签名位上下1格勿删,自动替换</div>',account.signature)
     
     now_time = int(time.time())
-    uid = '1'+str(int(time.time()))
+    uid = '1'+str(int(time.time()))[-5:]
     Email.objects.create(status=2,read=1,uid=uid,sent_from = send_from,send_to = send_to,send_cc = send_cc,
          subject = subject,server_id = 'local',date = time.strftime('%Y-%m-%d %X', time.localtime(time.time())),
          content = content,create_time = now_time)
@@ -1071,4 +1071,43 @@ def reply_email(request):
     
     return HttpResponse('done')
 
+def getMailAdd(content):
+    regex = re.compile(r"\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}\b", re.IGNORECASE)
+    mails = re.findall(regex, content)
+    return mails
 
+
+def match_customer(request):
+    email_id = request.POST.get('email_id')
+    if email_id == None:
+        return HttpResponse()
+    obj = Email.objects.filter(id = email_id).first()
+    emails = getMailAdd(obj.content)
+    if len(emails) == 0:
+        return HttpResponse('none')
+    else:
+        cus_list = []
+        data = []
+        for item in emails:
+            cus_list.extend([cs for cs in Customer.objects.filter(email__contains = item).all()])
+            
+        for item in cus_list:
+            temp = {}
+            temp.__setitem__('id', item.id)
+            temp.__setitem__('company_name', item.company_name)
+            temp.__setitem__('name', item.name)
+            temp.__setitem__('nation', Nation.objects.filter(id = item.nation).first().nation)
+            temp.__setitem__('email', item.email)
+            temp.__setitem__('website',item.website)
+            temp.__setitem__('sort',item.sort)
+            data.append(temp)
+            
+        return HttpResponse(json.dumps(data,ensure_ascii=False))
+    
+
+def add_black_list(request):
+    cs_id = request.POST.get('id')
+    obj = Customer.objects.filter(id = cs_id).first()
+    obj.customer_grade = 4
+    obj.save()
+    return HttpResponse('done')

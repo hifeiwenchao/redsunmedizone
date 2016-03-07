@@ -142,7 +142,7 @@ $(function($){
 	$('#customer_filter').combobox({
 		valueField: 'id',
         textField: 'text',
-		panelHeight:100,
+		panelHeight:150,
 		editable:false,
 		url:'/get_customer_grade_filter/',
 		method:'post',
