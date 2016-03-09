@@ -147,6 +147,11 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
+        'exception': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': '/soft/log/exception.log',
+        },
         'file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
@@ -164,6 +169,11 @@ LOGGING = {
         },
     },
     'loggers': {
+        'exception': {
+            'handlers': ['exception'],
+            'level': 'INFO',
+            'propagate': True,
+        },
         'fetch': {
             'handlers': ['fetch'],
             'level': 'INFO',

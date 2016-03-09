@@ -39,14 +39,31 @@
 			position:absolute;
 			z-index:7900;
 			left:0px;
-			top:9%;
+			top:10%;
 			width:87%;
 			height:50%;
 			text-align:center;
 			background:#fff;
-			-moz-border-radius:20px;
-			-webkit-border-radius:20px;
-			border-radius:10px;
+			-moz-border-radius:7px;
+			-webkit-border-radius:7px;
+			border-radius:7px;
+			border-top:1px solid red; 
+			border-right:1px solid red; 
+			border-bottom:1px solid red; 
+		}
+		.EmailSearchInfo{
+			display:none;
+			position:absolute;
+			z-index:7900;
+			left:0;
+			bottom:0;
+			width:98%;
+			height:50%;
+			text-align:center;
+			background:#fff;
+			-moz-border-radius:7px;
+			-webkit-border-radius:7px;
+			border-radius:7px;
 			border-top:1px solid #95B8E7; 
 			border-right:1px solid #95B8E7; 
 			border-bottom:1px solid #95B8E7; 
@@ -79,7 +96,7 @@
 		        	<div id="customer_list"></div>
 		        </div>
 		        <div title="邮件列表">
-		        	<div id="mail_tab"  class="easyui-tabs" data-options="fit:true,border:false,plain:true,pill:true,tabPosition:'top',">
+		        	<div id="mail_tab"  class="easyui-tabs" data-options="tools:'#mail-tab-tools',fit:true,border:false,plain:true,pill:true,tabPosition:'top',">
 			        	<div title="未读" >
 			        		<div id="email_list_unread" ></div>
 			        	</div>
@@ -143,6 +160,21 @@
 		        	{%include 'static_file_tab.html' %}
 		        </div>
 		    </div>
+		    <div id='email_search' class="EmailSearchInfo">
+       			<table style="width:100%;height:100%;">
+       				<tr height="10%">
+       					<td colspan="2" style="text-align: right;">
+       						<span style="float: left;margin-left:15px;" class="panel-title">邮件搜索信息</span>
+       						<a href="#" class="easyui-linkbutton c5" onclick="$('#email_search').animate({height: 'hide',opacity:'hide'}, 500 );" style="text-decoration:none;color:blue;">关闭</a>
+       					</td>
+       				</tr>
+       				<tr style="width:100%">
+       					<td colspan="2" style="height:100%;width:100%">
+       						<div id="email_search_info"></div>
+       					</td>
+       				</tr>
+       			</table>
+			</div>
 		</div>
 </body>
 {%include 'tab-tools.html' %}

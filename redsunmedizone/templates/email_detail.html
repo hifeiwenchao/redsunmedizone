@@ -8,7 +8,7 @@
 	    	console.log($(window).width())
 	    	$('#loading').fadeOut('slow')
 	    })
-	    
+	    var email_id = '{{obj.id}}'
 	    var sent_from = '{{sent_from}}'
     	var send_to = '{{send_to}}'
     	var send_cc = '{{send_cc}}'
@@ -42,7 +42,7 @@
         							data.append("files",file[i])
         						}
         					}
-        					
+        					data.append('email_id',email_id)
         					data.append('send_from',send)
         					data.append('send_to',receive)
         					data.append('send_cc',cc)
@@ -57,6 +57,7 @@
         					    },
         					    success: function(data){
         					    	$('#loading').fadeOut('slow')
+        					    	window.parent.$('#email_list_read').datagrid('reload')
         					    	window.parent.AlertInfoHard('greed','发送成功','邮件发送成功!')
         					    },
         					    error: function(data){

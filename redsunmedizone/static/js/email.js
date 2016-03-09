@@ -19,8 +19,10 @@ $(function($){
 	    textField:'address',
 	    editable:false,
 	    width:270,
+	    onLoadSuccess:function(){
+	    	$(this).combobox('select',11)
+	    },
 	});
-	
 	
 	$('#email_list_unread').datagrid({
 		fit:true,
@@ -44,7 +46,11 @@ $(function($){
 		columns:[[
 			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
 			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
-			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.15),align:'left',halign:'center',},
+			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.15),align:'left',halign:'center',
+				formatter:function(value,row,index){
+					return '<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetail(this)">'+row.subject+'</a>'
+				}
+			},
 			{field:'date',title:'接收日期',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
 			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.04),align:'center',halign:'center',
 				formatter:function(value,row,index){
@@ -88,9 +94,22 @@ $(function($){
             		}
             	}
             },
+            {field:'reply',title:' ',width:fixWidth(0.01),align:'center',halign:'center',
+            	formatter:function(value,row,index){
+            		if(row.reply == 1){
+            			return '<img src="/static/img/reply.png" />'
+            		}else{
+            			return ''
+            		}
+            	}
+            },
 			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
 			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
-			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.14),align:'left',halign:'center',},
+			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.14),align:'left',halign:'center',
+				formatter:function(value,row,index){
+					return '<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetail(this)">'+row.subject+'</a>'
+				}
+			},
 			{field:'date',title:'接收日期',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
 			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.04),align:'center',halign:'center',
 				formatter:function(value,row,index){
@@ -132,7 +151,11 @@ $(function($){
 			},
 			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
 			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
-			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.14),align:'left',halign:'center',},
+			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.14),align:'left',halign:'center',
+				formatter:function(value,row,index){
+					return '<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetail(this)">'+row.subject+'</a>'
+				}
+			},
 			{field:'date',title:'发送日期',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
 			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.04),align:'center',halign:'center',
 				formatter:function(value,row,index){
@@ -162,7 +185,11 @@ $(function($){
 		columns:[[
 			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
 			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
-			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.15),align:'left',halign:'center',},
+			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.15),align:'left',halign:'center',
+				formatter:function(value,row,index){
+					return '<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetail(this)">'+row.subject+'</a>'
+				}
+			},
 			{field:'date',title:'发送日期',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
 			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.04),align:'center',halign:'center',
 				formatter:function(value,row,index){
@@ -190,7 +217,11 @@ $(function($){
 		columns:[[
 			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
 			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
-			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.12),align:'left',halign:'center',},
+			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.12),align:'left',halign:'center',
+				formatter:function(value,row,index){
+					return '<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetail(this)">'+row.subject+'</a>'
+				}
+			},
 			{field:'date',title:'发送日期',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
 			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.04),align:'center',halign:'center',
 				formatter:function(value,row,index){
@@ -226,7 +257,11 @@ $(function($){
 		columns:[[
 			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
 			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
-			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.15),align:'left',halign:'center',},
+			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.15),align:'left',halign:'center',
+				formatter:function(value,row,index){
+					return '<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetail(this)">'+row.subject+'</a>'
+				}
+			},
 			{field:'date',title:'接收日期',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
 			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.04),align:'center',halign:'center',
 				formatter:function(value,row,index){
@@ -259,7 +294,11 @@ $(function($){
 		columns:[[
 			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
 			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
-			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.15),align:'left',halign:'center',},
+			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.15),align:'left',halign:'center',
+				formatter:function(value,row,index){
+					return '<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetail(this)">'+row.subject+'</a>'
+				}
+			},
 			{field:'date',title:'发送日期',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
 			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.04),align:'center',halign:'center',
 				formatter:function(value,row,index){
@@ -339,6 +378,76 @@ $(function($){
 	});
 	
 	
+	$('#email_searchbox').searchbox({
+		searcher:function(value,name){
+			if($.trim(value) == ''){return}
+			$('#email_search').fadeIn();
+			$('#email_search_info').datagrid({
+				queryParams:{
+					search:value,
+				}
+			});
+			
+		},
+		width:250,
+	});
+	
+	
+	
+	$('#email_search_info').datagrid({
+		fit:true,
+		striped:true,
+		border:false,
+		remoteSort:false,
+		nowrap:false,
+		autoRowHeight:true,
+		fitColumns:true,
+		singleSelect:true,//是否单选 
+        url:'/search_email/',
+        method:'post',
+        rownumbers:false,
+        rowStyler: function(index,row){
+        	if(row.read == 0){
+        		return 'font-weight: bold'
+        	}
+    	},
+		columns:[[
+            {field:'reply',title:' ',width:fixWidth(0.01),align:'center',halign:'center',
+            	formatter:function(value,row,index){
+            		if(row.reply == 1){
+            			return '<img src="/static/img/reply.png" />'
+            		}else{
+            			return ''
+            		}
+            	}
+            },
+			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',
+            	formatter:function(value,row,index){
+                	return  '<div><a style="text-decoration:none;color:blue;" href="#" onclick="openFromCustomerList(\''+row.sent_from+'\')">'+row.sent_from+'</a></div>'
+                }
+			},
+			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',
+				formatter:function(value,row,index){
+                	return  '<div><a style="text-decoration:none;color:blue;" href="#" onclick="openFromCustomerList(\''+row.sent_to+'\')">'+row.sent_to+'</a></div>'
+                }
+			},
+			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.14),align:'left',halign:'center',
+				formatter:function(value,row,index){
+					return '<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetail(this)">'+row.subject+'</a>'
+				}
+			},
+			{field:'customer_id',title:'关联客户',sortable:true,width:fixWidth(0.06),align:'left',halign:'center',
+				formatter:function(value,row,index){
+					if(row.customer_id != 0){
+						return '<a href="#" style="text-decoration:none;color:blue;" onclick="customerDetail('+row.customer_id+')">'+row.customer_name+'</a>'
+					}else{
+						return ''
+					}
+				}
+			},
+			{field:'date',title:'接收日期',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
+		]],
+	});
 	
 });
 
@@ -439,7 +548,7 @@ function saveMailAccount(){
 }
 
 function openFromCustomerList(address){
-	$('#email_send_to').textbox('setText',address)
+	$('#email_send_to').textbox('setValue',address)
 	$('#send_email').dialog('open')
 }
 
@@ -449,7 +558,7 @@ function sendEmail(){
 	var send_from = $('#email_send_from').combobox('getValue')
 	if(send_from == ''){AlertInfoHard('red','发件人必须选择','发件人必须选择!')}
 	var send_to = $('#email_send_to').textbox('getValue')
-	if($.trim(send_to) == ''){AlertInfoHard('red','收件人必须选择','收件人必须选择!')}
+	if($.trim(send_to) == ''){AlertInfoHard('red','收件人必须填写','收件人必须填写!')}
 	var send_cc = $('#email_send_cc').textbox('getValue')
 	var subject = $('#email_subject').textbox('getValue')
 	var content = email_send_content.window.getText()
@@ -460,7 +569,6 @@ function sendEmail(){
 			data.append("files",file[i])
 		}
 	}
-	
 	data.append('send_from',send_from)
 	data.append('send_to',send_to)
 	data.append('send_cc',send_cc)
