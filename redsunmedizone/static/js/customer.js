@@ -4,11 +4,11 @@ $(function($){
 	$('#customer_list').datagrid({
 		fit:true,
 		border:false,
+		striped:true,
 		remoteSort:false,
 		nowrap:false,
 		autoRowHeight:true,
 		fitColumns:true,
-		singleSelect:true,//是否单选 
         pagination:true,//分页控件 
         pageSize:20,
         pageList:[20,40,60,100],
@@ -19,11 +19,9 @@ $(function($){
         selectOnCheck:false,
         checkOnSelect:false,
         toolbar:'#customer_list_tools',
-        rowStyler: function(index,row){
-			return 'background-color:white;'; // return inline style
-			// the function can return predefined css class and inline style
-			//return {class:'nothover'};	
-    	},
+        rowStyler:function(index,row){
+        	return 'background:white'
+        },
 		columns:[[
 			{field:'ck',checkbox:true,},
 			{field:'id',title:'<span style="font-size:16px;font-weight: bold;">ID<span>',sortable:true,width:40,align:'center',halign:'center',
@@ -34,7 +32,12 @@ $(function($){
 			},
 			{field:'history',title:'历史',sortable:true,width:35,align:'center',halign:'center',
 				formatter:function(value,rowData,rowIndex){
-					return '<a href="#" style="text-decoration:none;color:blue;" class="icon-mail">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>'
+					if(rowData.history != 0){
+						return '<a href="#" style="text-decoration:none;color:blue;" onclick="OpenHistory('+rowData.id+')" class="icon-mail">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>'
+					}else{
+						return ''
+					}
+					
 				},
 			},
 			{field:'company_name',title:'<span style="font-size:16px;font-weight: bold;">公司名<span>',sortable:true,width:fixWidth(0.12),align:'left',halign:'center',},
@@ -260,6 +263,45 @@ $(function($){
 		]],
 	});
 	
+	
+	$('#email_history').datagrid({
+		fit:true,
+		striped:true,
+		border:false,
+		remoteSort:false,
+		nowrap:false,
+		autoRowHeight:true,
+		fitColumns:true,
+		singleSelect:true,//是否单选 
+        url:'/email_history/',
+        method:'post',
+        rownumbers:false,
+        toolbar:'#email_history_tools',
+        rowStyler: function(index,row){
+        	if(row.read == 0){
+        		return 'font-weight: bold'
+        	}
+    	},
+		columns:[[
+			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',
+            	formatter:function(value,row,index){
+                	return  '<div><a style="text-decoration:none;color:blue;" href="#" onclick="openFromCustomerList(\''+row.sent_from+'\')">'+row.sent_from+'</a></div>'
+                }
+			},
+			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',
+				formatter:function(value,row,index){
+                	return  '<div><a style="text-decoration:none;color:blue;" href="#" onclick="openFromCustomerList(\''+row.sent_to+'\')">'+row.sent_to+'</a></div>'
+                }
+			},
+			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.14),align:'left',halign:'center',
+				formatter:function(value,row,index){
+					return '<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailHistoryDetail(this)">'+row.subject+'</a>'
+				}
+			},
+			{field:'date',title:'接收日期',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
+		]],
+	});
+	
 });
 
 
@@ -440,4 +482,29 @@ function reloadSettingsInfo(param){
 	$('div[data='+param+']').datagrid('reload')
 	$('span[data='+param+']').combobox('reload')
 }
+
+function OpenHistory(id){
+	$('#email_history_win').show()
+	$('#history_tab').tabs()
+	$('#email_history').datagrid({
+		queryParams:{
+			id:id,
+		}
+	});
+}
+
+
+function EmailHistoryDetail(obj){
+	$obj = $(obj)
+	var iframe = '<div style="overflow-x:hidden;overflow-y:hidden;height:100%;width:100%"><iframe src="/email_detail/?id='+$obj.attr('data')+'" width="100%" height="100%" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="author" allowtransparency="yes"></iframe></div>'
+	$('#history_tab').tabs('add',{
+		title:'邮件详情',
+		closable:true,
+		content:iframe,
+	});
+	
+}
+
+
+
 

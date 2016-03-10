@@ -1,6 +1,7 @@
 $(document).ready(function(){
 	console.log($(window).width())
 	$('#loading').fadeOut('slow')
+	
 })
 
 $(document).keyup(function(e) { 

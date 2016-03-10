@@ -66,8 +66,26 @@
 			border-radius:7px;
 			border-top:1px solid #95B8E7; 
 			border-right:1px solid #95B8E7; 
-			border-bottom:1px solid #95B8E7; 
+			border-left:1px solid #95B8E7; 
 		}
+		.EmailHistoryInfo{
+			position:absolute;
+			z-index:7900;
+			right:0;
+			bottom:0;
+			width:85%;
+			height:90%;
+			text-align:center;
+			background:#fff;
+			-moz-border-radius:7px;
+			-webkit-border-radius:7px;
+			border-radius:7px;
+			border-top:1px solid #95B8E7; 
+			border-bottom:1px solid #95B8E7; 
+			border-left:1px solid #95B8E7; 
+			display:none;
+		}
+		
     </style>
 </head>
 <div id='loading' style="position:absolute;z-index:10000;top:0px;left:0px;width:100%;height:100%;text-align:center;background:#fff;opacity:0.4;">
@@ -94,6 +112,13 @@
 		        </div>
 		        <div title="客户列表">
 		        	<div id="customer_list"></div>
+		        	<div id='email_history_win' class="EmailHistoryInfo">
+			        	<div id="history_tab"  data-options="fit:true,border:false,plain:true,tabPosition:'top',">
+   							<div title="邮件历史">
+	   							<div id="email_history"></div>
+   							</div>
+   						</div>
+					</div>
 		        </div>
 		        <div title="邮件列表">
 		        	<div id="mail_tab"  class="easyui-tabs" data-options="tools:'#mail-tab-tools',fit:true,border:false,plain:true,pill:true,tabPosition:'top',">
@@ -165,7 +190,7 @@
        				<tr height="10%">
        					<td colspan="2" style="text-align: right;">
        						<span style="float: left;margin-left:15px;" class="panel-title">邮件搜索信息</span>
-       						<a href="#" class="easyui-linkbutton c5" onclick="$('#email_search').animate({height: 'hide',opacity:'hide'}, 500 );" style="text-decoration:none;color:blue;">关闭</a>
+       						<a href="#"  class="icon-cancel" onclick="$('#email_search').animate({height: 'hide',opacity:'hide'}, 500 );" style="text-decoration:none;color:blue;">&nbsp;&nbsp;&nbsp;&nbsp;</a>
        					</td>
        				</tr>
        				<tr style="width:100%">

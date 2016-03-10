@@ -101,6 +101,15 @@ def customer_list(request):
             temp.__setitem__('email', item.email)
             temp.__setitem__('website',item.website)
             temp.__setitem__('sort',item.sort)
+            
+            sql='select id,uid,sent_from,send_to,subject,`date`,`read`,reply,content,customer_id from email  where 1=1 '
+            for each in (item.email).split('\n'):
+                sql+=' and concat(sent_from,send_to,subject,content) like "%%'+each.replace(' ','')+'%%"'
+            e_objs = Email.objects.raw(sql)
+            e_objs = [o for o in e_objs]
+            
+            temp.__setitem__('history',1 if len(e_objs) !=0 else 0)
+            
             data.append(temp)
         return HttpResponse(json.dumps({'total':total,'rows':data},ensure_ascii=False))
 
@@ -892,15 +901,19 @@ def send_email(request):
     send_cc = None if data['send_cc'] == "" else data['send_cc']
     subject = data['subject']
     content = data['content']
-    
+    customer_id = 0
     account = EmailAccount.objects.filter(id = send_from).first()
     content = content +'<br><br><br>'+account.signature
+    
+    cs_obj = Customer.objects.filter(email__contains = send_to).first()
+    if cs_obj !=None:
+        customer_id=cs_obj.id
     
     now_time = int(time.time())
     uid = '1'+str(int(time.time()))[-5:]
     Email.objects.create(status=2,read=1,uid=uid,sent_from = account.address,send_to = send_to,send_cc = data['send_cc'],
          subject = subject,server_id = 'local',date = time.strftime('%Y-%m-%d %X', time.localtime(time.time())),
-         content = content,create_time = now_time)
+         content = content,customer_id = customer_id,create_time = now_time)
     
     if settings.DEBUG:
         path = settings.STATIC_ROOT +'/static/attachment/'
@@ -1072,11 +1085,16 @@ def reply_email(request):
     account = EmailAccount.objects.filter(address__contains = send_from).first()
     content = content.replace('<div data="signature">签名位上下1格勿删,自动替换</div>',account.signature)
     
+    customer_id = 0
+    cs_obj = Customer.objects.filter(email__contains = send_to).first()
+    if cs_obj !=None:
+        customer_id=cs_obj.id
+    
     now_time = int(time.time())
     uid = '1'+str(int(time.time()))[-5:]
     Email.objects.create(status=2,read=1,uid=uid,sent_from = send_from,send_to = send_to,send_cc = send_cc,
          subject = subject,server_id = 'local',date = time.strftime('%Y-%m-%d %X', time.localtime(time.time())),
-         content = content,create_time = now_time)
+         content = content,customer_id = customer_id,create_time = now_time)
     
     if settings.DEBUG:
         path = settings.STATIC_ROOT +'/static/attachment/'
@@ -1181,8 +1199,8 @@ def search_email(request):
             try:
                 to_list = []
                 for each in eval(item.send_to):
-                    to_list.append(each['email'].split('@')[0])
-                temp.__setitem__('sent_to', ','.join(to_list))
+                    to_list.append(each['email'])
+                temp.__setitem__('sent_to', ';'.join(to_list))
             except Exception as e :
                 temp.__setitem__('sent_to',(item.send_to).strip(';'))
             temp.__setitem__('subject', item.subject)
@@ -1193,3 +1211,45 @@ def search_email(request):
             temp.__setitem__('customer_name',Customer.objects.filter(id = item.customer_id).first().name if item.customer_id !=0 else '')
             data.append(temp)
         return HttpResponse(json.dumps({'total':total,'rows':data},ensure_ascii=False))
+
+@exception_logger
+def email_history(request):
+    if request.method == "POST":
+        uid = request.POST.get('id')
+        if not uid:return HttpResponse('[]')
+        obj = Customer.objects.filter(id = uid).first()
+        
+        
+        sql='select id,uid,sent_from,send_to,subject,`date`,`read`,reply,content,customer_id from email  where 1=1 '
+        
+        for item in (obj.email).split('\n'):
+            sql+=' and concat(sent_from,send_to,subject,content) like "%%'+item.replace(' ','')+'%%"'
+        
+        objs = Email.objects.raw(sql +' order by date desc')
+        objs = [item for item in objs]
+        
+        
+        data = []
+        for item in objs:
+            temp = {}
+            temp.__setitem__('id', item.id)
+            temp.__setitem__('uid', item.uid)
+            try:
+                temp.__setitem__('sent_from', eval(item.sent_from)[0]['email'])
+            except Exception as e:
+                temp.__setitem__('sent_from', item.sent_from)
+            try:
+                to_list = []
+                for each in eval(item.send_to):
+                    to_list.append(each['email'])
+                temp.__setitem__('sent_to', ';'.join(to_list))
+            except Exception as e :
+                temp.__setitem__('sent_to',(item.send_to).strip(';'))
+            temp.__setitem__('subject', item.subject)
+            temp.__setitem__('date', '2016-01-01 00:00:00' if item.date == 'None' else item.date)
+            temp.__setitem__('read',item.read)
+            temp.__setitem__('reply',item.reply)
+            temp.__setitem__('customer_id',item.customer_id)
+            temp.__setitem__('customer_name',Customer.objects.filter(id = item.customer_id).first().name if item.customer_id !=0 else '')
+            data.append(temp)
+        return HttpResponse(json.dumps(data,ensure_ascii=False))

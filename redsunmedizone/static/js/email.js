@@ -390,6 +390,7 @@ $(function($){
 			
 		},
 		width:250,
+		prompt:'发件人,收件人,Subject,内容等'
 	});
 	
 	
@@ -448,6 +449,29 @@ $(function($){
 			{field:'date',title:'接收日期',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
 		]],
 	});
+	
+	
+	$('#send_email').dialog({
+		width:1200,
+		height:$(window).height()*0.95,
+		closed:true,
+		collapsible:true,
+		resizable:true,
+		iconCls: 'icon-mail',
+		buttons: [
+		          {
+		        	  text:'发送',iconCls:'icon-mail',handler:function(){
+		        		  sendEmail();
+		          }},{
+		        	  text:'关闭',iconCls:'icon-cancel',handler:function(){
+		        		  $('#send_email').dialog('close');
+		        	  }}
+		          ],
+	});
+	
+	
+	
+	
 	
 });
 
