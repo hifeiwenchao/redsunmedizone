@@ -44,15 +44,15 @@ $(function($){
         	}
     	},
 		columns:[[
-			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
-			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
-			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.15),align:'left',halign:'center',
+			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.05),align:'center',halign:'center',},
+			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
+			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.08),align:'left',halign:'center',
 				formatter:function(value,row,index){
 					return '<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetail(this)">'+row.subject+'</a>'
 				}
 			},
-			{field:'date',title:'接收日期',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
-			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.04),align:'center',halign:'center',
+			{field:'date',title:'接收日期',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
+			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',
 				formatter:function(value,row,index){
 					return'<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetail(this)">查看</a>'+
 					'<span style="margin:0 5px 0 5px"></span>'+
@@ -103,15 +103,24 @@ $(function($){
             		}
             	}
             },
-			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
-			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
-			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.14),align:'left',halign:'center',
+			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.05),align:'center',halign:'center',
+            	formatter:function(value,row,index){
+					sent_list = value.split(';')
+					content = ''
+					for(i in sent_list){
+						content += '<a href="#" style="text-decoration:none;color:blue;margin-right:15px;"  onclick="openFromCustomerList(\''+value+'\')">'+sent_list[i]+'</a>'
+					}
+					return '<div style="word-break:break-all; word-wrap:break-word;">'+content+'</div>'
+				}
+			},
+			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
+			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.08),align:'left',halign:'center',
 				formatter:function(value,row,index){
 					return '<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetail(this)">'+row.subject+'</a>'
 				}
 			},
-			{field:'date',title:'接收日期',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
-			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.04),align:'center',halign:'center',
+			{field:'date',title:'接收日期',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
+			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',
 				formatter:function(value,row,index){
 					return'<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetailRead(this)">查看</a>'+
 					'<span style="margin:0 5px 0 5px"></span>'+
@@ -149,15 +158,24 @@ $(function($){
 					}
 				}
 			},
-			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
-			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
-			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.14),align:'left',halign:'center',
+			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.05),align:'center',halign:'center',},
+			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',
+				formatter:function(value,row,index){
+					sent_list = value.split(';')
+					content = ''
+					for(i in sent_list){
+						content += '<a href="#" style="text-decoration:none;color:blue;margin-right:15px;"  onclick="openFromCustomerList(\''+value+'\')">'+sent_list[i]+'</a>'
+					}
+					return '<div style="word-break:break-all; word-wrap:break-word;">'+content+'</div>'
+				}
+			},
+			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.08),align:'left',halign:'center',
 				formatter:function(value,row,index){
 					return '<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetail(this)">'+row.subject+'</a>'
 				}
 			},
-			{field:'date',title:'发送日期',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
-			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.04),align:'center',halign:'center',
+			{field:'date',title:'发送日期',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
+			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',
 				formatter:function(value,row,index){
 					return'<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetailRead(this)">查看</a>'+
 					'<span style="margin:0 5px 0 5px"></span>'+
@@ -183,15 +201,15 @@ $(function($){
         method:'post',
         rownumbers:false,
 		columns:[[
-			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
+			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.05),align:'center',halign:'center',},
 			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
-			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.15),align:'left',halign:'center',
+			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.08),align:'left',halign:'center',
 				formatter:function(value,row,index){
 					return '<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetail(this)">'+row.subject+'</a>'
 				}
 			},
-			{field:'date',title:'发送日期',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
-			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.04),align:'center',halign:'center',
+			{field:'date',title:'发送日期',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
+			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',
 				formatter:function(value,row,index){
 					return'<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetailRead(this)">查看</a>'+
 					'<span style="margin:0 5px 0 5px"></span>'
@@ -215,15 +233,15 @@ $(function($){
         method:'post',
         rownumbers:false,
 		columns:[[
-			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
-			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
-			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.12),align:'left',halign:'center',
+			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.05),align:'center',halign:'center',},
+			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
+			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.08),align:'left',halign:'center',
 				formatter:function(value,row,index){
 					return '<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetail(this)">'+row.subject+'</a>'
 				}
 			},
-			{field:'date',title:'发送日期',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
-			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.04),align:'center',halign:'center',
+			{field:'date',title:'发送日期',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
+			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',
 				formatter:function(value,row,index){
 					return'<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetailRead(this)">查看</a>'+
 					'<span style="margin:0 5px 0 5px"></span>'+
@@ -255,15 +273,24 @@ $(function($){
         	}
     	},
 		columns:[[
-			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
-			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
-			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.15),align:'left',halign:'center',
+			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.05),align:'center',halign:'center',
+				formatter:function(value,row,index){
+					sent_list = value.split(';')
+					content = ''
+					for(i in sent_list){
+						content += '<a href="#" style="text-decoration:none;color:blue;margin-right:15px;"  onclick="openFromCustomerList(\''+value+'\')">'+sent_list[i]+'</a>'
+					}
+					return '<div style="word-break:break-all; word-wrap:break-word;">'+content+'</div>'
+				}
+			},
+			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
+			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.08),align:'left',halign:'center',
 				formatter:function(value,row,index){
 					return '<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetail(this)">'+row.subject+'</a>'
 				}
 			},
-			{field:'date',title:'接收日期',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
-			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.04),align:'center',halign:'center',
+			{field:'date',title:'接收日期',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
+			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',
 				formatter:function(value,row,index){
 					return'<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetailRead(this)">查看</a>'+
 					'<span style="margin:0 5px 0 5px"></span>'+
@@ -292,15 +319,24 @@ $(function($){
         method:'post',
         rownumbers:false,
 		columns:[[
-			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
-			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
-			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.15),align:'left',halign:'center',
+			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.05),align:'center',halign:'center',},
+			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',
+				formatter:function(value,row,index){
+					sent_list = value.split(';')
+					content = ''
+					for(i in sent_list){
+						content += '<a href="#" style="text-decoration:none;color:blue;margin-right:15px;"  onclick="openFromCustomerList(\''+value+'\')">'+sent_list[i]+'</a>'
+					}
+					return '<div style="word-break:break-all; word-wrap:break-word;">'+content+'</div>'
+				}
+			},
+			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.08),align:'left',halign:'center',
 				formatter:function(value,row,index){
 					return '<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetail(this)">'+row.subject+'</a>'
 				}
 			},
-			{field:'date',title:'发送日期',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
-			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.04),align:'center',halign:'center',
+			{field:'date',title:'发送日期',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
+			{field:'operate',title:'操作',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',
 				formatter:function(value,row,index){
 					return'<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetailRead(this)">查看</a>'+
 					'<span style="margin:0 5px 0 5px"></span>'+

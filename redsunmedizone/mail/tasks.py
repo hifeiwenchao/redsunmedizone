@@ -88,7 +88,6 @@ def fetch_email(obj):
         path = settings.STATIC_ROOT +'/attachment/'
     log = logging.getLogger('fetch')
     log.info('当前时间,%s' % time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())))
-    
     log.info('邮件%s抓取邮件,时间为%s' % (obj.address,time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()))))
     imbox = Imbox(obj.imap,obj.address,obj.password,ssl=True)
     all_messages = imbox.messages(unread=True)

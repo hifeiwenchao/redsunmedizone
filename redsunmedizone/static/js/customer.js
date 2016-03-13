@@ -484,7 +484,7 @@ function reloadSettingsInfo(param){
 }
 
 function OpenHistory(id){
-	$('#email_history_win').show()
+	$('#email_history_win').fadeIn()
 	$('#history_tab').tabs()
 	$('#email_history').datagrid({
 		queryParams:{

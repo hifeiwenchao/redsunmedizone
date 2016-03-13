@@ -193,7 +193,7 @@ class EmailAttachmentTemplate(models.Model):
 
 class Attachment(models.Model):
     id = models.IntegerField(blank=True,primary_key=True)
-    email_id = models.IntegerField(default=0)
+    email_id = models.CharField(max_length=128,default='')
     email_task_detail_id = models.IntegerField(default=0)
     email_template_id = models.IntegerField(default=0)
     finance = models.IntegerField(default=0)
@@ -212,7 +212,7 @@ class Email(models.Model):
     status = models.IntegerField(default=0)
     type = models.IntegerField(default=0)
     read = models.IntegerField(default=0)
-    uid = models.IntegerField(default=0)
+    uid =  models.CharField(max_length=128,default='')
     sent_from = models.CharField(max_length=1024,default='')
     send_to = models.CharField(max_length=1024,default='')
     send_cc = models.CharField(max_length=1024,default='')
@@ -221,6 +221,8 @@ class Email(models.Model):
     date = models.CharField(max_length=128,default='')
     content = models.TextField(default='')
     create_time = models.IntegerField(default=0)
+    match_picture = models.IntegerField(default=0)
+    remark =  models.CharField(max_length=256,default='')
     class Meta:
         managed = False
         db_table = 'email'

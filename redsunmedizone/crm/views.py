@@ -11,6 +11,7 @@ import random
 import re
 from mail.utils import SendEmail
 from crm.utils import exception_logger
+import datetime
 
 @exception_logger
 def index(request):
@@ -663,11 +664,14 @@ def email_list_unread(request):
             temp = {}
             temp.__setitem__('id', item.id)
             temp.__setitem__('uid', item.uid)
-            temp.__setitem__('sent_from', eval(item.sent_from)[0]['email'])
-            to_list = []
-            for each in eval(item.send_to):
-                to_list.append(each['email'].split('@')[0])
-            temp.__setitem__('sent_to', ','.join(to_list))
+            try:
+                temp.__setitem__('sent_from',';'.join([ m['email'] for m in eval(item.sent_from)]))
+            except Exception as e :
+                temp.__setitem__('sent_from',item.sent_from)
+            try:
+                temp.__setitem__('sent_to',';'.join([ m['email'] for m in eval(item.send_to)]))
+            except Exception as e :
+                temp.__setitem__('sent_to',item.send_to)
             temp.__setitem__('subject', item.subject)
             temp.__setitem__('date',item.date)
             temp.__setitem__('read',item.read)
@@ -717,11 +721,14 @@ def email_list_read(request):
             temp = {}
             temp.__setitem__('id', item.id)
             temp.__setitem__('uid', item.uid)
-            temp.__setitem__('sent_from', eval(item.sent_from)[0]['email'])
-            to_list = []
-            for each in eval(item.send_to):
-                to_list.append(each['email'].split('@')[0])
-            temp.__setitem__('sent_to', ','.join(to_list))
+            try:
+                temp.__setitem__('sent_from',';'.join([ m['email'] for m in eval(item.sent_from)]))
+            except Exception as e :
+                temp.__setitem__('sent_from',item.sent_from)
+            try:
+                temp.__setitem__('sent_to',';'.join([ m['email'] for m in eval(item.send_to)]))
+            except Exception as e :
+                temp.__setitem__('sent_to',item.send_to)
             temp.__setitem__('subject', item.subject)
             temp.__setitem__('date', '2016-01-01 00:00:00' if item.date == 'None' else item.date)
             temp.__setitem__('read',item.read)
@@ -747,13 +754,14 @@ def email_list_sent(request):
             temp = {}
             temp.__setitem__('id', item.id)
             temp.__setitem__('uid', item.uid)
-            temp.__setitem__('sent_from',item.sent_from.split('@')[0])
-            '''
-            to_list = []
-            for each in eval(item.send_to):
-                to_list.append(each['email'].split('@')[0])
-            '''
-            temp.__setitem__('sent_to', item.send_to)
+            try:
+                temp.__setitem__('sent_from',';'.join([ m['email'] for m in eval(item.sent_from)]))
+            except Exception as e :
+                temp.__setitem__('sent_from',item.sent_from)
+            try:
+                temp.__setitem__('sent_to',';'.join([ m['email'] for m in eval(item.send_to)]))
+            except Exception as e :
+                temp.__setitem__('sent_to',item.send_to)
             temp.__setitem__('subject', item.subject)
             temp.__setitem__('date',item.date)
             temp.__setitem__('read',item.read)
@@ -777,13 +785,14 @@ def email_list_draft(request):
             temp = {}
             temp.__setitem__('id', item.id)
             temp.__setitem__('uid', item.uid)
-            temp.__setitem__('sent_from',item.sent_from.split('@')[0])
-            '''
-            to_list = []
-            for each in eval(item.send_to):
-                to_list.append(each['email'].split('@')[0])
-            '''
-            temp.__setitem__('sent_to', item.send_to)
+            try:
+                temp.__setitem__('sent_from',';'.join([ m['email'] for m in eval(item.sent_from)]))
+            except Exception as e :
+                temp.__setitem__('sent_from',item.sent_from)
+            try:
+                temp.__setitem__('sent_to',';'.join([ m['email'] for m in eval(item.send_to)]))
+            except Exception as e :
+                temp.__setitem__('sent_to',item.send_to)
             temp.__setitem__('subject', item.subject)
             temp.__setitem__('date',item.date)
             temp.__setitem__('read',item.read)
@@ -808,11 +817,14 @@ def email_list_trash(request):
             temp = {}
             temp.__setitem__('id', item.id)
             temp.__setitem__('uid', item.uid)
-            temp.__setitem__('sent_from', eval(item.sent_from)[0]['email'])
-            to_list = []
-            for each in eval(item.send_to):
-                to_list.append(each['email'].split('@')[0])
-            temp.__setitem__('sent_to', ','.join(to_list))
+            try:
+                temp.__setitem__('sent_from',';'.join([ m['email'] for m in eval(item.sent_from)]))
+            except Exception as e :
+                temp.__setitem__('sent_from',item.sent_from)
+            try:
+                temp.__setitem__('sent_to',';'.join([ m['email'] for m in eval(item.send_to)]))
+            except Exception as e :
+                temp.__setitem__('sent_to',item.send_to)
             temp.__setitem__('subject', item.subject)
             temp.__setitem__('date',item.date)
             temp.__setitem__('read',item.read)
@@ -836,11 +848,14 @@ def email_list_inquiry(request):
             temp = {}
             temp.__setitem__('id', item.id)
             temp.__setitem__('uid', item.uid)
-            temp.__setitem__('sent_from', eval(item.sent_from)[0]['email'])
-            to_list = []
-            for each in eval(item.send_to):
-                to_list.append(each['email'].split('@')[0])
-            temp.__setitem__('sent_to', ','.join(to_list))
+            try:
+                temp.__setitem__('sent_from',';'.join([ m['email'] for m in eval(item.sent_from)]))
+            except Exception as e :
+                temp.__setitem__('sent_from',item.sent_from)
+            try:
+                temp.__setitem__('sent_to',';'.join([ m['email'] for m in eval(item.send_to)]))
+            except Exception as e :
+                temp.__setitem__('sent_to',item.send_to)
             temp.__setitem__('subject', item.subject)
             temp.__setitem__('date',item.date)
             temp.__setitem__('read',item.read)
@@ -864,8 +879,14 @@ def email_list_quotation(request):
             temp = {}
             temp.__setitem__('id', item.id)
             temp.__setitem__('uid', item.uid)
-            temp.__setitem__('sent_from',item.sent_from.split('@')[0])
-            temp.__setitem__('sent_to', item.send_to)
+            try:
+                temp.__setitem__('sent_from',';'.join([ m['email'] for m in eval(item.sent_from)]))
+            except Exception as e :
+                temp.__setitem__('sent_from',item.sent_from)
+            try:
+                temp.__setitem__('sent_to',';'.join([ m['email'] for m in eval(item.send_to)]))
+            except Exception as e :
+                temp.__setitem__('sent_to',item.send_to)
             temp.__setitem__('subject', item.subject)
             temp.__setitem__('date',item.date)
             temp.__setitem__('read',item.read)
@@ -910,7 +931,7 @@ def send_email(request):
         customer_id=cs_obj.id
     
     now_time = int(time.time())
-    uid = '1'+str(int(time.time()))[-5:]
+    uid = '%s' % (datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')[:-4])
     Email.objects.create(status=2,read=1,uid=uid,sent_from = account.address,send_to = send_to,send_cc = data['send_cc'],
          subject = subject,server_id = 'local',date = time.strftime('%Y-%m-%d %X', time.localtime(time.time())),
          content = content,customer_id = customer_id,create_time = now_time)
@@ -1091,7 +1112,7 @@ def reply_email(request):
         customer_id=cs_obj.id
     
     now_time = int(time.time())
-    uid = '1'+str(int(time.time()))[-5:]
+    uid = '%s' % (datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')[:-4])
     Email.objects.create(status=2,read=1,uid=uid,sent_from = send_from,send_to = send_to,send_cc = send_cc,
          subject = subject,server_id = 'local',date = time.strftime('%Y-%m-%d %X', time.localtime(time.time())),
          content = content,customer_id = customer_id,create_time = now_time)
@@ -1109,7 +1130,7 @@ def reply_email(request):
     attachment = []
     for item in file_obj:
         attachment.append({'path':path +str(uid)+'/'+ item.name,'name':item.name})
-        Attachment.objects.create(create_time = int(time.time(  )),size = 0,email_id = str(uid),file_name = item.name,path='/static/attachment/'+str(uid)+'/'+ item.name)
+        Attachment.objects.create(create_time = int(time.time()),size = 0,email_id = str(uid),file_name = item.name,path='/static/attachment/'+str(uid)+'/'+ item.name)
         with open(path +str(uid)+'/'+ item.name,'wb') as up:
             for chunk in item.chunks():
                 up.write(chunk)
@@ -1176,11 +1197,11 @@ def search_email(request):
         search = request.POST.get('search')
         if search == None:return HttpResponse('')
         
-        sql='select id,uid,sent_from,send_to,subject,`date`,`read`,reply,content,customer_id from email  where 1=1 '
+        sql='select id,uid,sent_from,send_to,subject,`date`,`read`,reply,content,customer_id,remark from email  where 1=1 '
         
         search  = search.split(' ')
         for item in search:
-            sql+=' and concat(sent_from,send_to,subject,content) like "%%'+item+'%%"'
+            sql+=' and concat(sent_from,send_to,subject,content,remark) like "%%'+item+'%%"'
         
         objs = Email.objects.raw(sql +' order by date desc')
         objs = [item for item in objs]
@@ -1193,16 +1214,13 @@ def search_email(request):
             temp.__setitem__('id', item.id)
             temp.__setitem__('uid', item.uid)
             try:
-                temp.__setitem__('sent_from', eval(item.sent_from)[0]['email'])
-            except Exception as e:
-                temp.__setitem__('sent_from', item.sent_from)
-            try:
-                to_list = []
-                for each in eval(item.send_to):
-                    to_list.append(each['email'])
-                temp.__setitem__('sent_to', ';'.join(to_list))
+                temp.__setitem__('sent_from',';'.join([ m['email'] for m in eval(item.sent_from)]))
             except Exception as e :
-                temp.__setitem__('sent_to',(item.send_to).strip(';'))
+                temp.__setitem__('sent_from',item.sent_from)
+            try:
+                temp.__setitem__('sent_to',';'.join([ m['email'] for m in eval(item.send_to)]))
+            except Exception as e :
+                temp.__setitem__('sent_to',item.send_to)
             temp.__setitem__('subject', item.subject)
             temp.__setitem__('date', '2016-01-01 00:00:00' if item.date == 'None' else item.date)
             temp.__setitem__('read',item.read)
@@ -1235,16 +1253,13 @@ def email_history(request):
             temp.__setitem__('id', item.id)
             temp.__setitem__('uid', item.uid)
             try:
-                temp.__setitem__('sent_from', eval(item.sent_from)[0]['email'])
-            except Exception as e:
-                temp.__setitem__('sent_from', item.sent_from)
-            try:
-                to_list = []
-                for each in eval(item.send_to):
-                    to_list.append(each['email'])
-                temp.__setitem__('sent_to', ';'.join(to_list))
+                temp.__setitem__('sent_from',';'.join([ m['email'] for m in eval(item.sent_from)]))
             except Exception as e :
-                temp.__setitem__('sent_to',(item.send_to).strip(';'))
+                temp.__setitem__('sent_from',item.sent_from)
+            try:
+                temp.__setitem__('sent_to',';'.join([ m['email'] for m in eval(item.send_to)]))
+            except Exception as e :
+                temp.__setitem__('sent_to',item.send_to)
             temp.__setitem__('subject', item.subject)
             temp.__setitem__('date', '2016-01-01 00:00:00' if item.date == 'None' else item.date)
             temp.__setitem__('read',item.read)
