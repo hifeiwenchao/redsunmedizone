@@ -74,14 +74,14 @@ def customer_list(request):
         end = page*rows
         
         if search != None:
-            sql='select t1.id,t1.company_name,t1.name,t1.nation,t1.email,t1.website,t2.religion,t3.nation,t4.source \
+            sql='select t1.id,t1.company_name,t1.name,t1.nation,t1.email,t1.website,t1.history,t2.religion,t3.nation,t4.source \
             from customer t1 left join religion t2 on t1.religion = t2.id \
             left join nation t3 on t1.nation = t3.id \
             left join source_of_customer t4 on t1.source_of_customer = t4.id \
             where t1.customer_grade <> 4 and  1=1'
             search  = search.split(' ')
             for item in search:
-                sql+=' and concat(t1.company_name,t1.name,t1.nation,t1.email,t1.website,t2.religion,t3.nation,t4.source) like "%%'+item+'%%"'
+                sql+=' and concat(t1.company_name,t1.name,t1.nation,t1.email,t1.website,t1.history,t2.religion,t3.nation,t4.source) like "%%'+item+'%%"'
             objs = Customer.objects.raw(sql +' order by t1.sort desc')
             objs = [item for item in objs]
             total = len(objs)
@@ -91,7 +91,7 @@ def customer_list(request):
             objs = Customer.objects.filter(customer_grade = int(customer_grade)).order_by('-sort')[start:end]
         else:
             total = Customer.objects.exclude(customer_grade = 4).count()
-            objs = Customer.objects.raw('select id,sort,name,company_name,nation,email,website from customer where customer_grade <> 4 order by sort desc,id desc')[start:end]
+            objs = Customer.objects.raw('select id,sort,name,company_name,nation,email,website,history from customer where customer_grade <> 4 order by sort desc,id desc')[start:end]
         data = []
         for item in objs:
             temp = {}
@@ -102,15 +102,7 @@ def customer_list(request):
             temp.__setitem__('email', item.email)
             temp.__setitem__('website',item.website)
             temp.__setitem__('sort',item.sort)
-            
-            sql='select id,uid,sent_from,send_to,subject,`date`,`read`,reply,content,customer_id from email  where 1=1 '
-            for each in (item.email).split('\n'):
-                sql+=' and concat(sent_from,send_to,subject,content) like "%%'+each.replace(' ','')+'%%"'
-            e_objs = Email.objects.raw(sql)
-            e_objs = [o for o in e_objs]
-            
-            temp.__setitem__('history',1 if len(e_objs) !=0 else 0)
-            
+            temp.__setitem__('history',item.history)
             data.append(temp)
         return HttpResponse(json.dumps({'total':total,'rows':data},ensure_ascii=False))
 
@@ -987,19 +979,17 @@ def email_detail(request):
     except Exception as e :
         send_cc = obj.send_cc
     subject = obj.subject
+    subject = subject.replace('\r','').replace('\n','')
     
-    '''
-    imgs = re.findall('<img.*>', obj.content, re.I)
+    att = Attachment.objects.filter(email_id = obj.uid,content_id='').all()
     
-    
-    for item in imgs:
-        re_height = re.search('height:.*(\d+)px',item, re.I)
-        height = ''.join([m.group() for m in re.compile(r'\d+').finditer(re_height.group(0))])
-        print('高:',height)
-    '''
-        
-    att = Attachment.objects.filter(email_id = obj.uid).all()
-    
+    if obj.match_picture == 0:
+        content = obj.content
+        for item in Attachment.objects.filter(email_id = obj.uid).exclude(content_id='').all():
+            content = content.replace('cid:%s' % item.content_id,'%s%s' % ('' if settings.DEBUG else  settings.WEBSITE_HOST ,item.path))
+        obj.content = content.strip('b').strip('\'').strip('"').replace('\\n','<br>')
+        obj.match_picture = 1
+        obj.save()
     return render(request, 'email_detail.html',{'att':att,'obj':obj,'sent_from':sent_from,'send_to':send_to,'send_cc':send_cc,'subject':subject})
 
 

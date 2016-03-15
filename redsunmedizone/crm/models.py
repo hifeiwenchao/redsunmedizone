@@ -83,6 +83,7 @@ class Customer(models.Model):
     purchase_intention = models.CharField(max_length=1024,default='')
     payment_term = models.IntegerField(default=1)
     sort = models.IntegerField(default=0)
+    history = models.IntegerField(default=0)
     class Meta:
         managed = False
         db_table = 'customer'
@@ -201,6 +202,7 @@ class Attachment(models.Model):
     path =  models.CharField(max_length=128,default='')
     size = models.IntegerField(default=0)
     create_time = models.IntegerField(default=0)
+    content_id = models.CharField(max_length=128,default='')
     class Meta:
         managed = False
         db_table = 'attachment'

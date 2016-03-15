@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-
 import os
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+WEBSITE_HOST = 'https://crm.redsunmedizone.com'
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = '8dcbti3-9q^&e-#vu0**#y0jtf5ne)tqf)9a7plm98917%(lm0'
 

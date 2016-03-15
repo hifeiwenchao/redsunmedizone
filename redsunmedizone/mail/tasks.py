@@ -14,6 +14,7 @@ from django.conf import settings
 from mail.utils import SendEmail
 from crm.models import EmailAccount, EmailSubjectTemplate, EmailBodyTemplate,\
     Email, Attachment, Customer, EmailTask, EmailTaskDetail, EmailLog
+import datetime
 
 #fetch_email.apply_async(countdown=10,retry=False)
 #celery -A mail worker -B -l info
@@ -89,13 +90,13 @@ def fetch_email(obj):
     log = logging.getLogger('fetch')
     log.info('当前时间,%s' % time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())))
     log.info('邮件%s抓取邮件,时间为%s' % (obj.address,time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()))))
-    imbox = Imbox(obj.imap,obj.address,obj.password,ssl=True)
+    imbox = Imbox(obj.imap,obj.address,obj.password,ssl=False)
     all_messages = imbox.messages(unread=True)
     for uid,email in all_messages:
-        
         log.info('抓取邮件uid为%s,时间为%s' % (uid.decode(),time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()))))
+        data_uid = '%s' % (datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')[:-4])
         temp = {}
-        temp.__setitem__('uid', uid.decode())
+        temp.__setitem__('uid', data_uid)
         try:
             temp.__setitem__('sent_from', '%s' % email.sent_from)
         except Exception as e:
@@ -109,7 +110,7 @@ def fetch_email(obj):
         except Exception as e:
             pass
         try:
-            temp.__setitem__('subject','%s' %  email.subject)
+            temp.__setitem__('subject',('%s' %  email.subject).replace('\n',",").replace('\r',''))
         except Exception as e:
             pass
         try:
@@ -128,37 +129,39 @@ def fetch_email(obj):
             temp.__setitem__('content', email.body['html'][0].decode('utf-8'))
         except Exception as e:
             try:
-                temp.__setitem__('content', email.body['html'][0])
+                temp.__setitem__('content', '%s' % email.body['html'][0])
             except:
-                temp.__setitem__('content', email.body['plain'][0])
+                temp.__setitem__('content', '%s' % email.body['plain'][0])
             
         cs_obj = Customer.objects.filter(email__contains = email.sent_from[0]['email']).first()
         if cs_obj !=None:
+            cs_obj.history = 1
+            cs_obj.save()
             temp.__setitem__('customer_id', cs_obj.id)
         temp.__setitem__('create_time',int(time.time()))
         Email.objects.create(**temp)
         
         try:
-            os.mkdir(path+uid.decode())
+            os.mkdir(path+data_uid)
         except Exception as e:
             pass
         
         if len(email.attachments) != 0:
             log.info('有附件,开始抓取附件')
             for att in email.attachments:
-                log.info('附件名字为%s,大小为%s' % (att['filename'].strip('"'),att['size']))
-                Attachment.objects.create(create_time = int(time.time(  )),size = att['size'],email_id = uid.decode(),file_name = att['filename'].strip('"'),path='/static/attachment/'+uid.decode('utf-8')+'/%s' % att['filename'].strip('"'))
-                file_object = open(path+uid.decode('utf-8')+'/%s' % att['filename'].strip('"'), 'wb')
+                file_name =  att.get('filename').strip('"') if att.get('filename') else 'nonename%s' % time.time()
+                file_name = 'nonename%s' % time.time() if file_name.strip() == '' else file_name
+                log.info('附件名字为%s,大小为%s' % (file_name,att['size']))
+                Attachment.objects.create(create_time = int(time.time(  )),content_id = str(att.get('content_id')).strip().strip('<').strip('>')
+                                              ,size = att['size'],email_id = data_uid,file_name = file_name,path='/static/attachment/'+data_uid+'/%s' % file_name)
+                file_object = open(path+data_uid+'/%s' % file_name, 'wb')
                 file_object.write(att['content'].getvalue())
                 file_object.close()
                 
         imbox.mark_seen(uid)
         
     imbox.logout()
-    
-    
     log.info('邮箱%s抓取完毕 ,时间为%s' % (obj.address,time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()))))
-    
     log.info('当前时间,%s' % time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())))
     
     

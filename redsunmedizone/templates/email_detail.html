@@ -12,7 +12,8 @@
 	    var sent_from = '{{sent_from}}'
     	var send_to = '{{send_to}}'
     	var send_cc = '{{send_cc}}'
-    	var subject = '{{subject}}'
+    	
+    	var subject = "{{subject}}"
 	    
     	$(function($){
     		$('a[data=cancel]').linkbutton({
@@ -184,7 +185,7 @@
 				
 			</div>
 			<div style="margin-bottom: 50px"></div>
-			<div  id="content">
+			<div  id="content" style="margin-left:15px;">
 			{% autoescape off %}
 			   {{obj.content}}
 			{% endautoescape %}

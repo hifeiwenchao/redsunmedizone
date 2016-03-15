@@ -64,10 +64,7 @@ class FetchMail(object):
         print('文件夹为%s抓取邮件,时间为%s' % (folder,time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()))))
         imbox = Imbox(self.imap,self.user,self.password,ssl=False)
         all_emails = imbox.messages(**folder)
-        id_list = []
-        
         for uid, email in all_emails:
-            id_list.append(uid)
             uid = '%s' % (datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')[:-4])
             print('抓取邮件uid为%s,时间为%s' % (uid,time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()))))
             temp = {}
@@ -85,7 +82,7 @@ class FetchMail(object):
             except Exception as e:
                 temp.__setitem__('send_cc','')
             try:
-                temp.__setitem__('subject','%s' %  email.subject)
+                temp.__setitem__('subject',('%s' %  email.subject).replace('\n',",").replace('\r',''))
             except Exception as e:
                 temp.__setitem__('subject','')
             try:
@@ -106,12 +103,14 @@ class FetchMail(object):
                 temp.__setitem__('content', str(email.body['html'][0].decode('utf-8')))
             except Exception as e:
                 try:
-                    temp.__setitem__('content', str(email.body['html'][0]))
+                    temp.__setitem__('content', '%s' % email.body['html'][0])
                 except:
-                    temp.__setitem__('content', str(email.body['plain'][0]))
+                    temp.__setitem__('content', '%s' % email.body['plain'][0])
             temp.__setitem__('remark',remark)
             cs_obj = Customer.objects.filter(email__contains = email.sent_from[0]['email']).first()
             if cs_obj !=None:
+                cs_obj.history = 1
+                cs_obj.save()
                 temp.__setitem__('customer_id', cs_obj.id)
             temp.__setitem__('create_time',int(time.time()))
             Email.objects.create(**temp)
@@ -127,13 +126,13 @@ class FetchMail(object):
                     file_name =  att.get('filename').strip('"') if att.get('filename') else 'nonename%s' % time.time()
                     file_name = 'nonename%s' % time.time() if file_name.strip() == '' else file_name
                     print('附件名字为%s,大小为%s' % (file_name,att['size']))
-                    Attachment.objects.create(create_time = int(time.time(  )),size = att['size'],email_id = uid,file_name = file_name,path='/static/attachment/'+uid+'/%s' % file_name)
+                    Attachment.objects.create(create_time = int(time.time(  )),content_id = str(att.get('content_id')).strip().strip('<').strip('>')
+                                              ,size = att['size'],email_id = uid,file_name = file_name,path='/static/attachment/'+uid+'/%s' % file_name)
                     file_object = open(path+uid+'/%s' % file_name, 'wb')
                     file_object.write(att['content'].getvalue())
                     file_object.close()
           
         imbox.logout()
-        print('共获取了%s封邮件' % len(id_list))
         
 
     

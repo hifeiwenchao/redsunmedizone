@@ -113,7 +113,7 @@ $(function($){
 					return '<div style="word-break:break-all; word-wrap:break-word;">'+content+'</div>'
 				}
 			},
-			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
+			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
 			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.08),align:'left',halign:'center',
 				formatter:function(value,row,index){
 					return '<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetail(this)">'+row.subject+'</a>'
@@ -159,7 +159,7 @@ $(function($){
 				}
 			},
 			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.05),align:'center',halign:'center',},
-			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',
+			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',
 				formatter:function(value,row,index){
 					sent_list = value.split(';')
 					content = ''
@@ -273,7 +273,7 @@ $(function($){
         	}
     	},
 		columns:[[
-			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.05),align:'center',halign:'center',
+			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',
 				formatter:function(value,row,index){
 					sent_list = value.split(';')
 					content = ''
@@ -283,7 +283,7 @@ $(function($){
 					return '<div style="word-break:break-all; word-wrap:break-word;">'+content+'</div>'
 				}
 			},
-			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',},
+			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
 			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.08),align:'left',halign:'center',
 				formatter:function(value,row,index){
 					return '<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetail(this)">'+row.subject+'</a>'
@@ -320,7 +320,7 @@ $(function($){
         rownumbers:false,
 		columns:[[
 			{field:'sent_from',title:'发件人',sortable:true,width:fixWidth(0.05),align:'center',halign:'center',},
-			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.08),align:'center',halign:'center',
+			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',
 				formatter:function(value,row,index){
 					sent_list = value.split(';')
 					content = ''
