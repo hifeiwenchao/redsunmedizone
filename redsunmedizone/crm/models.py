@@ -203,6 +203,7 @@ class Attachment(models.Model):
     size = models.IntegerField(default=0)
     create_time = models.IntegerField(default=0)
     content_id = models.CharField(max_length=128,default='')
+    content_type = models.CharField(max_length=128,default='')
     class Meta:
         managed = False
         db_table = 'attachment'
@@ -215,13 +216,19 @@ class Email(models.Model):
     type = models.IntegerField(default=0)
     read = models.IntegerField(default=0)
     uid =  models.CharField(max_length=128,default='')
+    headers = models.CharField(max_length=1024,default='')
+    from_whom = models.CharField(max_length=1024,default='')
     sent_from = models.CharField(max_length=1024,default='')
     send_to = models.CharField(max_length=1024,default='')
+    to = models.CharField(max_length=1024,default='')
     send_cc = models.CharField(max_length=1024,default='')
     subject = models.CharField(max_length=1024,default='')
     server_id = models.CharField(max_length=256,default='')
     date = models.CharField(max_length=128,default='')
+    format_date = models.CharField(max_length=128,default='')
     content = models.TextField(default='')
+    content_html = models.TextField(default='')
+    content_normalized = models.TextField(default='')
     create_time = models.IntegerField(default=0)
     match_picture = models.IntegerField(default=0)
     remark =  models.CharField(max_length=256,default='')

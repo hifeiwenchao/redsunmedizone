@@ -19,14 +19,8 @@ class Command(BaseCommand):
         if options['receive']:
             email = EmailAccount.objects.filter(address__contains = 'matt@heershi.com.cn').first()
             obj = FetchMail(email.imap,email.address, email.password)
-            all_folder = obj.folder_dict_all(True)
-            log = logging.getLogger('fetch')
-            for key,value in all_folder.items():
-                print('文件夹中文名为:%s  ,  utf7查询名为:%s' %(key,value))
-                try:
-                    obj.fetch_email_by_folder({'folder':value},None,key)
-                except Exception as e :
-                    log.info('异常!!!!!!!!!!%s!!!!!!!!!!!!!!!!!!!!!!%s' % (key,e))
+            obj.fetch_email_by_folder(None)
+                    
         
         if options['send']:
             email = EmailAccount.objects.filter(address__contains = 'matt@heershi.com.cn').first()
