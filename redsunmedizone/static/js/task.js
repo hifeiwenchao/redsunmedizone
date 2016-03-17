@@ -1,5 +1,43 @@
 $(function($){
+	$('#email_task').dialog({
+		openAnimation:'show',
+		width:1200,
+		height:$(window).height()*0.95,
+		closed:true,
+		collapsible:true,
+		resizable:true,
+		iconCls: 'icon-save',
+	});
 	
+	$('a[data=normal_task]').click(function(){
+		$obj = $(this)
+		if($obj.attr('show') == 0){
+			$('.TaskInfo').show('normal');
+			$('.SpecialTaskInfo').hide('normal');
+			$('a[data=specical_task]').attr('show',0);
+			$obj.attr('show',1);
+		}else{
+			$('.TaskInfo').hide('normal');
+			$obj.attr('show',0);
+			$('.SpecialTaskInfo').hide('normal');
+			$('a[data=specical_task]').attr('show',0);
+		}
+	});
+	
+	$('a[data=specical_task]').click(function(){
+		$obj = $(this)
+		if($obj.attr('show') == 0){
+			$('.SpecialTaskInfo').show('normal');
+			$('.TaskInfo').hide('normal');
+			$('a[data=normal_task]').attr('show',0);
+			$obj.attr('show',1);
+		}else{
+			$('.TaskInfo').hide('normal');
+			$('.SpecialTaskInfo').hide('normal');
+			$('a[data=normal_task]').attr('show',0);
+			$obj.attr('show',0);
+		}
+	});
 	
 	$('#email_task_target').datalist({
 		singleSelect:false,
@@ -81,6 +119,47 @@ $(function($){
 	});
 	
 	
+	$("#email_task_attachment").datalist({
+		singleSelect:false,
+	    checkbox: true,
+		fit:true,
+		border:false,
+		remoteSort:false,
+		nowrap:false,
+		autoRowHeight:true,
+		fitColumns:true,
+		loadMsg:'加载中...',
+		method:'get',
+		rownumbers:false,
+		showHeader:true,
+		columns:[[
+	          {field:'url',title:' ',width:fixWidth(0.13),align:'center',halign:'center',},
+        ]],
+	});
+	
+	$('#remove_task_attachment').click(function(e){
+		$obj = $("#email_task_attachment")
+		var rows = $obj.datalist('getChecked')
+		for(i in rows){
+			$obj.datalist('deleteRow',$obj.datalist('getRowIndex',rows[i]))
+		}
+	});
+	
+	$('#empty_task_attachment').click(function(e){
+		$("#email_task_attachment").datalist('loadData',[])
+	});
+	
+	$('#add_att_to_template').click(function(e){
+		if($("#task_url_info").text() == '未有选中'){return;}
+		$("#email_task_attachment").datalist('insertRow',{
+			index:0,
+			row:{
+				url:$("#task_url_info").text(),
+			}
+		})
+	});
+	
+	
 	$('span[name=email_task_template_filter]').each(function(){
 		$this = $(this)
 		$this.combobox({
@@ -112,9 +191,6 @@ $(function($){
 		});
 		$this.combobox('setValue','全部种类');
 	});
-	
-	
-	
 	
 	
 	
@@ -421,6 +497,7 @@ $(function($){
 				  }
 			  },
         ]],
+        
 	});
 	
 	
@@ -438,25 +515,25 @@ $(function($){
         pageList:[20,40,60,100],
         url:'/task_list/',
         method:'post',
-        rownumbers:false,
+        rownumbers:true,
 		columns:[[
 	          {field:'id',align:'center',hidden:true,},
-			  {field:'name',align:'center',halign:'center',fixed:true,title:"任务名",width:fixWidth(0.17),
+			  {field:'name',align:'center',halign:'center',fixed:true,title:"任务名",width:fixWidth(0.15),
 	        	  formatter:function(value,row,index){
-	        		  return '<a href="#" style="text-decoration:none;color:blue;" class="easyui-tooltip" title="'+row.remark+'">'+row.name+'</a>'
+	        		  return '<a href="#" style="text-decoration:none;color:blue;" class="task_main_info" row_index="'+index+'" >'+row.name+'</a>'
 	        	  }
 			  },
 			  {field:'interval',align:'center',halign:'center',fixed:true,title:"间隔",width:fixWidth(0.03),},
-			  {field:'operate',align:'center',halign:'center',fixed:true,title:"操作",width:fixWidth(0.08),
+			  {field:'operate',align:'center',halign:'center',fixed:true,title:"情况",width:fixWidth(0.08),
 				  formatter:function(value,row,index){
 					  if(row.status == 0){
-						  return'<a href="#" style="text-decoration:none;color:blue;" task="'+row.id+'" data="1" onclick="ChangeTaskStatus(this)">开始</a><span style="margin-left:10px;"></span><a href="#" style="text-decoration:none;color:blue;" task="'+row.id+'"  onclick="TaskDetail(this)">详情</a>'
+						  return'<a href="#" style="text-decoration:none;color:blue;" task="'+row.id+'" data="1" onclick="ChangeTaskStatus(this)">开始</a><span style="margin-left:10px;"></span><a href="#" style="text-decoration:none;color:blue;" task="'+row.id+'" class="openTaskDetail"   onclick="TaskDetail(this)">详情</a>'
 					  }
 					  if(row.status == 1){
-						  return'<a href="#" style="text-decoration:none;color:blue;" task="'+row.id+'" data="0"  onclick="ChangeTaskStatus(this)">暂停</a><span style="margin-left:10px;"></span><a href="#" style="text-decoration:none;color:blue;" task="'+row.id+'"  onclick="TaskDetail(this)">详情</a>'
+						  return'<a href="#" style="text-decoration:none;color:blue;" task="'+row.id+'" data="0"  onclick="ChangeTaskStatus(this)">暂停</a><span style="margin-left:10px;"></span><a href="#" style="text-decoration:none;color:blue;" task="'+row.id+'" class="openTaskDetail"   onclick="TaskDetail(this)">详情</a>'
 					  }
 					  if(row.status == 2){
-						  return'已完成<span style="margin-left:10px;"></span><a href="#" style="text-decoration:none;color:blue;" task="'+row.id+'"  onclick="TaskDetail(this)">详情</a>'
+						  return'已完成<span style="margin-left:10px;"></span><a href="#" class="openTaskDetail" style="text-decoration:none;color:blue;" task="'+row.id+'"  onclick="TaskDetail(this)">详情</a>'
 					  }
 				  }
 			  },
@@ -466,10 +543,46 @@ $(function($){
         	$(pager).pagination({
         		buttons: [{
         			iconCls:'icon-edit',
-        			handler:function(){alert('edit')}
-        		}]
+        			handler:function(){ChangeInterval()}
+        		}],
+        		displayMsg:'',
+        	})
+        	$('.openTaskDetail').each(function(){
+        		$(this).tooltip({
+        			position:'right',
+            		content:'<div style="color:white;">单击加载对应任务详情</div>',
+        			onShow: function(){
+            	        $(this).tooltip('tip').css({
+            	            backgroundColor: '#666',
+            	            borderColor: '#95B8E7',
+            	        })
+            	    },
+        		});
         	});
+        	$('.task_main_info').each(function(){
+    			row_data = data['rows'][$(this).attr('row_index')]
+    			$(this).tooltip({
+            	    position: 'right',
+            	    onShow: function(){
+            	        $(this).tooltip('tip').css({
+            	            backgroundColor: '#666',
+            	            borderColor: '#95B8E7',
+            	        });
+            	    },
+    				content: '<div style="color:white;">任务名:'+row_data['name']+'</div>\
+    	        		<div style="color:white;">间隔:'+row_data['interval']+'分钟</div>\
+    	        		<div style="color:white;">备注:'+row_data['remark']+'</div>\
+    	        		<div style="color:white;">总共:'+row_data['total']+'条</div>\
+    	        		<div style="color:white;">创建时间:'+row_data['create_time']+'</div>',
+            	});
+    		});
         },
+        onBeforeLoad:function(param){
+        	$('.task_main_info').tooltip('destroy')
+        	$('.openTaskDetail').tooltip('destroy')
+        	
+        },
+        
 	});
 	
 	
@@ -513,11 +626,34 @@ $(function($){
 			  },
 			  {field:'operate',align:'center',halign:'center',fixed:true,title:"操作",width:fixWidth(0.05),
 				  formatter:function(value,row,index){
-					  return'<a href="#" style="text-decoration:none;color:blue;" >详情</a>'
+					  return'<a href="#" class="task_detail" style="text-decoration:none;color:blue;" row_index="'+index+'" >详情</a>'
 				  }
 			  },
         ]],
+        onBeforeLoad:function(param){
+        	$('.task_detail').tooltip('destroy')
+        },
+        onLoadSuccess:function(data){
+    		$('.task_detail').each(function(){
+    			row_data = data['rows'][$(this).attr('row_index')]
+    			$(this).tooltip({
+            	    position: 'left',
+            	    onShow: function(){
+            	        $(this).tooltip('tip').css({
+            	            backgroundColor: '#666',
+            	            borderColor: '#95B8E7',
+            	        });
+            	    },
+    				content: '<div style="color:white;">客户名:'+row_data['name']+'</div>\
+    	        		<div style="color:white;">send_from:'+row_data['send_from']+'</div>\
+    	        		<div style="color:white;">send_to:'+row_data['send_to']+'</div>\
+    	        		<div style="color:white;">发送结果信息:'+row_data['info']+'</div>',
+            	});
+    		})	
+        },
 	});
+	
+	
 	
 });
 
@@ -623,12 +759,19 @@ function addTesk(){
 	var body = $("#email_task_body").datalist('getChecked')		
 	if(body.length == 0){AlertInfo('red','信息错误','至少选择一个body模板');return}
 	
+	
 	data.target = GetDataId($('#email_task_target').datalist('getChecked'))
 	data.subject = GetDataId($('#email_task_subject').datalist('getChecked'))
 	data.body = GetDataId($('#email_task_body').datalist('getChecked'))
 	data.send =  GetDataId($('#email_task_send').datalist('getChecked'))
-	
-	
+	var atts = $('#email_task_attachment').datalist('getChecked')
+	if( atts.length != 0){
+		var atts_list = []
+		for(i in atts){
+			atts_list.push(atts[i]['url'])
+		}
+		data.atts = atts_list.join(',')
+	}
 	$('#loading').show();
 	$.ajax({url:'/add_email_task/',type:'POST',data:data,success:function(data){
 		if(data == 'repeat'){
@@ -667,7 +810,7 @@ function ChangeTaskStatus(obj){
 		}
 		$('#task_list_main').datagrid('reload');
 	},error:function(data){
-		AlertInfo('red','修改失败','状态修改成功!(呼叫开发者)')
+		AlertInfo('red','修改失败','状态修改失败!(呼叫开发者)')
 		$('#task_list_main').datagrid('loaded');
 		}
 	});
@@ -682,4 +825,28 @@ function TaskDetail(obj){
 	})
 }
 
+function ChangeInterval(){
+	var row = $('#task_list').datagrid('getSelected')
+	if(row == null){return;}
+	$.messager.prompt('改变时间间隔','改变任务名为:<span style="color:red;margin:0 5px 0 5px">'+row['name']+'</span>的任务间隔,当前为间隔为:<span style="color:red;margin:0 5px 0 5px">'+row['interval']+'</span>分钟', function(r){
+		if (r){
+			if(r <= 5 ){
+				AlertInfo('red','修改失败','间隔要大于5!')
+				return
+			}
+			$('.MainLoadInfo').toggle('normal')
+			$('#task_list').datagrid('loading');
+			$.ajax({url:'/change_task_interval/',type:'POST',data:{'interval':$.trim(r),'task_id':row.id},success:function(data){
+				AlertInfo('green','修改成功','任务间隔成功!')
+				$('#task_list').datagrid('reload');
+				$('.MainLoadInfo').toggle('normal')
+			},error:function(data){
+				$('.MainLoadInfo').toggle('normal')
+				AlertInfo('red','修改失败','间隔修改失败,可能不是数字!(呼叫开发者)')
+				$('#task_list').datagrid('loaded');
+				}
+			});
+		}
+	});
+}
 

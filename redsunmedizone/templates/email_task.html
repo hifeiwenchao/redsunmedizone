@@ -1,10 +1,5 @@
-<div id="email_task" class="easyui-dialog" title="添加任务配置" 
-data-options="width:1200,height:730,closed:true,collapsible:true,resizable:true,iconCls: 'icon-save',
-buttons: [{text:'添加',iconCls:'icon-add',handler:function(){addTesk();}},
-{text:'关闭',iconCls:'icon-cancel',handler:function(){$('#email_task').dialog('close');}}],">
-
-	
-	<table style="width:1180px;height:94%">
+<div id="email_task"  title="添加任务配置" >
+	<table style="width:1180px;height:100%">
 		<tr >
 			<td width="20%" style="border-right:1px solid #95B8E7;">
 				<div class="easyui-panel" title="收件人列表" headerCls="chartPanelHeight"  data-options="fit:true,border:false,tools:[{iconCls:'icon-add',handler:function(){ addEmailTaskTarget() }}]">
@@ -38,32 +33,80 @@ buttons: [{text:'添加',iconCls:'icon-add',handler:function(){addTesk();}},
 					<div style="height:93%">
 						<div id="email_task_attachment" ></div>
 					</div>
-					<div style="height:7%">
-						<span class="panel-title" style="margin:0 10px 0 10px;">过滤:</span>
-						<span name="email_task_template_filter" render="attachment" ></span>
+					<div style="height:7%;text-align: center;">
+						<span class="easyui-linkbutton c2" id="remove_task_attachment">删除</span>
+						<span style="margin-right:10px;margin-left:10px;"></span>
+						<span class="easyui-linkbutton c5" id="empty_task_attachment">清空</span>
 					</div>
 				</div>
 			</td>
 			<td width="20%" >
-				<div class="easyui-panel" title="配置发件人" headerCls="chartPanelHeight" style="padding:10px 10px;height:50%" data-options="border:false,">
+				<div class="easyui-panel" title="配置发件人" headerCls="chartPanelHeight" style="padding:10px 10px;height:80%" data-options="border:false,">
 					<div id="email_task_send" ></div>
 				</div>
-				<div class="easyui-panel" title="任务基本信息配置" headerCls="chartPanelHeight" style="padding:10px 10px;height:50%" data-options="border:false,">
-					<div style="color:red;margin: 3px 0 3px 0">Tips:任务间隔只能是数字,任务名不能为空</div>
-					<div style="margin: 3px 0 3px 0;font-weight: bold;">任务名:</div>
-					<input class="easyui-textbox" style="width:100%;height:32px" data="email_task_name">
-					<div style="margin: 3px 0 3px 0;font-weight: bold;">备注:</div>
-					<input class="easyui-textbox" style="width:100%;height:32px" data="email_task_remark">
-					<div style="margin: 3px 0 3px 0;font-weight: bold;">任务间隔:</div>
-					<input class="easyui-numberbox" data-options="min:5," style="width:100%;height:32px" data="email_task_interval">
-					<div style="margin: 15px 0 3px 0;text-align: right;">
-						<span style="float: left;font-weight: bold;">是否立即开始:</span><input class="easyui-switchbutton" data="email_task_status" data-options="onText:'Yes',offText:'No'">
+				<div class="easyui-panel" title="任务基本信息配置" headerCls="chartPanelHeight" style="padding:10px 10px;height:20%" data-options="border:false,">
+					<div style="text-align: center;width: 100%">
+						<a href="javascript:void(0)" show="0" class="easyui-linkbutton c2 easyui-tooltip" title="常规任务发布" data="normal_task" >常规</a>
+						<span style="margin-right:10px;margin-left:10px;"></span>
+						<a href="javascript:void(0)" show="0" class="easyui-linkbutton c5 easyui-tooltip" title="时间段任务发布" data="specical_task" >特殊</a>
+					</div>
+					<div class="TaskInfo">
+						<div style="color:red;margin: 3px 0 3px 0">Tips:任务间隔只能是数字,任务名不能为空</div>
+						<div style="margin: 3px 0 3px 0;font-weight: bold;float: left;">任务名:</div>
+						<input class="easyui-textbox" style="width:100%;height:32px" data="email_task_name">
+						<div style="margin: 3px 0 3px 0;font-weight: bold;float: left;">备注:</div>
+						<input class="easyui-textbox" style="width:100%;height:32px" data="email_task_remark">
+						<div style="margin: 3px 0 3px 0;font-weight: bold;float: left;">任务间隔:</div>
+						<input class="easyui-numberbox" data-options="min:5," style="width:100%;height:32px" data="email_task_interval">
+						<div style="margin: 15px 0 3px 0;text-align: right;">
+							<span style="float: left;font-weight: bold;">是否立即开始:</span><input class="easyui-switchbutton" data="email_task_status" data-options="onText:'Yes',offText:'No'">
+						</div>
+						<div style="text-align: center;margin-top:30px;">
+							<a href="#" title="添加任务,间隔名字必填,不可重复加" class="easyui-linkbutton easyui-tooltip" iconCls="icon-add" onclick="addTesk();" >添加</a>
+							<span style="margin-right:15px;"></span>
+							<a href='#' title="关闭窗口" onclick="$('.TaskInfo').hide('normal');$('a[data=normal_task]').attr('show','0')" iconCls="icon-cancel" class="easyui-linkbutton easyui-tooltip">关闭</a>
+						</div>
+					</div>
+					<div class="SpecialTaskInfo">
+						<table style="width:100%;height:100%">
+							<tr>
+								<td width="30%" style="vertical-align: top;border-right:1px solid #95b8e7">
+									<div class="panel-title">开始时间</div>
+									<div style="margin-top:5px;"></div>
+									<input  class="easyui-timespinner" value="00:00:00"  style="width:150px;" data-options="min:'00:00:00',showSeconds:true,">
+									<div style="margin-top:5px;"></div>
+									<div class="panel-title">结束时间</div>
+									<div style="margin-top:5px;"></div>
+									<input  class="easyui-timespinner" value="00:00:00" style="width:150px;" data-options="min:'00:00:00',showSeconds:true,">
+								</td>
+								<td width="35%" style="vertical-align: top;border-right:1px solid #95b8e7">
+									<div class="panel-title easyui-tooltip" position="right" title="可以跳跃式的选择时间,不需要连续时间" >选择时间</div>
+									<div style="margin-top:5px;"></div>
+									<div  class="easyui-calendar" style="width:200px;height:200px;"></div>
+								</td>
+								<td width="35%" style="vertical-align: top;">
+									<div style="color:red;margin: 3px 0 3px 0">Tips:任务间隔只能是数字,任务名不能为空</div>
+									<div style="margin: 3px 0 3px 0;font-weight: bold;float: left;">任务名:</div>
+									<input class="easyui-textbox" style="width:230px;height:32px" >
+									<div style="margin: 3px 0 3px 0;font-weight: bold;float: left;">备注:</div>
+									<input class="easyui-textbox" style="width:230px;height:32px" >
+									<div style="margin: 3px 0 3px 0;font-weight: bold;float: left;">任务间隔:</div>
+									<input class="easyui-numberbox" data-options="min:5," style="width:230px;height:32px" >
+									<div style="margin: 15px 0 3px 0;text-align: right;">
+										<span style="float: left;font-weight: bold;">是否立即开始:</span><input class="easyui-switchbutton"  data-options="onText:'Yes',offText:'No'">
+									</div>
+									<div style="text-align: center;margin-top:30px;">
+										<a href="#" title="添加任务,间隔名字必填,不可重复加" class="easyui-linkbutton easyui-tooltip" iconCls="icon-add" onclick="alert('开发中')" >添加</a>
+										<span style="margin-right:15px;"></span>
+										<a href='#' title="关闭窗口" onclick="$('.SpecialTaskInfo').hide('normal');$('a[data=specical_task]').attr('show','0')" iconCls="icon-cancel" class="easyui-linkbutton easyui-tooltip">关闭</a>
+									</div>
+								</td>
+							</tr>
+						</table>
 					</div>
 				</div>
 			</td>
 		</tr>
 	</table>
-	
-	
 	
 </div>

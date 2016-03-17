@@ -298,6 +298,7 @@ $(function($){
 					return '<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailHistoryDetail(this)">'+row.subject+'</a>'
 				}
 			},
+			{field:'status',title:'所属邮箱',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
 			{field:'date',title:'接收日期',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
 		]],
 	});

@@ -144,6 +144,7 @@ class EmailTaskDetail(models.Model):
     info = models.CharField(max_length=256,default='')
     update_time = models.IntegerField(default=0)
     process_time = models.IntegerField(default=0)
+    atts = models.CharField(max_length=512,default='')
     class Meta:
         managed = False
         db_table = 'email_task_detail'

@@ -108,12 +108,21 @@ $(function($){
 					sent_list = value.split(';')
 					content = ''
 					for(i in sent_list){
-						content += '<a href="#" style="text-decoration:none;color:blue;margin-right:15px;"  onclick="openFromCustomerList(\''+value+'\')">'+sent_list[i]+'</a>'
+						content += '<a href="#" style="text-decoration:none;color:blue;margin-right:15px;" email="'+value+'" row_index="'+index+'"  class="ReadSentFrom" onclick="openFromCustomerList(\''+value+'\')">'+sent_list[i]+'</a>'
 					}
 					return '<div style="word-break:break-all; word-wrap:break-word;">'+content+'</div>'
 				}
 			},
-			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
+			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',
+				formatter:function(value,row,index){
+					sent_list = value.split(';')
+					content = ''
+					for(i in sent_list){
+						content += '<a href="#" style="text-decoration:none;color:black;margin-right:15px;">'+sent_list[i]+'</a>'
+					}
+					return '<div style="word-break:break-all; word-wrap:break-word;">'+content+'</div>'
+				}
+			},
 			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.08),align:'left',halign:'center',
 				formatter:function(value,row,index){
 					return '<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetail(this)">'+row.subject+'</a>'
@@ -131,7 +140,31 @@ $(function($){
 				}
 			},
 		]],
+		onBeforeLoad:function(param){
+        	$('.ReadSentFrom').tooltip('destroy')
+        },
+        onLoadSuccess:function(data){
+    		$('.ReadSentFrom').each(function(){
+    			$(this).tooltip({
+            	    position:'top',
+            	    content: $('<div></div>'),
+            	    onShow: function(){
+            	    },
+            	    onUpdate: function(cc){
+                        cc.panel({
+                            width: 500,
+                            loadingMessage:'用户信息检索中.....',
+                            height:'auto',
+                            border:false,
+                            href: '/customer_detail_info/?email='+$(this).attr('email')
+                        });
+                    }
+            	});
+    		})	
+        },
 	});
+	
+	
 	
 	
 	$('#email_list_send').datagrid({
@@ -482,12 +515,14 @@ $(function($){
 					}
 				}
 			},
+			{field:'status',title:'所属邮箱',sortable:true,width:fixWidth(0.03),align:'center',halign:'center',},
 			{field:'date',title:'接收日期',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
 		]],
 	});
 	
 	
 	$('#send_email').dialog({
+		openAnimation:'show',
 		width:1200,
 		height:$(window).height()*0.95,
 		closed:true,

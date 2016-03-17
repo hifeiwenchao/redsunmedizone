@@ -1,7 +1,7 @@
 $(document).ready(function(){
 	console.log($(window).width())
 	$('#loading').fadeOut('slow')
-	
+	$('#mm3').hide()
 })
 
 $(document).keyup(function(e) { 
@@ -12,12 +12,12 @@ $(document).keyup(function(e) {
 		$('#email_account_settings').dialog('close');
 		$('#email_task').dialog('close')
 		$('#email_template_settings').dialog('close')
-		
 	}
 });
 
-
-
+window.setInterval(function(){$('#email_list_unread').datagrid('reload')},180000); 
+window.setInterval(function(){$('#task_list_main').datagrid('reload')},120000);
+window.setInterval(function(){$('#task_list').datagrid('reload')},180000);
 var timeInterval = null;
 var customer_tree = [{"id": 1,"text": "客户信息列表",}]
 var mail_tree = [{"id": 0,"text": "未读",},{"id": 1,"text": "已读",},{"id": 2,"text": "发件箱",},{"id": 3,"text": "草稿箱",},{"id": 4,"text": "垃圾箱",},{"id": 5,"text": "询盘",},{"id": 6,"text": "报价",}]
@@ -30,6 +30,19 @@ var tree_id_list = ['customer_tree','mail_tree','order_tree','finance_tree','fil
 var template_type = [{'id':'all','text':'全部种类'},{'id':'0','text':'常规模板'},{'id':'1','text':'开发信'},{'id':'2','text':'新产品提醒'},{'id':'3','text':'展会提醒'},{'id':'4','text':'放假提醒'},{'id':'5','text':'节日'},{'id':'6','text':'生日'},{'id':'7','text':'跟踪'}]
 
 $(function($) {
+    $("#menu_accordion").accordion('getSelected').panel('collapse')
+	$('#menu_button').click(function(e){
+		var $obj = $(this)
+		if($obj.attr('show') == 0){
+			$obj.tooltip('update','隐藏菜单')
+			$('#mm3').show('normal')
+			$obj.attr('show',1).empty().append('<img src="/static/img/arrow_down.png" style="opacity:0.8;" alt="隐藏菜单">')
+		}else{
+			$obj.tooltip('update','呼出菜单')
+			$('#mm3').hide('normal')
+			$obj.attr('show',0).empty().append('<img src="/static/img/arrow_up.png" style="opacity:0.8;" alt="呼出菜单">')
+		}
+	});
 	
 	timeInterval = setTimeout(flushTime,1000);
 	$('#customer_tree').datalist({

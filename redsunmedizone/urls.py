@@ -63,6 +63,7 @@ urlpatterns = [
     url(r'edit_body_template/$', views.edit_body_template),
     url(r'get_attachment_template/$', views.get_attachment_template),
     url(r'add_email_task/$', views.add_email_task),
+    url(r'add_email_task_special/$', views.add_email_task_special),
     url(r'email_list_unread/$', views.email_list_unread),
     url(r'email_list_read/$', views.email_list_read),
     url(r'email_list_sent/$', views.email_list_sent),
@@ -84,6 +85,8 @@ urlpatterns = [
     url(r'add_black_list/$', views.add_black_list),
     url(r'search_email/$', views.search_email),
     url(r'email_history/$', views.email_history),
+    url(r'change_task_interval/$', views.change_task_interval),
+    url(r'customer_detail_info/$', views.customer_detail_info),
 ]
 
 

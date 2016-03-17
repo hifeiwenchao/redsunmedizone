@@ -1,3 +1,12 @@
+.icon-arrow_up{
+	background:url('icons/arrow_up.png') no-repeat center center;
+}
+.icon-arrow_down{
+	background:url('icons/arrow_down.png') no-repeat center center;
+}
+.icon-menu{
+	background:url('icons/menu.png') no-repeat center center;
+}
 .icon-out{
 	background:url('icons/out.png') no-repeat center center;
 }

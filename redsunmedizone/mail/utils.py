@@ -37,11 +37,6 @@ class SendEmail(object):
             att.set_payload(open(item.get('path'),'rb').read())
             att.add_header('Content-Disposition','attachment',filename=('gbk','',item.get('name')))
             encoders.encode_base64(att)
-            '''
-            att = MIMEText(open(item.get('path'), 'rb').read(), 'base64', 'utf8')
-            att["Content-Type"] = 'application/octet-stream'
-            att["Content-Disposition"] = 'attachment; filename="%s"' % item.get('name') #这里的filename可以任意写，写什么名字，邮件中显示什么名字
-            '''
             msg.attach(att)
                     
         if cc:
@@ -51,12 +46,3 @@ class SendEmail(object):
     
     def logout(self):
         self.server.close()
-'''        
-DEMO     
-if __name__ == '__main__':
-    obj = SendEmail()
-    obj.set_info('imap.redsunmedizone.com','matt@redsunmedizone.com','hlj52764892')
-    obj.send_email('matt@redsunmedizone.com', 'info@redsunmedizone.com', None, 'test2 %s' % time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())), '123', [])
-    obj.logout()
-'''
-        

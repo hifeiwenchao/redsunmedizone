@@ -15,13 +15,16 @@ class Command(BaseCommand):
         parser.add_argument('--send',action='store_true',dest = 'send',default = False,help = 'send')
         parser.add_argument('--inbox',action='store_true',dest = 'inbox',default = False,help = 'inbox')
         parser.add_argument('--history',action='store_true',dest = 'history',default = False,help = 'history')
+    
     def handle(self,*args,**options):
         if options['receive']:
-            email = EmailAccount.objects.filter(address__contains = 'matt@heershi.com.cn').first()
-            obj = FetchMail(email.imap,email.address, email.password)
-            obj.fetch_email_by_folder(None)
+            objs = Customer.objects.all()
+            for item in objs:
+                item.name = (item.name).upper()
+                print(item.name)
+                item.save()
                     
-        
+    '''    
         if options['send']:
             email = EmailAccount.objects.filter(address__contains = 'matt@heershi.com.cn').first()
             obj = FetchMail(email.imap,email.address, email.password)
@@ -47,7 +50,7 @@ class Command(BaseCommand):
                     if len(emails) !=0:
                         item.history = 1
                 item.save()
-                
+    '''        
                 
                 
                 

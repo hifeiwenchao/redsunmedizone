@@ -5,16 +5,17 @@ Created on 2016年2月9日
 '''
 from __future__ import absolute_import
 from celery import shared_task
-from imbox import Imbox
 import os
 import logging
 import time
-import random
+import email.utils as e_utils
+from datetime import datetime
 from django.conf import settings
 from mail.utils import SendEmail
-from crm.models import EmailAccount, EmailSubjectTemplate, EmailBodyTemplate,\
-    Email, Attachment, Customer, EmailTask, EmailTaskDetail, EmailLog
-import datetime
+from crm.models import EmailAccount,Email, Attachment, Customer, EmailTask, EmailTaskDetail
+import re
+import imapy
+from imapy.query_builder import Q
 
 #fetch_email.apply_async(countdown=10,retry=False)
 #celery -A mail worker -B -l info
@@ -51,7 +52,7 @@ def process_task_detail(obj):
         mail_handler.set_info(account.smtp,account.address,account.password)
         log.info('发件人%s,收件人%s,' % (account.address, process_obj.send_to) )
         try:
-            mail_handler.send_email(account.address, process_obj.send_to, None, process_obj.subject,process_obj.content, [])
+            mail_handler.send_email(account.address, process_obj.send_to, None, process_obj.subject,process_obj.content,eval(process_obj.atts) if process_obj.atts != '' else [])
             process_obj.result = 0
             #process_obj.status = 1
             process_obj.process_time = int(time.time())
@@ -83,57 +84,61 @@ def main_fetch_email():
     
 @shared_task
 def fetch_email(obj):
+    
+    log = logging.getLogger('fetch')
+    log.info('当前时间,%s' % time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())))
+    log.info('邮件%s抓取邮件,时间为%s' % (obj.address,time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()))))
+    
+    #['INBOX' 'REDSUN测试邮件','已发送',]
+    box = imapy.connect(host=obj.imap,username=obj.address,password=obj.password,ssl=False)
+    q = Q()
+    emails = box.folder('INBOX').emails(q.unseen())
+    save_email(emails,'')
+    box.logout()
+    log.info('邮箱%s抓取完毕 ,时间为%s' % (obj.address,time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()))))
+    
+    
+def save_email(emails,item):
     if settings.DEBUG:
         path = settings.STATIC_ROOT +'/static/attachment/'
     else:
         path = settings.STATIC_ROOT +'/attachment/'
-    log = logging.getLogger('fetch')
-    log.info('当前时间,%s' % time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())))
-    log.info('邮件%s抓取邮件,时间为%s' % (obj.address,time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()))))
-    imbox = Imbox(obj.imap,obj.address,obj.password,ssl=False)
-    all_messages = imbox.messages(unread=True)
-    for uid,email in all_messages:
-        log.info('抓取邮件uid为%s,时间为%s' % (uid.decode(),time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()))))
-        data_uid = '%s' % (datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')[:-4])
+    for email in emails:
+        uid = '%s' % (datetime.now().strftime('%Y%m%d%H%M%S%f')[2:])
+        print('抓取邮件uid为%s,时间为%s' % (uid,time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()))))
         temp = {}
-        temp.__setitem__('uid', data_uid)
+        temp.__setitem__('uid', uid)
+        temp.__setitem__('headers','%s' % email['headers'])
+        temp.__setitem__('from_whom','%s' % email['from_whom'])
+        temp.__setitem__('sent_from','%s' % email['from_email'])
+        temp.__setitem__('to','%s' % email['to'])
         try:
-            temp.__setitem__('sent_from', '%s' % email.sent_from)
-        except Exception as e:
-            pass
+            match = re.findall(r'[\w\.-]+@[\w\.-]+',email['to'])
+            temp.__setitem__('send_to','%s' % ';'.join(match))
+        except Exception:
+            temp.__setitem__('send_to','%s' % email['to'])
+        temp.__setitem__('send_cc','%s' % email['cc'])
+        temp.__setitem__('subject','%s' % email['subject'])
+        temp.__setitem__('date','%s' % email['date'])
+        timetuple = e_utils.parsedate(temp['date'])
         try:
-            temp.__setitem__('send_to','%s' % email.sent_to)
-        except Exception as e:
-            pass
-        try:
-            temp.__setitem__('send_cc','%s' %  email.sent_cc)
-        except Exception as e:
-            pass
-        try:
-            temp.__setitem__('subject',('%s' %  email.subject).replace('\n',",").replace('\r',''))
-        except Exception as e:
-            pass
-        try:
-            temp.__setitem__('server_id','%s' %  email.message_id)
-        except Exception as e:
-            pass
-        try:
-            temp.__setitem__('date','%s' %  email.parsed_date)
-        except Exception as e:
-            pass
+            temp.__setitem__('format_date','%s' % datetime.fromtimestamp(time.mktime(timetuple)))
+        except Exception:
+            temp.__setitem__('format_date',temp.get('date'))
+        if len(email['text']) != 0:
+            temp.__setitem__('content','' if email.get('text')[0].get('text') == None else email.get('text')[0].get('text'))
+            temp.__setitem__('content_normalized', '' if email.get('text')[0].get('text_normalized') == None else email.get('text')[0].get('text_normalized'))
+        if len(email['html']) != 0:
+            temp.__setitem__('content_html', email['html'][0])
+        temp.__setitem__('uid', uid)
+        temp.__setitem__('create_time',int(time.time()))
         
         temp.__setitem__('status',1)
         temp.__setitem__('type',0)
         temp.__setitem__('read',0)
-        try:
-            temp.__setitem__('content', email.body['html'][0].decode('utf-8'))
-        except Exception as e:
-            try:
-                temp.__setitem__('content', '%s' % email.body['html'][0])
-            except:
-                temp.__setitem__('content', '%s' % email.body['plain'][0])
-            
-        cs_obj = Customer.objects.filter(email__contains = email.sent_from[0]['email']).first()
+        
+        temp.__setitem__('remark',item)
+        cs_obj = Customer.objects.filter(email__contains = temp['sent_from']).first()
         if cs_obj !=None:
             cs_obj.history = 1
             cs_obj.save()
@@ -141,33 +146,22 @@ def fetch_email(obj):
         temp.__setitem__('create_time',int(time.time()))
         Email.objects.create(**temp)
         
-        try:
-            os.mkdir(path+data_uid)
-        except Exception as e:
-            pass
-        
-        if len(email.attachments) != 0:
-            log.info('有附件,开始抓取附件')
-            for att in email.attachments:
-                file_name =  att.get('filename').strip('"') if att.get('filename') else 'nonename%s' % time.time()
-                file_name = 'nonename%s' % time.time() if file_name.strip() == '' else file_name
-                log.info('附件名字为%s,大小为%s' % (file_name,att['size']))
-                Attachment.objects.create(create_time = int(time.time(  )),content_id = str(att.get('content_id')).strip().strip('<').strip('>')
-                                              ,size = att['size'],email_id = data_uid,file_name = file_name,path='/static/attachment/'+data_uid+'/%s' % file_name)
-                file_object = open(path+data_uid+'/%s' % file_name, 'wb')
-                file_object.write(att['content'].getvalue())
-                file_object.close()
-                
-        imbox.mark_seen(uid)
-        
-    imbox.logout()
-    log.info('邮箱%s抓取完毕 ,时间为%s' % (obj.address,time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()))))
-    log.info('当前时间,%s' % time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())))
-    
-    
-
-    
-    
-    
+        if len(email['attachments']) != 0:
+            try:
+                os.mkdir(path+uid)
+            except Exception :
+                pass
+            for attachment in email['attachments']:
+                file_name = attachment['filename']
+                content_type = attachment['content_type']
+                content_id = attachment['content_id']
+                data = attachment['data']
+                if data == None:continue
+                print('附件名字为%s' % file_name)
+                Attachment.objects.create(create_time = int(time.time(  )),content_id = str(content_id).strip().strip('<').strip('>')
+                        ,content_type = content_type,email_id = uid,file_name = file_name,path='/static/attachment/'+uid+'/%s' % file_name)
+                with open(path+uid+'/%s' % file_name, 'wb') as f:
+                    f.write(data)
+        email.mark('Seen')
     
     

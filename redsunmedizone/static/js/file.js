@@ -23,6 +23,7 @@ $(function($){
 				}
 			}
 	    	$('#public_url_info').text(true_host+'/static/'+path)
+	    	$('#task_url_info').text('/static/'+path)
 		},
 		onContextMenu: function(e, node){
 			e.preventDefault();
