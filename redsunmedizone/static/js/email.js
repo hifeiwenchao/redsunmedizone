@@ -113,16 +113,7 @@ $(function($){
 					return '<div style="word-break:break-all; word-wrap:break-word;">'+content+'</div>'
 				}
 			},
-			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',
-				formatter:function(value,row,index){
-					sent_list = value.split(';')
-					content = ''
-					for(i in sent_list){
-						content += '<a href="#" style="text-decoration:none;color:black;margin-right:15px;">'+sent_list[i]+'</a>'
-					}
-					return '<div style="word-break:break-all; word-wrap:break-word;">'+content+'</div>'
-				}
-			},
+			{field:'sent_to',title:'收件人',sortable:true,width:fixWidth(0.06),align:'center',halign:'center',},
 			{field:'subject',title:'Subject',sortable:true,width:fixWidth(0.08),align:'left',halign:'center',
 				formatter:function(value,row,index){
 					return '<a href="#" style="text-decoration:none;color:blue;" data="'+row.id+'" onclick="EmailDetail(this)">'+row.subject+'</a>'
@@ -148,8 +139,6 @@ $(function($){
     			$(this).tooltip({
             	    position:'top',
             	    content: $('<div></div>'),
-            	    onShow: function(){
-            	    },
             	    onUpdate: function(cc){
                         cc.panel({
                             width: 500,

@@ -1285,13 +1285,13 @@ def customer_detail_info(request):
         return HttpResponse('没有检索到与此邮箱相关用户信息')
     else:
         content = '''
-            <span style="margin-rigth:5px;">公司名:</span><span style="margin-rigth:5px;">%s</span>
-            <span style="margin-rigth:5px;">国家:</span><span style="margin-rigth:5px;">%s</span><br>
-            <span style="margin-rigth:5px;">人名:</span><span style="margin-rigth:5px;">%s</span>
-            <span style="margin-rigth:5px;">职位:</span><span style="margin-rigth:5px;">%s</span><br>
-            <span style="margin-rigth:5px;">网站:</span><span style="margin-rigth:5px;">%s</span>
-            <span style="margin-rigth:5px;">权重:</span><span style="margin-rigth:5px;">%s</span><br>
-            <span style="margin-rigth:5px;">购买意向:</span><span style="margin-rigth:5px;">%s</span>
+            <span style="margin-right:5px;color:blue;">公司名:</span><span style="margin-right:5px;">%s</span>
+            <span style="margin-right:5px;color:blue;">国家:</span><span style="margin-right:5px;">%s</span><br><br>
+            <span style="margin-right:5px;color:blue;">人名:</span><span style="margin-right:5px;">%s</span>
+            <span style="margin-right:5px;color:blue;">职位:</span><span style="margin-right:5px;">%s</span><br><br>
+            <span style="margin-right:5px;color:blue;">网站:</span><span style="margin-right:5px;">%s</span>
+            <span style="margin-right:5px;color:blue;">权重:</span><span style="margin-right:5px;">%s</span><br><br>
+            <span style="margin-right:5px;color:blue;">购买意向:</span><span style="margin-right:5px;">%s</span>
         '''
         content = content % (obj.company_name,Nation.objects.filter(id = obj.nation).first().nation,obj.name,obj.job_title,obj.website,obj.sort,obj.purchase_intention)
         return HttpResponse(content)

@@ -527,10 +527,10 @@ $(function($){
 			  {field:'operate',align:'center',halign:'center',fixed:true,title:"情况",width:fixWidth(0.08),
 				  formatter:function(value,row,index){
 					  if(row.status == 0){
-						  return'<a href="#" style="text-decoration:none;color:blue;" task="'+row.id+'" data="1" onclick="ChangeTaskStatus(this)">开始</a><span style="margin-left:10px;"></span><a href="#" style="text-decoration:none;color:blue;" task="'+row.id+'" class="openTaskDetail"   onclick="TaskDetail(this)">详情</a>'
+						  return'<a href="#" style="text-decoration:none;color:blue;" task="'+row.id+'" data="1" onclick="ChangeTaskStatus(this)">开始</a><span style="margin-left:10px;"></span><a href="#" style="text-decoration:none;color:blue;" task="'+row.id+'" class="openTaskDetail" onclick="TaskDetail(this)">详情</a>'
 					  }
 					  if(row.status == 1){
-						  return'<a href="#" style="text-decoration:none;color:blue;" task="'+row.id+'" data="0"  onclick="ChangeTaskStatus(this)">暂停</a><span style="margin-left:10px;"></span><a href="#" style="text-decoration:none;color:blue;" task="'+row.id+'" class="openTaskDetail"   onclick="TaskDetail(this)">详情</a>'
+						  return'<a href="#" style="text-decoration:none;color:blue;" task="'+row.id+'" data="0"  onclick="ChangeTaskStatus(this)">暂停</a><span style="margin-left:10px;"></span><a href="#" style="text-decoration:none;color:blue;" task="'+row.id+'" class="openTaskDetail" onclick="TaskDetail(this)">详情</a>'
 					  }
 					  if(row.status == 2){
 						  return'已完成<span style="margin-left:10px;"></span><a href="#" class="openTaskDetail" style="text-decoration:none;color:blue;" task="'+row.id+'"  onclick="TaskDetail(this)">详情</a>'
